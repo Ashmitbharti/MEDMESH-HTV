@@ -9,13 +9,13 @@ import { useClock } from '../ui3d/project';
 const HOLD_MS = 3000;
 const SANS = 'Inter, -apple-system, Segoe UI, Roboto, sans-serif';
 
-export default function SosOrb({ size = 230, disabled, onComplete }) {
+export default function SosOrb({ size = 230, disabled, onComplete, onBlocked }) {
   const { t } = useClock(true, 30);
   const [frac, setFrac] = useState(0);
   const timer = useRef(null);
 
   function start() {
-    if (disabled) return;
+    if (disabled) { onBlocked?.(); return; }   // a report is already open: take them to it instead of doing nothing
     const t0 = Date.now();
     clearInterval(timer.current);
     timer.current = setInterval(() => {
@@ -91,7 +91,7 @@ export default function SosOrb({ size = 230, disabled, onComplete }) {
       <View style={{ alignItems: 'center', marginTop: -24 }}>
         <Text style={{ color: '#fff', fontSize: 22, fontWeight: '800', letterSpacing: -0.3 }}>I’m in trouble</Text>
         <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 3 }}>
-          {holding ? 'Release to cancel' : 'Hold 3 seconds · emergency for you'}
+          {disabled ? 'You already have an open report · tap to see it' : holding ? 'Release to cancel' : 'Hold 3 seconds · emergency for you'}
         </Text>
       </View>
     </Pressable>
