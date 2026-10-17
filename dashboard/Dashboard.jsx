@@ -17,7 +17,8 @@ import { latest } from './outbox';
 import { c } from '../medmesh-id/theme';
 import { useAuth } from '../auth/AuthContext';
 import { loadProfile } from '../medmesh-id/profileService';
-import { createRequest, loadRequest } from '../emergency/requestService';
+import { createScene, isOpen, loadScene } from '../emergency/sceneService';
+import { forId, useMesh } from '../link/meshLink';
 
 const HAZARD_ICON = { storm: CloudLightning, rain: CloudRain, flood: Waves, snow: Snowflake, fire: Flame, quake: Activity, calm: Sun };
 
@@ -52,7 +53,7 @@ export default function Dashboard() {
 
   const refresh = useCallback(() => {
     loadProfile().then(setProfile).catch(() => {});
-    loadRequest().then((r) => setRequest(r && r.phase !== 'cancelled' ? r : null)).catch(() => {});
+    loadScene().then((r) => setRequest(isOpen(r) ? r : null)).catch(() => {});
     latest('checkin').then((x) => setCheckin(x && Date.now() - x.at < 12 * 3600 * 1000 ? x : null));
     getHazard().then(setHazard).catch(() => {});
   }, []);
@@ -73,6 +74,7 @@ export default function Dashboard() {
   }, [hazard.kind, shake]);
 
   const onFlash = useCallback(() => setFlashAt(Date.now()), []);
+  const { link, inbox } = useMesh();
 
   const d = profile?.details || {};
   const name = (d.name || account?.name || '').split(' ')[0];
@@ -96,7 +98,7 @@ export default function Dashboard() {
     opening.current = true;
     setError('');
     try {
-      const r = await createRequest(mode);
+      const r = await createScene(mode);
       setRequest(r);
       router.push('/sos');
     } catch {
@@ -121,16 +123,20 @@ export default function Dashboard() {
 
   const HIcon = HAZARD_ICON[hazard.kind] || Sun;
   const hz = HAZARDS[hazard.kind] || HAZARDS.calm;
-  const ccOnline = !!hazard.ccOnline;
+  const ccOnline = !!hazard.ccOnline || (link.kind === 'wifi-sim' && link.connected);
+  const reqIds = request ? [...Object.values(request.sent || {}), request.voiceId].filter(Boolean) : [];
+  const lastHelp = reqIds.flatMap((id) => forId(inbox, id)).filter((m) => m.code === 'H').sort((a, b) => a.at - b.at).pop();
+  const withAmb = new Set(reqIds.filter((id) => forId(inbox, id).some((m) => m.code === 'H' && m.f[1] === 'AMB')));
+  const helpText = withAmb.size > 1 ? `Ambulances assigned for ${withAmb.size} people. Stay where you are.` : lastHelp ? lastHelp.f.slice(3).join('|') : '';
 
   const headline = {
     calm: ["Don't worry,", "we've got you."],
-    help: ['Your request', 'is saved.'],
+    help: lastHelp ? ['Help is', 'on the way.'] : ['Your request', request?.phase === 'sent' ? 'is out.' : 'is open.'],
     safe: ["You're marked", 'safe.'],
   }[status];
   const subline = {
     calm: 'Your MedMesh ID is ready. If anything happens, hold a button below. It works without internet.',
-    help: 'It goes out the moment your phone reaches a MedMesh node. Keep the app open.',
+    help: helpText || (request?.phase === 'sent' ? 'Sent. Waiting for the command centre to reply. Keep the app open.' : 'Finish the report so help can be sent. Keep the app open.'),
     safe: contact ? `${contact.first} will be told as soon as the message gets through.` : 'Your check-in is queued for the command centre.',
   }[status];
 
@@ -196,7 +202,7 @@ export default function Dashboard() {
           <View style={s.statusPill}>
             <View style={[s.dot, { backgroundColor: col }]} />
             <Text style={[s.statusText, { color: col }]}>
-              {status === 'help' ? 'HELP REQUEST SAVED' : status === 'safe' ? 'CHECKED IN SAFE' : 'PROTECTED · READY'}
+              {status === 'help' ? (lastHelp ? 'HELP ON THE WAY' : 'EMERGENCY REPORT OPEN') : status === 'safe' ? 'CHECKED IN SAFE' : 'PROTECTED · READY'}
             </Text>
           </View>
           <Text style={s.headline}>{headline[0]}{'\n'}<Text style={{ color: col }}>{headline[1]}</Text></Text>
@@ -207,8 +213,8 @@ export default function Dashboard() {
             <Pressable accessibilityRole="button" onPress={() => router.push('/sos')} style={({ pressed }) => [s.resume, pressed && { opacity: 0.85 }]}>
               <Siren size={18} color={c.amber} />
               <View style={{ flex: 1 }}>
-                <Text style={s.resumeTitle}>{request.mode === 'self' ? 'Your emergency request' : 'Request for someone else'}</Text>
-                <Text style={s.resumeSub}>Saved on this phone · waiting for a mesh node · tap to continue</Text>
+                <Text style={s.resumeTitle}>{request.mode === 'self' ? 'Your emergency report' : `Report for ${Math.max(request.count || 1, (request.people || []).length) > 1 ? `${Math.max(request.count, request.people.length)} people` : 'someone else'}`}</Text>
+                <Text style={s.resumeSub}>{helpText || (request.phase === 'sent' ? 'Sent · tap to see status' : 'Not finished · tap to continue')}</Text>
               </View>
               <ChevronRight size={18} color={c.amber} />
             </Pressable>
@@ -238,8 +244,8 @@ export default function Dashboard() {
           <View style={s.tiles}>
             <Pressable accessibilityRole="button" onPress={() => router.push('/medicine')} style={({ pressed }) => [s.tile, pressed && s.pressed]}>
               <View style={[s.tileIcon, { backgroundColor: 'rgba(251,191,36,0.14)' }]}><Pill size={20} color={c.amber} /></View>
-              <Text style={s.tileTitle}>Find medicine</Text>
-              <Text style={s.tileSub}>Which pharmacy has it in stock</Text>
+              <Text style={s.tileTitle}>Medicine & supplies</Text>
+              <Text style={s.tileSub}>Medicine, oxygen, equipment</Text>
             </Pressable>
             <Pressable accessibilityRole="button" onPress={() => router.push('/safe')} style={({ pressed }) => [s.tile, pressed && s.pressed, status === 'safe' && s.tileSafe]}>
               <View style={[s.tileIcon, { backgroundColor: 'rgba(52,211,153,0.14)' }]}>
@@ -266,7 +272,7 @@ export default function Dashboard() {
           <View style={s.link}>
             <LinkStep icon={Smartphone} label="Phone" state="ok" />
             <View style={s.linkBar} />
-            <LinkStep icon={Radio} label="Mesh node" state="off" />
+            <LinkStep icon={Radio} label={link.kind === 'wifi-sim' ? 'Test mesh' : 'Mesh node'} state={link.kind === 'wifi-sim' && link.connected ? 'ok' : 'off'} />
             <View style={s.linkBar} />
             <LinkStep icon={Server} label="Command centre" state={ccOnline ? 'ok' : 'off'} />
           </View>

@@ -9,7 +9,12 @@ export const SITES = [
   { id: 'MSP', kind: 'pharmacy', name: 'Morningside Pharmacy', short: 'Morningside Rx', lat: 43.79, lon: -79.205, open: true },
   { id: 'ECP', kind: 'pharmacy', name: 'Ellesmere Community Rx', short: 'Ellesmere Rx', lat: 43.7765, lon: -79.243, open: true },
   { id: 'MVR', kind: 'pharmacy', name: 'Malvern Rx', short: 'Malvern Rx', lat: 43.808, lon: -79.224, open: false },
+  // Home oxygen in Ontario comes from home-oxygen suppliers, not drugstores (demo supplier, not a real company)
+  { id: 'SHO', kind: 'supplier', name: 'Scarborough Home Oxygen (demo)', short: 'Home Oxygen', lat: 43.7712, lon: -79.23, open: true },
 ];
+
+const DIRS = ['north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west'];
+export const compass = (rad) => DIRS[Math.round((((rad * 180) / Math.PI + 360) % 360) / 45) % 8];
 
 const R = 6371;
 const rad = (d) => (d * Math.PI) / 180;
