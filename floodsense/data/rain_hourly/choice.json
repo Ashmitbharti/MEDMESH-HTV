@@ -1,0 +1,58 @@
+{
+  "02HC033": {
+    "climate_id": "6158355",
+    "name": "TORONTO CITY",
+    "km": 9.9,
+    "coverage": 0.9133
+  },
+  "02HC030": {
+    "climate_id": "6158355",
+    "name": "TORONTO CITY",
+    "km": 14.5,
+    "coverage": 0.9094
+  },
+  "02HC032": null,
+  "02HC027": {
+    "climate_id": "6158355",
+    "name": "TORONTO CITY",
+    "km": 8.4,
+    "coverage": 0.9133
+  },
+  "02HC005": {
+    "climate_id": "6158355",
+    "name": "TORONTO CITY",
+    "km": 8.2,
+    "coverage": 0.8463
+  },
+  "02HC024": {
+    "climate_id": "6158355",
+    "name": "TORONTO CITY",
+    "km": 3.7,
+    "coverage": 0.9094
+  },
+  "02HC013": {
+    "climate_id": "6158355",
+    "name": "TORONTO CITY",
+    "km": 20.9,
+    "coverage": 0.9881
+  },
+  "02HC058": {
+    "climate_id": "6158355",
+    "name": "TORONTO CITY",
+    "km": 16.4,
+    "coverage": 0.9881
+  },
+  "02HC022": null,
+  "02HB030": {
+    "climate_id": "6158355",
+    "name": "TORONTO CITY",
+    "km": 19.8,
+    "coverage": 0.9887
+  },
+  "02HC003": {
+    "climate_id": "6158355",
+    "name": "TORONTO CITY",
+    "km": 10.3,
+    "coverage": 0.9133
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "02HC033": {
+    "p": 0.02515566750797215,
+    "time": "2026-10-17T04:50:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN",
+    "imputed": [],
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC030": {
+    "p": 0.024076382431784192,
+    "time": "2026-10-17T05:15:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN",
+    "imputed": [],
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC032": {
+    "p": 0.0005321204662322998,
+    "time": "2026-10-17T05:15:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN",
+    "imputed": [
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d"
+    ],
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC027": {
+    "p": 0.02433442510664463,
+    "time": "2026-10-17T08:15:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN",
+    "imputed": [],
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC005": {
+    "p": 0.00903630004651565,
+    "time": "2026-10-17T08:50:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN",
+    "imputed": [
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d"
+    ],
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC024": {
+    "p": 0.047158535569906235,
+    "time": "2026-10-17T08:50:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN",
+    "imputed": [],
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC013": {
+    "p": 0.029390005555686053,
+    "time": "2026-10-17T08:50:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN+INT",
+    "imputed": [],
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC058": {
+    "p": 0.0387723445892334,
+    "time": "2026-10-17T08:25:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN",
+    "imputed": [],
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC022": {
+    "p": 0.018474310001029472,
+    "time": "2026-10-17T08:45:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN",
+    "imputed": [
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d"
+    ],
+    "simulated": false,
+    "simulation": null
+  },
+  "02HB030": {
+    "p": 0.02364830640605154,
+    "time": "2026-10-17T08:50:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN",
+    "imputed": [],
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC003": {
+    "p": 0.0024389822501689196,
+    "time": "2026-10-17T08:55:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "feature_set": "LEAN",
+    "imputed": [
+      "level_z30"
+    ],
+    "simulated": false,
+    "simulation": null
+  }
+}

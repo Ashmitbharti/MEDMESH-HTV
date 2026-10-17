@@ -31,3 +31,8 @@ def find_input(name: str) -> Path:
         if p.exists():
             return p
     return DATA_DIR / name
+
+REALTIME_DIR = DATA_DIR / "realtime"
+RAIN_DIR = DATA_DIR / "rain"
+SCREEN_FILE = "station_screen.csv"
+FLEET_PCT = 95

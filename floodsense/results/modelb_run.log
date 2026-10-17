@@ -1,0 +1,372 @@
+
+=== STEP 1 (fleet): nearest climate station with >= 90% precipitation coverage per gauge ===
+  02HC033 MIMICO CREEK AT ISLINGTON              -> 6158731 TORONTO PEARSON (6158733 to 2013-06 + 61   9.5 km, coverage 99.7% (2002-01-01..2024-12-31)
+      skipped nearer: 6158411 TORONTO BURNHAMTHORPE 4.1 km 17%
+  02HC030 ETOBICOKE CREEK BELOW QUEEN ELIZABETH  -> 6158731 TORONTO PEARSON (6158733 to 2013-06 + 61  10.3 km, coverage 99.7% (2002-01-01..2023-12-31)
+      skipped nearer: 6158411 TORONTO BURNHAMTHORPE 4.8 km 18%
+  02HC032 EAST HUMBER RIVER AT KING CREEK        -> 615S001 TORONTO NORTH YORK                        18.0 km, coverage 97.1% (2002-10-08..2024-12-31)
+      skipped nearer: 6155680 NOBLETON 1.8 km 5%; 6154150 KING CITY NORTH 7.4 km 23%; 6156162 PA KING CITY 7.5 km 0%; 6159575 WOODBRIDGE 13.3 km 12%; 6157012 RICHMOND HILL 13.5 km 51%; 6154142 KING SMOKE TREE 14.8 km 6%
+  02HC027 BLACK CREEK NEAR WESTON                -> 6158355 TORONTO CITY                               8.4 km, coverage 96.1% (2002-01-01..2024-12-31)
+      skipped nearer: 6158411 TORONTO BURNHAMTHORPE 6.4 km 17%; 6158350 TORONTO 8.4 km 35%
+  02HC005 DON RIVER WEST BRANCH AT YORK MILLS    -> 615S001 TORONTO NORTH YORK                         6.8 km, coverage 97.3% (2000-01-01..2025-12-31)
+      skipped nearer: 6158255 THORNHILL GRANDVIEW 6.8 km 29%
+  02HC024 DON RIVER AT TODMORDEN                 -> 6158355 TORONTO CITY                               3.7 km, coverage 95.9% (2002-01-01..2023-12-31)
+      skipped nearer: 6158751 TORONTO EAST YORK DUSTAN 2.2 km 37%; 6158350 TORONTO 3.7 km 37%; 6158352 TORONTO SOLAR RADIATION 3.7 km 0%
+  02HC013 HIGHLAND CREEK NEAR WEST HILL          -> 6158355 TORONTO CITY                              20.9 km, coverage 97.8% (2005-08-30..2023-12-31)
+      skipped nearer: 6158751 TORONTO EAST YORK DUSTAN 14.9 km 45%; 6158410 TORONTO BUTTONVILLE A 17.0 km 20%; 6158409 TORONTO BUTTONVILLE A 17.0 km 0%; 615HMAK TORONTO BUTTONVILLE A 17.1 km 53%; 6158255 THORNHILL GRANDVIEW 18.3 km 10%
+  02HC058 WEST HIGHLAND CREEK NEAR SCARBOROUGH V -> 6158355 TORONTO CITY                              16.4 km, coverage 97.8% (2005-10-31..2023-12-31)
+      skipped nearer: 6158751 TORONTO EAST YORK DUSTAN 10.5 km 45%; 6158255 THORNHILL GRANDVIEW 15.6 km 9%; 6158410 TORONTO BUTTONVILLE A 16.1 km 20%; 6158409 TORONTO BUTTONVILLE A 16.1 km 0%; 615HMAK TORONTO BUTTONVILLE A 16.3 km 53%
+  02HC022 ROUGE RIVER NEAR MARKHAM               -> 615S001 TORONTO NORTH YORK                        20.7 km, coverage 97.2% (2002-01-01..2024-12-31)
+      skipped nearer: 6158410 TORONTO BUTTONVILLE A 10.8 km 16%; 6158409 TORONTO BUTTONVILLE A 10.8 km 0%; 615HMAK TORONTO BUTTONVILLE A 10.9 km 58%; 6152605 FRENCHMANS BAY 12.9 km 12%; 6158255 THORNHILL GRANDVIEW 16.0 km 24%; 6157012 RICHMOND HILL 17.3 km 52%; 6158751 TORONTO EAST YORK DUSTAN 19.8 km 36%
+  02HB030 COOKSVILLE CREEK NEAR COOKSVILLE       -> 6158731 TORONTO PEARSON (6158733 to 2013-06 + 61   9.5 km, coverage 99.6% (2005-09-19..2024-12-31)
+      skipped nearer: 6158411 TORONTO BURNHAMTHORPE 7.1 km 16%
+  02HC003 HUMBER RIVER AT WESTON                 -> 6158731 TORONTO PEARSON (6158733 to 2013-06 + 61   9.2 km, coverage 99.7% (2002-01-01..2024-12-31)
+      skipped nearer: 6158411 TORONTO BURNHAMTHORPE 7.4 km 17%
+
+=== Model B step 1: hourly rain per gauge (climate-hourly, PRECIP_AMOUNT) ===
+  02HC033 MIMICO CREEK AT ISLINGTON          -> 6158355 TORONTO CITY   9.9 km, 91.3% hours with PRECIP_AMOUNT over 2002-01-01..2024-12-31
+      6158731 TORONTO INTL A 9.5 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2013), np.int64(2016), np.int64(2018), np.int64(2021), np.int64(2024)]
+      6158733 TORONTO LESTER B. PEAR 9.5 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2002), np.int64(2005), np.int64(2008), np.int64(2010), np.int64(2013)]
+  02HC030 ETOBICOKE CREEK BELOW QUEEN ELIZAB -> 6158355 TORONTO CITY  14.5 km, 90.9% hours with PRECIP_AMOUNT over 2002-01-01..2023-12-31
+      6158731 TORONTO INTL A 10.2 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2013), np.int64(2016), np.int64(2018), np.int64(2021), np.int64(2024)]
+      6158733 TORONTO LESTER B. PEAR 10.3 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2002), np.int64(2005), np.int64(2008), np.int64(2010), np.int64(2013)]
+      6158359 TORONTO CITY CENTRE 13.2 km: 56% hours missing
+      6158667 TORONTO CITY CENTRE 13.3 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2006), np.int64(2007), np.int64(2008), np.int64(2009), np.int64(2010)]
+  02HC032 EAST HUMBER RIVER AT KING CREEK    -> RATE: intensity features SKIPPED
+      6154150 KING CITY NORTH 7.4 km: 77% hours missing
+      6156162 PA KING CITY 7.5 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2015), np.int64(2016), np.int64(2017), np.int64(2018)]
+      615HMAK TORONTO BUTTONVILLE A 20.0 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2002), np.int64(2005), np.int64(2008), np.int64(2012), np.int64(2015)]
+      6158409 TORONTO BUTTONVILLE A 20.1 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2016), np.int64(2018), np.int64(2020), np.int64(2021), np.int64(2023)]
+      6158410 TORONTO BUTTONVILLE A 20.1 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2015), np.int64(2016), np.int64(2017), np.int64(2018), np.int64(2019)]
+      stop: next candidate 6158733 TORONTO LESTER B. PEAR is 25.1 km (> 25 km)
+  02HC027 BLACK CREEK NEAR WESTON            -> 6158355 TORONTO CITY   8.4 km, 91.3% hours with PRECIP_AMOUNT over 2002-01-01..2024-12-31
+  02HC005 DON RIVER WEST BRANCH AT YORK MILL -> 6158355 TORONTO CITY   8.2 km, 84.6% hours with PRECIP_AMOUNT over 2000-01-01..2025-12-31
+  02HC024 DON RIVER AT TODMORDEN             -> 6158355 TORONTO CITY   3.7 km, 90.9% hours with PRECIP_AMOUNT over 2002-01-01..2023-12-31
+  02HC013 HIGHLAND CREEK NEAR WEST HILL      -> 6158355 TORONTO CITY  20.9 km, 98.8% hours with PRECIP_AMOUNT over 2005-08-30..2023-12-31
+      6158409 TORONTO BUTTONVILLE A 17.0 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2016), np.int64(2018), np.int64(2020), np.int64(2021), np.int64(2023)]
+      6158410 TORONTO BUTTONVILLE A 17.0 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2015), np.int64(2016), np.int64(2017), np.int64(2018), np.int64(2019)]
+      615HMAK TORONTO BUTTONVILLE A 17.1 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2002), np.int64(2005), np.int64(2008), np.int64(2012), np.int64(2015)]
+  02HC058 WEST HIGHLAND CREEK NEAR SCARBOROU -> 6158355 TORONTO CITY  16.4 km, 98.8% hours with PRECIP_AMOUNT over 2005-10-31..2023-12-31
+      6158409 TORONTO BUTTONVILLE A 16.1 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2016), np.int64(2018), np.int64(2020), np.int64(2021), np.int64(2023)]
+      6158410 TORONTO BUTTONVILLE A 16.1 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2015), np.int64(2016), np.int64(2017), np.int64(2018), np.int64(2019)]
+      615HMAK TORONTO BUTTONVILLE A 16.3 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2002), np.int64(2005), np.int64(2008), np.int64(2012), np.int64(2015)]
+  02HC022 ROUGE RIVER NEAR MARKHAM           -> RATE: intensity features SKIPPED
+      6158409 TORONTO BUTTONVILLE A 10.8 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2016), np.int64(2018), np.int64(2020), np.int64(2021), np.int64(2023)]
+      6158410 TORONTO BUTTONVILLE A 10.8 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2015), np.int64(2016), np.int64(2017), np.int64(2018), np.int64(2019)]
+      615HMAK TORONTO BUTTONVILLE A 10.9 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2002), np.int64(2005), np.int64(2008), np.int64(2012), np.int64(2015)]
+      stop: next candidate 6158355 TORONTO CITY is 25.1 km (> 25 km)
+  02HB030 COOKSVILLE CREEK NEAR COOKSVILLE   -> 6158355 TORONTO CITY  19.8 km, 98.9% hours with PRECIP_AMOUNT over 2005-09-19..2024-12-31
+      6158731 TORONTO INTL A 9.4 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2013), np.int64(2016), np.int64(2018), np.int64(2021), np.int64(2024)]
+      6158733 TORONTO LESTER B. PEAR 9.5 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2002), np.int64(2005), np.int64(2008), np.int64(2010), np.int64(2013)]
+      6158359 TORONTO CITY CENTRE 18.8 km: 45% hours missing
+      6158667 TORONTO CITY CENTRE 18.9 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2006), np.int64(2007), np.int64(2008), np.int64(2009), np.int64(2010)]
+  02HC003 HUMBER RIVER AT WESTON             -> 6158355 TORONTO CITY  10.3 km, 91.3% hours with PRECIP_AMOUNT over 2002-01-01..2024-12-31
+      6158733 TORONTO LESTER B. PEAR 9.2 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2002), np.int64(2005), np.int64(2008), np.int64(2010), np.int64(2013)]
+      6158731 TORONTO INTL A 9.2 km: no PRECIP_AMOUNT in sampled Julys [np.int64(2013), np.int64(2016), np.int64(2018), np.int64(2021), np.int64(2024)]
+
+  Hourly stations used:
+    6158355: 2002-06-04 16:00:00 -> 2025-12-31 23:00:00, 205738 rows, typical step 0 days 01:00:00, 93.8% PRECIP_AMOUNT non-missing overall
+      columns: ['STATION_NAME', 'CLIMATE_IDENTIFIER', 'ID', 'LOCAL_DATE', 'PROVINCE_CODE', 'LOCAL_YEAR', 'LOCAL_MONTH', 'LOCAL_DAY', 'LOCAL_HOUR', 'UTC_DATE', 'UTC_YEAR', 'UTC_MONTH', 'UTC_DAY', 'TEMP', 'TEMP_FLAG', 'DEW_POINT_TEMP', 'DEW_POINT_TEMP_FLAG', 'HUMIDEX', 'HUMIDEX_FLAG', 'PRECIP_AMOUNT', 'PRECIP_AMOUNT_FLAG', 'RELATIVE_HUMIDITY', 'RELATIVE_HUMIDITY_FLAG', 'STATION_PRESSURE', 'STATION_PRESSURE_FLAG', 'VISIBILITY', 'VISIBILITY_FLAG', 'WEATHER_ENG_DESC', 'WEATHER_FRE_DESC', 'WINDCHILL', 'WINDCHILL_FLAG', 'WIND_DIRECTION', 'WIND_DIRECTION_FLAG', 'WIND_SPEED', 'WIND_SPEED_FLAG', 'STN_ID', 'LONGITUDE_DECIMAL_DEGREES', 'LATITUDE_DECIMAL_DEGREES', 'FLAG']
+    6158359: 2010-02-02 00:00:00 -> 2025-12-31 23:00:00, 139212 rows, typical step 0 days 01:00:00, 72.9% PRECIP_AMOUNT non-missing overall
+      columns: ['STATION_NAME', 'CLIMATE_IDENTIFIER', 'ID', 'LOCAL_DATE', 'PROVINCE_CODE', 'LOCAL_YEAR', 'LOCAL_MONTH', 'LOCAL_DAY', 'LOCAL_HOUR', 'UTC_DATE', 'UTC_YEAR', 'UTC_MONTH', 'UTC_DAY', 'TEMP', 'TEMP_FLAG', 'DEW_POINT_TEMP', 'DEW_POINT_TEMP_FLAG', 'HUMIDEX', 'HUMIDEX_FLAG', 'PRECIP_AMOUNT', 'PRECIP_AMOUNT_FLAG', 'RELATIVE_HUMIDITY', 'RELATIVE_HUMIDITY_FLAG', 'STATION_PRESSURE', 'STATION_PRESSURE_FLAG', 'VISIBILITY', 'VISIBILITY_FLAG', 'WEATHER_ENG_DESC', 'WEATHER_FRE_DESC', 'WINDCHILL', 'WINDCHILL_FLAG', 'WIND_DIRECTION', 'WIND_DIRECTION_FLAG', 'WIND_SPEED', 'WIND_SPEED_FLAG', 'STN_ID', 'LONGITUDE_DECIMAL_DEGREES', 'LATITUDE_DECIMAL_DEGREES', 'FLAG']
+    6154150: 2019-09-17 13:00:00 -> 2025-12-31 23:00:00, 54849 rows, typical step 0 days 01:00:00, 99.3% PRECIP_AMOUNT non-missing overall
+      columns: ['STATION_NAME', 'CLIMATE_IDENTIFIER', 'ID', 'LOCAL_DATE', 'PROVINCE_CODE', 'LOCAL_YEAR', 'LOCAL_MONTH', 'LOCAL_DAY', 'LOCAL_HOUR', 'UTC_DATE', 'UTC_YEAR', 'UTC_MONTH', 'UTC_DAY', 'TEMP', 'TEMP_FLAG', 'DEW_POINT_TEMP', 'DEW_POINT_TEMP_FLAG', 'HUMIDEX', 'HUMIDEX_FLAG', 'PRECIP_AMOUNT', 'PRECIP_AMOUNT_FLAG', 'RELATIVE_HUMIDITY', 'RELATIVE_HUMIDITY_FLAG', 'STATION_PRESSURE', 'STATION_PRESSURE_FLAG', 'VISIBILITY', 'VISIBILITY_FLAG', 'WEATHER_ENG_DESC', 'WEATHER_FRE_DESC', 'WINDCHILL', 'WINDCHILL_FLAG', 'WIND_DIRECTION', 'WIND_DIRECTION_FLAG', 'WIND_SPEED', 'WIND_SPEED_FLAG', 'STN_ID', 'LONGITUDE_DECIMAL_DEGREES', 'LATITUDE_DECIMAL_DEGREES', 'FLAG']
+
+=== Model B steps 2-4: RATE features, set comparison, re-tune, thresholds, TEST once ===
+
+  02HC033 MIMICO CREEK AT ISLINGTON | hourly: 6158355 | capacity (max_1h_rain): NOT estimated - no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.19 on 47 days)
+    capacity bins (TRAIN): [0.2-1.3] 980d 41pos 0.04; [1.4-2.4] 346d 36pos 0.10; [2.5-3.3] 181d 30pos 0.17; [3.4-5.6] 185d 39pos 0.21; [5.7-8.3] 89d 22pos 0.25; [8.4-12.7] 47d 8pos 0.17; [13.0-268.4] 47d 9pos 0.19
+    LEAN            14 feat  best logreg CV PR-AUC 0.358 +/- 0.046  val PR-AUC 0.355  val F2 0.442
+    LEAN+INT        19 feat  best lgbm   CV PR-AUC 0.352 +/- 0.042  val PR-AUC 0.321  val F2 0.409
+    LEAN+INT+DRAIN  24 feat  best logreg CV PR-AUC 0.343 +/- 0.060  val PR-AUC 0.342  val F2 0.444
+    DECISION: LEAN - keep LEAN: best alternative LEAN+INT - CV gain -0.006 is not more than one fold std (0.046); val PR-AUC would drop (0.321 < 0.355)
+    final: logreg on LEAN; WATCH 0.0479, WARNING 0.3477 (lowest cut-off with >= 50% val precision); TEST PR-AUC 0.367, F2 0.474, events 39/45 (LEAN before: PR-AUC 0.367, F2 0.474, events 39/45) [46s]
+
+  02HC030 ETOBICOKE CREEK BELOW QUEEN ELIZABETH HI | hourly: 6158355 | capacity (max_1h_rain): NOT estimated - no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.10 on 48 days)
+    capacity bins (TRAIN): [0.2-1.2] 946d 43pos 0.05; [1.3-2.4] 396d 40pos 0.10; [2.5-3.3] 171d 28pos 0.16; [3.4-5.5] 188d 48pos 0.26; [5.6-8.1] 92d 25pos 0.27; [8.2-11.9] 45d 9pos 0.20; [12.4-268.4] 48d 5pos 0.10
+    LEAN            14 feat  best lgbm   CV PR-AUC 0.435 +/- 0.042  val PR-AUC 0.447  val F2 0.517
+    LEAN+INT        19 feat  best lgbm   CV PR-AUC 0.433 +/- 0.057  val PR-AUC 0.444  val F2 0.518
+    LEAN+INT+DRAIN  24 feat  best lgbm   CV PR-AUC 0.446 +/- 0.045  val PR-AUC 0.413  val F2 0.508
+    DECISION: LEAN - keep LEAN: best alternative LEAN+INT+DRAIN - CV gain +0.012 is not more than one fold std (0.045); val PR-AUC would drop (0.413 < 0.447)
+    final: lgbm on LEAN; WATCH 0.0758, WARNING 0.2945 (lowest cut-off with >= 50% val precision); TEST PR-AUC 0.346, F2 0.480, events 24/32 (LEAN before: PR-AUC 0.346, F2 0.480, events 24/32) [39s]
+
+  02HC032 EAST HUMBER RIVER AT KING CREEK | hourly: SKIPPED | capacity (rain_today): 30.40 mm
+    capacity bins (TRAIN): [0.2-2.6] 1104d 41pos 0.04; [2.8-6.0] 430d 29pos 0.07; [6.1-9.4] 213d 18pos 0.08; [9.6-16.2] 222d 35pos 0.16; [16.4-22.8] 105d 16pos 0.15; [23.0-30.0] 57d 17pos 0.30; [30.4-140.6] 53d 16pos 0.30
+    LEAN            14 feat  best logreg CV PR-AUC 0.787 +/- 0.088  val PR-AUC 0.726  val F2 0.751
+    LEAN+INT+DRAIN  19 feat  best logreg CV PR-AUC 0.786 +/- 0.088  val PR-AUC 0.722  val F2 0.751
+    RATE            22 feat  best lgbm   CV PR-AUC 0.781 +/- 0.107  val PR-AUC 0.720  val F2 0.771
+    DECISION: LEAN - keep LEAN: best alternative LEAN+INT+DRAIN - CV gain -0.001 is not more than one fold std (0.088); val PR-AUC would drop (0.722 < 0.726)
+    final: xgb on LEAN; WATCH 0.0825, WARNING 0.1388 (lowest cut-off with >= 50% val precision); TEST PR-AUC 0.772, F2 0.709, events 15/17 (LEAN before: PR-AUC 0.772, F2 0.709, events 15/17) [33s]
+
+  02HC027 BLACK CREEK NEAR WESTON | hourly: 6158355 | capacity (max_1h_rain): NOT estimated - no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.24 on 50 days)
+    capacity bins (TRAIN): [0.2-1.2] 1019d 42pos 0.04; [1.3-2.3] 392d 39pos 0.10; [2.4-3.3] 208d 34pos 0.16; [3.4-5.5] 195d 45pos 0.23; [5.6-8.1] 97d 25pos 0.26; [8.2-12.4] 49d 11pos 0.22; [12.6-268.4] 50d 12pos 0.24
+    LEAN            14 feat  best lgbm   CV PR-AUC 0.357 +/- 0.056  val PR-AUC 0.262  val F2 0.368
+    LEAN+INT        19 feat  best lgbm   CV PR-AUC 0.384 +/- 0.039  val PR-AUC 0.243  val F2 0.370
+    LEAN+INT+DRAIN  24 feat  best lgbm   CV PR-AUC 0.384 +/- 0.058  val PR-AUC 0.324  val F2 0.398
+    DECISION: LEAN - keep LEAN: best alternative LEAN+INT - CV gain +0.028 is not more than one fold std (0.056); val PR-AUC would drop (0.243 < 0.262)
+    final: xgb on LEAN; WATCH 0.0744, WARNING 0.4269 (lowest cut-off with >= 50% val precision); TEST PR-AUC 0.414, F2 0.527, events 38/48 (LEAN before: PR-AUC 0.414, F2 0.527, events 38/48) [39s]
+
+  02HC005 DON RIVER WEST BRANCH AT YORK MILLS | hourly: 6158355 | capacity (max_1h_rain): 13.00 mm
+    capacity bins (TRAIN): [0.2-1.2] 993d 57pos 0.06; [1.3-2.2] 330d 22pos 0.07; [2.3-3.2] 203d 19pos 0.09; [3.3-5.5] 180d 24pos 0.13; [5.6-8.1] 89d 13pos 0.15; [8.2-12.7] 47d 6pos 0.13; [13.0-268.4] 48d 15pos 0.31
+    LEAN            14 feat  best logreg CV PR-AUC 0.476 +/- 0.085  val PR-AUC 0.507  val F2 0.602
+    LEAN+INT        19 feat  best logreg CV PR-AUC 0.468 +/- 0.111  val PR-AUC 0.499  val F2 0.599
+    LEAN+INT+DRAIN  24 feat  best logreg CV PR-AUC 0.460 +/- 0.109  val PR-AUC 0.501  val F2 0.596
+    RATE            27 feat  best logreg CV PR-AUC 0.460 +/- 0.105  val PR-AUC 0.497  val F2 0.592
+    DECISION: LEAN - keep LEAN: best alternative LEAN+INT - CV gain -0.007 is not more than one fold std (0.111); val PR-AUC would drop (0.499 < 0.507)
+    final: logreg on LEAN; WATCH 0.1133, WARNING 0.3543 (lowest cut-off with >= 50% val precision); TEST PR-AUC 0.601, F2 0.690, events 30/33 (LEAN before: PR-AUC 0.601, F2 0.690, events 30/33) [34s]
+
+  02HC024 DON RIVER AT TODMORDEN | hourly: 6158355 | capacity (max_1h_rain): NOT estimated - no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.25 on 48 days)
+    capacity bins (TRAIN): [0.2-1.2] 952d 40pos 0.04; [1.3-2.4] 398d 38pos 0.10; [2.5-3.3] 173d 27pos 0.16; [3.4-5.5] 187d 41pos 0.22; [5.6-8.2] 92d 22pos 0.24; [8.3-12.4] 47d 9pos 0.19; [12.6-268.4] 48d 12pos 0.25
+    LEAN            14 feat  best lgbm   CV PR-AUC 0.350 +/- 0.031  val PR-AUC 0.325  val F2 0.463
+    LEAN+INT        19 feat  best lgbm   CV PR-AUC 0.350 +/- 0.034  val PR-AUC 0.370  val F2 0.458
+    LEAN+INT+DRAIN  24 feat  best logreg CV PR-AUC 0.328 +/- 0.118  val PR-AUC 0.372  val F2 0.441
+    DECISION: LEAN - keep LEAN: best alternative LEAN+INT - CV gain -0.000 is not more than one fold std (0.034)
+    final: xgb on LEAN; WATCH 0.1346, WARNING 0.3321 (lowest cut-off with >= 50% val precision); TEST PR-AUC 0.216, F2 0.388, events 16/32 (LEAN before: PR-AUC 0.216, F2 0.388, events 16/32) [39s]
+
+  02HC013 HIGHLAND CREEK NEAR WEST HILL | hourly: 6158355 | capacity (max_1h_rain): NOT estimated - no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.07 on 45 days)
+    capacity bins (TRAIN): [0.2-1.2] 907d 41pos 0.05; [1.3-2.3] 342d 28pos 0.08; [2.4-3.3] 177d 26pos 0.15; [3.4-5.7] 180d 36pos 0.20; [5.8-8.2] 86d 13pos 0.15; [8.3-13.0] 45d 5pos 0.11; [13.3-268.4] 45d 3pos 0.07
+    LEAN            14 feat  best logreg CV PR-AUC 0.225 +/- 0.023  val PR-AUC 0.185  val F2 0.322
+    LEAN+INT        19 feat  best logreg CV PR-AUC 0.294 +/- 0.044  val PR-AUC 0.221  val F2 0.361
+    LEAN+INT+DRAIN  24 feat  best logreg CV PR-AUC 0.279 +/- 0.045  val PR-AUC 0.257  val F2 0.377
+    DECISION: LEAN+INT - LEAN+INT CV PR-AUC 0.294 vs LEAN 0.225 (+0.069 > fold std 0.044) and val PR-AUC 0.221 >= 0.185
+    final: lgbm on LEAN+INT; WATCH 0.0715, WARNING 0.2845 (lowest cut-off with >= 50% val precision); TEST PR-AUC 0.237, F2 0.400, events 20/31 (LEAN before: PR-AUC 0.203, F2 0.375, events 23/31) [33s]
+
+  02HC058 WEST HIGHLAND CREEK NEAR SCARBOROUGH VIL | hourly: 6158355 | capacity (max_1h_rain): NOT estimated - no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.07 on 43 days)
+    capacity bins (TRAIN): [0.2-1.2] 900d 39pos 0.04; [1.3-2.3] 323d 27pos 0.08; [2.4-3.3] 169d 28pos 0.17; [3.4-5.8] 170d 32pos 0.19; [5.9-8.5] 82d 14pos 0.17; [8.6-13.5] 44d 5pos 0.11; [13.6-190.2] 43d 3pos 0.07
+    LEAN            14 feat  best logreg CV PR-AUC 0.191 +/- 0.073  val PR-AUC 0.163  val F2 0.307
+    LEAN+INT        19 feat  best logreg CV PR-AUC 0.248 +/- 0.069  val PR-AUC 0.199  val F2 0.338
+    LEAN+INT+DRAIN  24 feat  best logreg CV PR-AUC 0.242 +/- 0.079  val PR-AUC 0.213  val F2 0.324
+    DECISION: LEAN - keep LEAN: best alternative LEAN+INT - CV gain +0.057 is not more than one fold std (0.073)
+    final: xgb on LEAN; WATCH 0.0953, WARNING 0.2717 (lowest cut-off with >= 50% val precision); TEST PR-AUC 0.162, F2 0.338, events 15/28 (LEAN before: PR-AUC 0.162, F2 0.338, events 15/28) [32s]
+
+  02HC022 ROUGE RIVER NEAR MARKHAM | hourly: SKIPPED | capacity (rain_today): 16.00 mm
+    capacity bins (TRAIN): [0.2-2.5] 1226d 33pos 0.03; [2.6-5.8] 490d 29pos 0.06; [5.9-9.2] 248d 20pos 0.08; [9.3-15.8] 246d 55pos 0.22; [16.0-22.8] 119d 40pos 0.34; [23.0-29.6] 61d 30pos 0.49; [30.0-140.6] 62d 37pos 0.60
+    LEAN            14 feat  best logreg CV PR-AUC 0.687 +/- 0.051  val PR-AUC 0.655  val F2 0.725
+    LEAN+INT+DRAIN  19 feat  best logreg CV PR-AUC 0.671 +/- 0.061  val PR-AUC 0.644  val F2 0.690
+    RATE            22 feat  best logreg CV PR-AUC 0.675 +/- 0.058  val PR-AUC 0.636  val F2 0.663
+    DECISION: LEAN - keep LEAN: best alternative RATE - CV gain -0.012 is not more than one fold std (0.058); val PR-AUC would drop (0.636 < 0.655)
+    final: logreg on LEAN; WATCH 0.7479, WARNING 0.8236 (lowest cut-off with >= 50% val precision); TEST PR-AUC 0.635, F2 0.708, events 31/37 (LEAN before: PR-AUC 0.635, F2 0.708, events 31/37) [35s]
+
+  02HB030 COOKSVILLE CREEK NEAR COOKSVILLE | hourly: 6158355 | capacity (max_1h_rain): NOT estimated - no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.11 on 27 days)
+    capacity bins (TRAIN): [0.3-1.3] 547d 22pos 0.04; [1.4-2.4] 199d 19pos 0.10; [2.5-3.3] 101d 15pos 0.15; [3.4-5.6] 100d 21pos 0.21; [5.7-7.9] 52d 5pos 0.10; [8.0-11.3] 26d 2pos 0.08; [11.9-190.2] 27d 3pos 0.11
+    LEAN            14 feat  best lgbm   CV PR-AUC 0.205 +/- 0.095  val PR-AUC 0.094  val F2 0.278
+    LEAN+INT        19 feat  best lgbm   CV PR-AUC 0.196 +/- 0.087  val PR-AUC 0.026  val F2 0.139
+    LEAN+INT+DRAIN  24 feat  best lgbm   CV PR-AUC 0.181 +/- 0.083  val PR-AUC 0.039  val F2 0.175
+    DECISION: LEAN - keep LEAN: best alternative LEAN+INT - CV gain -0.009 is not more than one fold std (0.095); val PR-AUC would drop (0.026 < 0.094)
+    final: logreg on LEAN; WATCH 0.2153, WARNING 0.2153 (no cut-off reached 50% val precision -> F0.5-optimal); TEST PR-AUC 0.036, F2 0.000, events 0/2 (LEAN before: PR-AUC 0.036, F2 0.000, events 0/2) [24s]
+
+  02HC003 HUMBER RIVER AT WESTON | hourly: 6158355 | capacity (max_1h_rain): NOT estimated - no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.10 on 50 days)
+    capacity bins (TRAIN): [0.2-1.2] 1002d 60pos 0.06; [1.3-2.3] 388d 34pos 0.09; [2.4-3.3] 204d 30pos 0.15; [3.4-5.5] 189d 41pos 0.22; [5.6-8.1] 96d 16pos 0.17; [8.2-12.4] 48d 6pos 0.12; [12.6-268.4] 50d 5pos 0.10
+    LEAN            14 feat  best logreg CV PR-AUC 0.711 +/- 0.081  val PR-AUC 0.716  val F2 0.719
+    LEAN+INT        19 feat  best logreg CV PR-AUC 0.709 +/- 0.065  val PR-AUC 0.715  val F2 0.725
+    LEAN+INT+DRAIN  24 feat  best logreg CV PR-AUC 0.713 +/- 0.050  val PR-AUC 0.698  val F2 0.733
+    DECISION: LEAN - keep LEAN: best alternative LEAN+INT+DRAIN - CV gain +0.002 is not more than one fold std (0.081); val PR-AUC would drop (0.698 < 0.716)
+    final: xgb on LEAN; WATCH 0.1371, WARNING 0.1735 (lowest cut-off with >= 50% val precision); TEST PR-AUC 0.710, F2 0.694, events 26/32 (LEAN before: PR-AUC 0.710, F2 0.694, events 26/32) [35s]
+
+=== Model B results on TEST (cut-offs fixed on validation) vs the previous LEAN fleet ===
+station  usable feature_set  model  test_pos_days  precision  recall    f2  pr_auc  cv_pr_auc  cv_std events day_before  persist_f2 persist_events lean_model  lean_f2  lean_pr_auc lean_events
+02HC033    True        LEAN logreg             59      0.197   0.729 0.474   0.367      0.358   0.046  39/45      31/45       0.136          13/45     logreg    0.474        0.367       39/45
+02HC030    True        LEAN   lgbm             41      0.231   0.659 0.480   0.346      0.464   0.061  24/32      19/32       0.146           8/32       lgbm    0.480        0.346       24/32
+02HC032    True        LEAN    xgb             45      0.486   0.800 0.709   0.772      0.803   0.111  15/17      11/17       0.556          10/17        xgb    0.709        0.772       15/17
+02HC027    True        LEAN    xgb             65      0.246   0.738 0.527   0.414      0.400   0.061  38/48      34/48       0.215          15/48        xgb    0.527        0.414       38/48
+02HC005    True        LEAN logreg             73      0.491   0.767 0.690   0.601      0.476   0.085  30/33      19/33       0.441          21/33     logreg    0.690        0.601       30/33
+02HC024    True        LEAN    xgb             37      0.214   0.486 0.388   0.216      0.354   0.063  16/32      13/32       0.135           3/32        xgb    0.388        0.216       16/32
+02HC013    True    LEAN+INT   lgbm             34      0.175   0.588 0.400   0.237      0.260   0.063  20/31      18/31       0.059           3/31        xgb    0.375        0.203       23/31
+02HC058    True        LEAN    xgb             34      0.158   0.471 0.338   0.162      0.219   0.060  15/28      12/28       0.147           5/28        xgb    0.338        0.162       15/28
+02HC022    True        LEAN logreg             60      0.511   0.783 0.708   0.635      0.689   0.054  31/37      24/37       0.385          16/37     logreg    0.708        0.635       31/37
+02HB030   False        LEAN logreg              2      0.000   0.000 0.000   0.036      0.199   0.039    0/2        0/2       0.000            0/2     logreg    0.000        0.036         0/2
+02HC003    True        LEAN    xgb             63      0.485   0.778 0.694   0.710      0.690   0.132  26/32      18/32       0.462          17/32        xgb    0.694        0.710       26/32
+  switched away from LEAN at 1/11 gauges: ['02HC013']
+  NOTE: test splits hold few events; differences of a few hundredths are within noise (see cv_std).
+
+=== Rain-rate ablation: same model and params, with vs without the intensity features ===
+station  model base_set with_intensity_cv with_intensity_cv_std with_intensity_val with_intensity_test without_intensity_cv without_intensity_cv_std without_intensity_val without_intensity_test                              note
+02HC033 logreg     LEAN             0.345                  0.06              0.344               0.374                0.358                    0.046                 0.355                  0.367                                  
+02HC030   lgbm     LEAN             0.467                 0.063              0.463               0.358                0.464                    0.061                 0.458                  0.346                                  
+02HC032    xgb     LEAN                                                                                                                                                                           no hourly rain: intensity SKIPPED
+02HC027    xgb     LEAN             0.412                 0.056              0.317               0.456                  0.4                    0.061                 0.306                  0.414                                  
+02HC005 logreg     LEAN             0.468                 0.111              0.499                 0.6                0.476                    0.085                 0.507                  0.601                                  
+02HC024    xgb     LEAN             0.353                 0.067              0.386               0.204                0.354                    0.063                 0.385                  0.216                                  
+02HC013   lgbm LEAN+INT              0.26                 0.063              0.281               0.237                0.239                    0.049                 0.211                  0.192                                  
+02HC058    xgb     LEAN             0.224                 0.073               0.23               0.197                0.219                     0.06                 0.226                  0.162                                  
+02HC022 logreg     LEAN                                                                                                                                                                           no hourly rain: intensity SKIPPED
+02HB030 logreg     LEAN             0.192                  0.03              0.069               0.034                0.199                    0.039                 0.084                  0.036                                  
+02HC003    xgb     LEAN             0.678                 0.133              0.762               0.692                 0.69                    0.132                 0.769                   0.71                                  
+
+=== Top new-feature importances in each final model (share of total) ===
+station
+02HC013    rain_total_day=0.084, intensity_ratio=0.039
+
+=== Logistic regression (largest set) standardised coefficients of the new features ===
+feature  antecedent_14d  antecedent_7d  disch_chg_3d  headroom  hours_with_rain  intensity_ratio  max_1h_rain  max_3h_rain  rain_minus_drain  rain_over_drain  rain_total_day  recession  saturation_adjusted_rain
+station                                                                                                                                                                                                           
+02HB030          -0.111         -0.119        -0.167    -0.307            0.094            0.116       -0.033        0.005               NaN              NaN          -0.137      0.033                       NaN
+02HC003          -0.001         -0.150         0.047    -1.058            0.205            0.100       -0.163       -0.369               NaN              NaN          -0.085      0.023                       NaN
+02HC005          -0.006         -0.052        -0.130    -0.785           -0.011            0.189       -0.083        0.180            -0.083           -0.083          -0.148     -0.095                     0.185
+02HC013           0.182         -0.173        -0.041     2.368           -0.000            0.140       -1.703        0.440               NaN              NaN          -3.253      0.125                       NaN
+02HC022          -0.029         -0.239         0.055    -0.841              NaN              NaN          NaN          NaN             0.530            0.530             NaN      0.120                     0.455
+02HC024           0.060          0.070        -0.069     0.111            0.338            0.221       -0.137        0.083               NaN              NaN          -1.061      0.059                       NaN
+02HC027          -0.022         -0.054         0.072    -0.510            0.311            0.237       -0.514        0.150               NaN              NaN          -0.908      0.027                       NaN
+02HC030          -0.025         -0.104         0.125     0.221            0.281            0.227       -0.588        0.380               NaN              NaN          -0.529     -0.018                       NaN
+02HC032           0.125         -0.308        -0.059    -0.966              NaN              NaN          NaN          NaN             0.303            0.303             NaN     -0.033                     0.066
+02HC033           0.071         -0.195         0.204    -0.722            0.151            0.146       -0.152        0.069               NaN              NaN          -0.277      0.047                       NaN
+02HC058           0.172         -0.251        -0.209     0.741            0.136            0.182       -0.833        0.360               NaN              NaN          -1.789     -0.085                       NaN
+
+=== Known-flood check (alert level = WATCH/WARNING from the station's own model) ===
+station       date level_m high_that_day       issued_day_before           issued_on_day split_of_day                                    status
+02HC033 2013-07-08   6.543          True WARNING (p=0.46, train) WARNING (p=1.00, train)        train                TRAIN split - not evidence
+02HC033 2024-07-16   6.419          True  WARNING (p=0.77, test)  WARNING (p=0.99, test)         test                                          
+02HC033 2024-08-17   6.221          True     NONE (p=0.02, test)  WARNING (p=1.00, test)         test                                          
+02HC030 2013-07-08   3.911          True WARNING (p=0.33, train) WARNING (p=0.72, train)        train                TRAIN split - not evidence
+02HC030 2024-07-16                                                                                    not covered (data 2000-01-01..2023-12-31)
+02HC030 2024-08-17                                                                                    not covered (data 2000-01-01..2023-12-31)
+02HC032 2013-07-08   2.491          True           no usable row WARNING (p=0.82, train)        train                TRAIN split - not evidence
+02HC032 2024-07-16   1.506         False     NONE (p=0.03, test)  WARNING (p=0.35, test)         test                                          
+02HC032 2024-08-17   1.362         False     NONE (p=0.00, test)     NONE (p=0.06, test)         test                                          
+02HC027 2013-07-08   1.426          True WARNING (p=0.57, train) WARNING (p=0.61, train)        train                TRAIN split - not evidence
+02HC027 2024-07-16   1.369          True  WARNING (p=0.53, test)  WARNING (p=0.69, test)         test                                          
+02HC027 2024-08-17   0.855          True     NONE (p=0.02, test)     NONE (p=0.05, test)         test                                          
+02HC005 2013-07-08   1.044          True   WATCH (p=0.17, train) WARNING (p=0.95, train)        train                TRAIN split - not evidence
+02HC005 2024-07-16   1.192          True     NONE (p=0.08, test)  WARNING (p=0.98, test)         test                                          
+02HC005 2024-08-17   0.973          True     NONE (p=0.00, test)  WARNING (p=0.99, test)         test                                          
+02HC024 2013-07-08  13.026          True   WATCH (p=0.31, train) WARNING (p=0.58, train)        train                TRAIN split - not evidence
+02HC024 2024-07-16                                                                                    not covered (data 2000-01-01..2023-12-31)
+02HC024 2024-08-17                                                                                    not covered (data 2000-01-01..2023-12-31)
+02HC013 2013-07-08   6.228         False   WATCH (p=0.12, train)   WATCH (p=0.16, train)        train                TRAIN split - not evidence
+02HC013 2024-07-16                                                                                    not covered (data 2005-08-01..2023-12-31)
+02HC013 2024-08-17                                                                                    not covered (data 2005-08-01..2023-12-31)
+02HC058 2013-07-08   2.603         False   WATCH (p=0.24, train)   WATCH (p=0.25, train)        train                TRAIN split - not evidence
+02HC058 2024-07-16                                                                                    not covered (data 2005-10-01..2023-12-31)
+02HC058 2024-08-17                                                                                    not covered (data 2005-10-01..2023-12-31)
+02HC022 2013-07-08   3.447         False    NONE (p=0.05, train) WARNING (p=1.00, train)        train                TRAIN split - not evidence
+02HC022 2024-07-16   3.847          True     NONE (p=0.27, test)  WARNING (p=1.00, test)         test                                          
+02HC022 2024-08-17   3.672         False     NONE (p=0.02, test)  WARNING (p=1.00, test)         test                                          
+02HB030 2013-07-08   2.461          True   WARNING (p=0.22, val)   WARNING (p=0.96, val)          val                                          
+02HB030 2024-07-16   2.588          True     NONE (p=0.11, test)  WARNING (p=0.82, test)         test                                          
+02HB030 2024-08-17   2.426          True     NONE (p=0.02, test)  WARNING (p=0.94, test)         test                                          
+02HC003 2013-07-08   2.935          True   WATCH (p=0.17, train) WARNING (p=0.83, train)        train                TRAIN split - not evidence
+02HC003 2024-07-16    2.99          True  WARNING (p=0.70, test)  WARNING (p=0.83, test)         test                                          
+02HC003 2024-08-17   2.687          True     NONE (p=0.00, test)  WARNING (p=0.54, test)         test                                          
+  'issued_day_before' = forecast made on D-1 for day D; 'issued_on_day' = forecast made on D for D+1.
+  Days in a gauge's TRAIN split were fitted on and do not count as evidence.
+
+  excluded from the leave-one-out test: 02HB030 (too few high-water events to validate: val 3, test 2 positive days (need >= 10 in each); run `python -m src.diagnose 02HB030`)
+
+=== STEP 4 (fleet): leave-one-gauge-out test, 10 usable gauges, TEST dates only ===
+
+  ----- R = 10 km -----
+  PR-AUC on G's real TEST labels (all usable gauges):
+                                              nearest_gauge nearest_km n_neighbours test_days test_pos    raw   norm    own mean_all mean_R nearest
+02HC033                                             02HC027        3.3            3       824       33  0.254  0.268  0.262    0.223  0.204   0.272
+02HC030                                             02HC033        5.8            2      1186       41  0.301  0.294  0.346    0.359   0.34   0.287
+02HC032  no usable neighbour within 10 km (nearest 23.9 km)                                                                                        
+02HC027                                             02HC003        3.1            3       891       38  0.185  0.299   0.35    0.313  0.274   0.147
+02HC005                                             02HC024        6.8            1       254       20  0.489  0.489  0.553    0.477  0.489   0.489
+02HC024                                             02HC005        6.8            1      1128       37  0.182  0.182  0.217    0.288  0.182   0.182
+02HC013                                             02HC058        4.4            2       964       34  0.241  0.188  0.237    0.197  0.259   0.182
+02HC058                                             02HC013        4.4            1       936       34  0.191  0.191  0.165    0.187  0.191   0.191
+02HC022                                             02HC013        9.5            1       860       35  0.375  0.375  0.521    0.591  0.375   0.375
+02HC003                                             02HC027        3.1            2      1239       63  0.459   0.47   0.71    0.707  0.473   0.438
+  precision/recall + events at cut-offs chosen on G's VALIDATION window:
+method               raw             norm              own           norm cut from            raw cut from
+gauge                                                                                                     
+02HC003  0.29/0.65 30/32  0.40/0.52 26/32  0.49/0.78 26/32             F2 on G val             F2 on G val
+02HC005   0.40/0.50 8/11   0.40/0.50 8/11  0.48/0.80 11/11             F2 on G val             F2 on G val
+02HC013  0.16/0.76 24/31  0.14/0.68 22/31  0.18/0.59 20/31             F2 on G val             F2 on G val
+02HC022  0.33/0.49 15/24  0.33/0.49 15/24  0.42/0.71 18/24             F2 on G val             F2 on G val
+02HC024  0.14/0.41 13/32  0.14/0.41 13/32  0.21/0.49 16/32  deploy (val too small)  deploy (val too small)
+02HC027  0.21/0.45 18/32  0.27/0.45 17/32  0.21/0.76 25/32             F2 on G val             F2 on G val
+02HC030  0.15/0.80 29/32  0.16/0.80 29/32  0.23/0.66 24/32             F2 on G val             F2 on G val
+02HC033  0.18/0.55 19/28  0.19/0.58 19/28  0.17/0.76 24/28             F2 on G val             F2 on G val
+02HC058  0.16/0.53 17/28  0.16/0.53 17/28  0.16/0.47 15/28             F2 on G val             F2 on G val
+  mean over 9 gauges:  raw PR-AUC 0.298 P 0.22 R 0.57  norm PR-AUC 0.306 P 0.24 R 0.55  own PR-AUC 0.374 P 0.28 R 0.67  mean_all PR-AUC 0.371 P 0.28 R 0.74  mean_R PR-AUC 0.310 P 0.24 R 0.56  nearest PR-AUC 0.285 P 0.22 R 0.52
+  norm - raw PR-AUC: +0.009 on the full test windows; per chronological fold +0.004, +0.014, +0.001, +0.013, +0.017 -> fold mean +0.010, fold std 0.007
+
+  ----- R = 15 km -----
+  PR-AUC on G's real TEST labels (all usable gauges):
+                                              nearest_gauge nearest_km n_neighbours test_days test_pos    raw   norm    own mean_all mean_R nearest
+02HC033                                             02HC027        3.3            5       798       33  0.258  0.269  0.264    0.224  0.197   0.273
+02HC030                                             02HC033        5.8            3      1186       41  0.309  0.295  0.346    0.359  0.314   0.287
+02HC032  no usable neighbour within 15 km (nearest 23.9 km)                                                                                        
+02HC027                                             02HC003        3.1            5       865       38  0.187  0.298  0.351    0.314  0.274   0.147
+02HC005                                             02HC024        6.8            5       254       20  0.509  0.494  0.553    0.477  0.502   0.489
+02HC024                                             02HC005        6.8            5      1128       37  0.204  0.234  0.217    0.288  0.269   0.182
+02HC013                                             02HC058        4.4            2       964       34  0.241  0.188  0.237    0.197  0.259   0.182
+02HC058                                             02HC013        4.4            4       910       34  0.225    0.2  0.167    0.188  0.223   0.194
+02HC022                                             02HC013        9.5            2       860       35  0.387  0.375  0.521    0.591  0.363   0.375
+02HC003                                             02HC027        3.1            5       847       39  0.379  0.377  0.687     0.57   0.45   0.362
+  precision/recall + events at cut-offs chosen on G's VALIDATION window:
+method               raw             norm              own           norm cut from            raw cut from
+gauge                                                                                                     
+02HC003  0.20/0.74 19/19  0.20/0.74 19/19  0.45/0.74 14/19  deploy (val too small)  deploy (val too small)
+02HC005   0.47/0.40 8/11   0.35/0.40 8/11  0.48/0.80 11/11             F2 on G val             F2 on G val
+02HC013  0.16/0.76 24/31  0.14/0.68 22/31  0.18/0.59 20/31             F2 on G val             F2 on G val
+02HC022  0.34/0.51 16/24  0.34/0.51 15/24  0.42/0.71 18/24             F2 on G val             F2 on G val
+02HC024  0.15/0.57 19/32  0.15/0.68 23/32  0.21/0.49 16/32  deploy (val too small)  deploy (val too small)
+02HC027  0.20/0.79 27/32  0.19/0.68 24/32  0.21/0.76 25/32             F2 on G val             F2 on G val
+02HC030  0.23/0.54 22/32  0.16/0.83 29/32  0.23/0.66 24/32             F2 on G val             F2 on G val
+02HC033  0.27/0.36 13/28  0.29/0.36 13/28  0.17/0.76 24/28             F2 on G val             F2 on G val
+02HC058  0.14/0.82 23/28  0.16/0.56 17/28  0.16/0.47 15/28  deploy (val too small)  deploy (val too small)
+  mean over 9 gauges:  raw PR-AUC 0.300 P 0.24 R 0.61  norm PR-AUC 0.303 P 0.22 R 0.61  own PR-AUC 0.371 P 0.28 R 0.66  mean_all PR-AUC 0.357 P 0.25 R 0.73  mean_R PR-AUC 0.317 P 0.23 R 0.60  nearest PR-AUC 0.277 P 0.21 R 0.58
+  norm - raw PR-AUC: +0.003 on the full test windows; per chronological fold -0.004, +0.015, -0.012, +0.016, +0.005 -> fold mean +0.004, fold std 0.012
+
+  ----- R = 25 km -----
+  PR-AUC on G's real TEST labels (all usable gauges):
+        nearest_gauge nearest_km n_neighbours test_days test_pos    raw   norm    own mean_all mean_R nearest
+02HC033       02HC027        3.3            5       798       33  0.258  0.269  0.264    0.224  0.197   0.273
+02HC030       02HC033        5.8            5      1096       41  0.308  0.295   0.35     0.36  0.315   0.289
+02HC032       02HC003       23.9            2      1073       45   0.59  0.538  0.772    0.443   0.44   0.651
+02HC027       02HC003        3.1            6       865       38  0.187  0.298  0.351    0.314  0.294   0.147
+02HC005       02HC024        6.8            9       254       20  0.497  0.487  0.553    0.477  0.477   0.489
+02HC024       02HC005        6.8            8      1091       37  0.219  0.239  0.224    0.294  0.303   0.185
+02HC013       02HC058        4.4            4       938       34  0.232  0.188   0.24    0.198  0.222   0.184
+02HC058       02HC013        4.4            6       910       34  0.223    0.2  0.167    0.188   0.19   0.194
+02HC022       02HC013        9.5            4       834       35  0.403  0.384  0.521    0.592   0.42    0.38
+02HC003       02HC027        3.1            7       847       39   0.38   0.38  0.687     0.57   0.56   0.362
+  precision/recall + events at cut-offs chosen on G's VALIDATION window:
+method               raw             norm              own           norm cut from            raw cut from
+gauge                                                                                                     
+02HC003  0.20/0.74 19/19  0.21/0.77 19/19  0.45/0.74 14/19  deploy (val too small)  deploy (val too small)
+02HC005   0.50/0.40 8/11   0.44/0.40 8/11  0.48/0.80 11/11             F2 on G val             F2 on G val
+02HC013  0.10/0.91 28/31  0.08/0.91 28/31  0.18/0.59 20/31             F2 on G val             F2 on G val
+02HC022  0.19/0.80 21/24  0.22/0.77 20/24  0.42/0.71 18/24  deploy (val too small)  deploy (val too small)
+02HC024  0.15/0.62 21/32  0.16/0.68 23/32  0.22/0.49 16/32  deploy (val too small)  deploy (val too small)
+02HC027  0.19/0.79 27/32  0.19/0.68 24/32  0.21/0.76 25/32             F2 on G val             F2 on G val
+02HC030  0.15/0.85 29/32  0.17/0.83 29/32  0.24/0.66 24/32  deploy (val too small)  deploy (val too small)
+02HC032  0.26/0.82 16/17  0.25/0.82 16/17  0.49/0.80 15/17  deploy (val too small)  deploy (val too small)
+02HC033  0.27/0.36 13/28  0.29/0.36 13/28  0.17/0.76 24/28             F2 on G val             F2 on G val
+02HC058  0.14/0.82 23/28  0.16/0.56 17/28  0.16/0.47 15/28  deploy (val too small)  deploy (val too small)
+  mean over 10 gauges:  raw PR-AUC 0.330 P 0.22 R 0.71  norm PR-AUC 0.328 P 0.22 R 0.68  own PR-AUC 0.413 P 0.30 R 0.68  mean_all PR-AUC 0.366 P 0.22 R 0.81  mean_R PR-AUC 0.342 P 0.21 R 0.75  nearest PR-AUC 0.315 P 0.22 R 0.64
+  norm - raw PR-AUC: -0.002 on the full test windows; per chronological fold -0.004, +0.009, -0.026, +0.014, +0.001 -> fold mean -0.001, fold std 0.016
+
+  ===== raw vs normalised combiner =====
+  R=10 km: norm - raw PR-AUC +0.009 vs fold std 0.007 -> normalised better beyond noise; recall raw 0.57 vs norm 0.55, precision raw 0.22 vs norm 0.24
+  R=15 km: norm - raw PR-AUC +0.003 vs fold std 0.012 -> NOT beyond noise; recall raw 0.61 vs norm 0.61, precision raw 0.24 vs norm 0.22
+  R=25 km: norm - raw PR-AUC -0.002 vs fold std 0.016 -> NOT beyond noise; recall raw 0.71 vs norm 0.68, precision raw 0.22 vs norm 0.22
+  DECISION (default R = 15 km): keep the current raw-probability combiner
+
+  ----- Highland pair: 02HC013 Highland Creek <-> 02HC058 West Highland Creek (4.4 km) -----
+  gauge                 method  eval_days  pos_days  pr_auc  precision  recall events
+02HC013              own model        964        34   0.237      0.175   0.588  20/31
+02HC013 partner only (02HC058)        964        34   0.182      0.158   0.471  17/31
+02HC058              own model        936        34   0.165      0.160   0.471  15/28
+02HC058 partner only (02HC013)        936        34   0.191      0.159   0.529  17/28
+
+  Scope: this measures how well OTHER gauges predict a gauge's creek high water. It does not validate street-level flooding.
+
+=== Combiner leave-one-out: LEAN fleet (before) vs Model B (after), mean PR-AUC over gauges ===
+ R   method  gauges  before  after  change
+10      raw       9   0.293  0.298   0.004
+10      own       9   0.370  0.374   0.004
+10 mean_all       9   0.371  0.371   0.001
+10  nearest       9   0.280  0.285   0.004
+15      raw       9   0.294  0.300   0.006
+15      own       9   0.368  0.371   0.004
+15 mean_all       9   0.357  0.357  -0.000
+15  nearest       9   0.272  0.277   0.005
+25      raw      10   0.325  0.330   0.005
+25      own      10   0.409  0.413   0.004
+25 mean_all      10   0.366  0.366   0.000
+25  nearest      10   0.311  0.315   0.004
+
+Model B done in 478s -> results/modelb_results.csv, results/modelb/, models/

@@ -1,0 +1,235 @@
+
+=== STEP 1 (fleet): nearest climate station with >= 90% precipitation coverage per gauge ===
+  02HC033 MIMICO CREEK AT ISLINGTON              -> 6158731 TORONTO PEARSON (6158733 to 2013-06 + 61   9.5 km, coverage 99.7% (2002-01-01..2024-12-31)
+      skipped nearer: 6158411 TORONTO BURNHAMTHORPE 4.1 km 17%
+  02HC030 ETOBICOKE CREEK BELOW QUEEN ELIZABETH  -> 6158731 TORONTO PEARSON (6158733 to 2013-06 + 61  10.3 km, coverage 99.7% (2002-01-01..2023-12-31)
+      skipped nearer: 6158411 TORONTO BURNHAMTHORPE 4.8 km 18%
+  02HC032 EAST HUMBER RIVER AT KING CREEK        -> 615S001 TORONTO NORTH YORK                        18.0 km, coverage 97.1% (2002-10-08..2024-12-31)
+      skipped nearer: 6155680 NOBLETON 1.8 km 5%; 6154150 KING CITY NORTH 7.4 km 23%; 6156162 PA KING CITY 7.5 km 0%; 6159575 WOODBRIDGE 13.3 km 12%; 6157012 RICHMOND HILL 13.5 km 51%; 6154142 KING SMOKE TREE 14.8 km 6%
+  02HC027 BLACK CREEK NEAR WESTON                -> 6158355 TORONTO CITY                               8.4 km, coverage 96.1% (2002-01-01..2024-12-31)
+      skipped nearer: 6158411 TORONTO BURNHAMTHORPE 6.4 km 17%; 6158350 TORONTO 8.4 km 35%
+  02HC005 DON RIVER WEST BRANCH AT YORK MILLS    -> 615S001 TORONTO NORTH YORK                         6.8 km, coverage 97.3% (2000-01-01..2025-12-31)
+      skipped nearer: 6158255 THORNHILL GRANDVIEW 6.8 km 29%
+  02HC024 DON RIVER AT TODMORDEN                 -> 6158355 TORONTO CITY                               3.7 km, coverage 95.9% (2002-01-01..2023-12-31)
+      skipped nearer: 6158751 TORONTO EAST YORK DUSTAN 2.2 km 37%; 6158350 TORONTO 3.7 km 37%; 6158352 TORONTO SOLAR RADIATION 3.7 km 0%
+  02HC013 HIGHLAND CREEK NEAR WEST HILL          -> 6158355 TORONTO CITY                              20.9 km, coverage 97.8% (2005-08-30..2023-12-31)
+      skipped nearer: 6158751 TORONTO EAST YORK DUSTAN 14.9 km 45%; 6158410 TORONTO BUTTONVILLE A 17.0 km 20%; 6158409 TORONTO BUTTONVILLE A 17.0 km 0%; 615HMAK TORONTO BUTTONVILLE A 17.1 km 53%; 6158255 THORNHILL GRANDVIEW 18.3 km 10%
+  02HC058 WEST HIGHLAND CREEK NEAR SCARBOROUGH V -> 6158355 TORONTO CITY                              16.4 km, coverage 97.8% (2005-10-31..2023-12-31)
+      skipped nearer: 6158751 TORONTO EAST YORK DUSTAN 10.5 km 45%; 6158255 THORNHILL GRANDVIEW 15.6 km 9%; 6158410 TORONTO BUTTONVILLE A 16.1 km 20%; 6158409 TORONTO BUTTONVILLE A 16.1 km 0%; 615HMAK TORONTO BUTTONVILLE A 16.3 km 53%
+  02HC022 ROUGE RIVER NEAR MARKHAM               -> 615S001 TORONTO NORTH YORK                        20.7 km, coverage 97.2% (2002-01-01..2024-12-31)
+      skipped nearer: 6158410 TORONTO BUTTONVILLE A 10.8 km 16%; 6158409 TORONTO BUTTONVILLE A 10.8 km 0%; 615HMAK TORONTO BUTTONVILLE A 10.9 km 58%; 6152605 FRENCHMANS BAY 12.9 km 12%; 6158255 THORNHILL GRANDVIEW 16.0 km 24%; 6157012 RICHMOND HILL 17.3 km 52%; 6158751 TORONTO EAST YORK DUSTAN 19.8 km 36%
+  02HB030 COOKSVILLE CREEK NEAR COOKSVILLE       -> 6158731 TORONTO PEARSON (6158733 to 2013-06 + 61   9.5 km, coverage 99.6% (2005-09-19..2024-12-31)
+      skipped nearer: 6158411 TORONTO BURNHAMTHORPE 7.1 km 16%
+  02HC003 HUMBER RIVER AT WESTON                 -> 6158731 TORONTO PEARSON (6158733 to 2013-06 + 61   9.2 km, coverage 99.7% (2002-01-01..2024-12-31)
+      skipped nearer: 6158411 TORONTO BURNHAMTHORPE 7.4 km 17%
+
+=== STEP 2 (fleet): clean + per-station models (NEXT-DAY, train p95, LEAN + rain) ===
+
+  02HC033 MIMICO CREEK AT ISLINGTON | rain 6158731 (9.5 km) | p95 LEVEL > 5.826 m | train<= 2018-06-25 val<= 2021-09-27 | rows/positives train (5552, 269) val (1190, 51) test (1190, 59)
+    val PR-AUC / F2: logreg 0.355/0.442, rf 0.313/0.456, lgbm 0.342/0.422, xgb 0.346/0.422 -> best logreg (32s)
+    WATCH = 0.0479 (F2-optimal on val); WARNING = 0.3477 (lowest cut-off with >= 50% val precision)
+
+  02HC030 ETOBICOKE CREEK BELOW QUEEN ELIZABETH HI | rain 6158731 (10.3 km) | p95 LEVEL > 3.838 m | train<= 2017-05-26 val<= 2020-08-29 | rows/positives train (5536, 277) val (1186, 54) test (1186, 41)
+    val PR-AUC / F2: logreg 0.350/0.484, rf 0.444/0.522, lgbm 0.458/0.523, xgb 0.457/0.530 -> best lgbm (25s)
+    WATCH = 0.0758 (F2-optimal on val); WARNING = 0.2945 (lowest cut-off with >= 50% val precision)
+
+  02HC032 EAST HUMBER RIVER AT KING CREEK | rain 615S001 (18.0 km) | p95 LEVEL > 1.647 m | train<= 2019-01-24 val<= 2022-01-11 | rows/positives train (5058, 249) val (1083, 30) test (1084, 45)
+    val PR-AUC / F2: logreg 0.726/0.751, rf 0.667/0.751, lgbm 0.703/0.738, xgb 0.718/0.763 -> best xgb (21s)
+    WATCH = 0.0825 (F2-optimal on val); WARNING = 0.1388 (lowest cut-off with >= 50% val precision)
+
+  02HC027 BLACK CREEK NEAR WESTON | rain 6158355 (8.4 km) | p95 LEVEL > 0.766 m | train<= 2018-02-10 val<= 2021-07-22 | rows/positives train (5868, 294) val (1258, 52) test (1257, 65)
+    val PR-AUC / F2: logreg 0.259/0.375, rf 0.257/0.356, lgbm 0.302/0.399, xgb 0.306/0.403 -> best xgb (25s)
+    WATCH = 0.0744 (F2-optimal on val); WARNING = 0.4269 (lowest cut-off with >= 50% val precision)
+
+  02HC005 DON RIVER WEST BRANCH AT YORK MILLS | rain 615S001 (6.8 km) | p95 LEVEL > 0.955 m | train<= 2019-06-08 val<= 2023-03-29 | rows/positives train (4648, 225) val (996, 41) test (996, 73)
+    val PR-AUC / F2: logreg 0.507/0.602, rf 0.357/0.616, lgbm 0.378/0.620, xgb 0.400/0.637 -> best logreg (19s)
+    WATCH = 0.1133 (F2-optimal on val); WARNING = 0.3543 (lowest cut-off with >= 50% val precision)
+
+  02HC024 DON RIVER AT TODMORDEN | rain 6158355 (3.7 km) | p95 LEVEL > 12.490 m | train<= 2017-06-04 val<= 2020-09-08 | rows/positives train (5566, 277) val (1192, 48) test (1193, 37)
+    val PR-AUC / F2: logreg 0.334/0.437, rf 0.331/0.471, lgbm 0.390/0.468, xgb 0.385/0.478 -> best xgb (25s)
+    WATCH = 0.1346 (F2-optimal on val); WARNING = 0.3321 (lowest cut-off with >= 50% val precision)
+
+  02HC013 HIGHLAND CREEK NEAR WEST HILL | rain 6158355 (20.9 km) | p95 LEVEL > 6.347 m | train<= 2018-09-10 val<= 2021-05-05 | rows/positives train (4499, 222) val (964, 39) test (964, 34)
+    val PR-AUC / F2: logreg 0.185/0.322, rf 0.205/0.280, lgbm 0.211/0.295, xgb 0.214/0.302 -> best xgb (21s)
+    WATCH = 0.0586 (F2-optimal on val); WARNING = 0.2667 (lowest cut-off with >= 50% val precision)
+
+  02HC058 WEST HIGHLAND CREEK NEAR SCARBOROUGH VIL | rain 6158355 (16.4 km) | p95 LEVEL > 2.692 m | train<= 2018-10-25 val<= 2021-06-02 | rows/positives train (4390, 215) val (941, 40) test (941, 34)
+    val PR-AUC / F2: logreg 0.163/0.307, rf 0.204/0.276, lgbm 0.196/0.315, xgb 0.226/0.320 -> best xgb (20s)
+    WATCH = 0.0953 (F2-optimal on val); WARNING = 0.2717 (lowest cut-off with >= 50% val precision)
+
+  02HC022 ROUGE RIVER NEAR MARKHAM | rain 615S001 (20.7 km) | p95 LEVEL > 3.682 m | train<= 2018-01-07 val<= 2021-08-17 | rows/positives train (5744, 286) val (1230, 48) test (1231, 60)
+    val PR-AUC / F2: logreg 0.656/0.717, rf 0.632/0.696, lgbm 0.632/0.729, xgb 0.627/0.701 -> best logreg (23s)
+    WATCH = 0.7479 (F2-optimal on val); WARNING = 0.8236 (lowest cut-off with >= 50% val precision)
+
+  02HB030 COOKSVILLE CREEK NEAR COOKSVILLE | rain 6158731 (9.5 km) | p95 LEVEL > 2.339 m | train<= 2013-06-08 val<= 2023-06-16 | rows/positives train (2626, 123) val (562, 3) test (563, 2)
+    !!!!! WARNING: val has only 3 positive days (<10) !!!!!
+    !!!!! WARNING: test has only 2 positive days (<10) !!!!!
+    !!!!! 02HB030 marked usable=false: excluded from the combiner and the leave-one-out test !!!!!
+    val PR-AUC / F2: logreg 0.084/0.294, rf 0.089/0.294, lgbm 0.038/0.200, xgb 0.030/0.126 -> best logreg (16s)
+    WATCH = 0.2153 (F2-optimal on val); WARNING = 0.2153 (no cut-off reached 50% val precision -> F0.5-optimal)
+
+  02HC003 HUMBER RIVER AT WESTON | rain 6158731 (9.2 km) | p95 LEVEL > 2.649 m | train<= 2018-03-13 val<= 2021-08-09 | rows/positives train (5782, 288) val (1239, 52) test (1239, 63)
+    val PR-AUC / F2: logreg 0.716/0.719, rf 0.756/0.729, lgbm 0.760/0.717, xgb 0.769/0.714 -> best xgb (23s)
+    WATCH = 0.1371 (F2-optimal on val); WARNING = 0.1735 (lowest cut-off with >= 50% val precision)
+
+=== Fleet results on TEST (WATCH/WARNING cut-offs fixed on validation) ===
+station  model  usable  test_pos_days  pr_auc  cv_pr_auc  cv_std  watch_precision  watch_recall  watch_f2 watch_events  warning_precision  warning_recall warning_events  persist_precision  persist_recall  persist_f2 persist_events pos_days_quality_symbol test_pos_quality_symbol
+02HC033 logreg    True             59   0.367      0.358   0.046            0.197         0.729     0.474        39/45              0.486           0.288          16/45              0.136           0.136       0.136          13/45                  42/379                    6/59
+02HC030   lgbm    True             41   0.346      0.464   0.061            0.231         0.659     0.480        24/32              0.359           0.341          14/32              0.146           0.146       0.146           8/32                  30/372                    2/41
+02HC032    xgb    True             45   0.772      0.803   0.111            0.486         0.800     0.709        15/17              0.547           0.778          14/17              0.556           0.556       0.556          10/17                  77/324                    6/45
+02HC027    xgb    True             65   0.414      0.400   0.061            0.246         0.738     0.527        38/48              0.571           0.308          19/48              0.215           0.215       0.215          15/48                  22/411                    4/65
+02HC005 logreg    True             73   0.601      0.476   0.085            0.491         0.767     0.690        30/33              0.569           0.507          20/33              0.451           0.438       0.441          21/33                   9/339                    5/73
+02HC024    xgb    True             37   0.216      0.354   0.063            0.214         0.486     0.388        16/32              0.333           0.189           7/32              0.135           0.135       0.135           3/32                  12/362                    4/37
+02HC013    xgb    True             34   0.203      0.263   0.028            0.135         0.676     0.375        23/31              0.346           0.265           9/31              0.059           0.059       0.059           3/31                  33/295                    1/34
+02HC058    xgb    True             34   0.162      0.219   0.060            0.158         0.471     0.338        15/28              0.174           0.118           4/28              0.147           0.147       0.147           5/28                  47/289                    4/34
+02HC022 logreg    True             60   0.635      0.689   0.054            0.511         0.783     0.708        31/37              0.545           0.700          29/37              0.390           0.383       0.385          16/37                  83/394                    7/60
+02HB030 logreg   False              2   0.036      0.199   0.039            0.000         0.000     0.000          0/2              0.000           0.000            0/2              0.000           0.000       0.000            0/2                  15/128                     2/2
+02HC003    xgb    True             63   0.710      0.690   0.132            0.485         0.778     0.694        26/32              0.533           0.762          25/32              0.468           0.460       0.462          17/32                 134/403                    3/63
+  !!!!! WARNING: fewer than 10 positive test days at ['02HB030'] !!!!!
+  !!!!! usable=false (val or test < 10 positive days): ['02HB030']; their test metrics are not meaningful and they are left out of the combiner !!!!!
+  pos_days_quality_symbol = high-water (label) days carrying 'Ice Conditions' or 'Estimated', all splits; test_pos_quality_symbol = same, test only.
+  NOTE: test splits hold few events; differences of a few hundredths are within noise (see cv_std).
+
+=== Known-flood check (alert level = WATCH/WARNING from the station's own model) ===
+station       date level_m high_that_day       issued_day_before           issued_on_day split_of_day                                    status
+02HC033 2013-07-08   6.543          True WARNING (p=0.46, train) WARNING (p=1.00, train)        train                TRAIN split - not evidence
+02HC033 2024-07-16   6.419          True  WARNING (p=0.77, test)  WARNING (p=0.99, test)         test                                          
+02HC033 2024-08-17   6.221          True     NONE (p=0.02, test)  WARNING (p=1.00, test)         test                                          
+02HC030 2013-07-08   3.911          True WARNING (p=0.33, train) WARNING (p=0.72, train)        train                TRAIN split - not evidence
+02HC030 2024-07-16                                                                                    not covered (data 2000-01-01..2023-12-31)
+02HC030 2024-08-17                                                                                    not covered (data 2000-01-01..2023-12-31)
+02HC032 2013-07-08   2.491          True           no usable row WARNING (p=0.82, train)        train                TRAIN split - not evidence
+02HC032 2024-07-16   1.506         False     NONE (p=0.03, test)  WARNING (p=0.35, test)         test                                          
+02HC032 2024-08-17   1.362         False     NONE (p=0.00, test)     NONE (p=0.06, test)         test                                          
+02HC027 2013-07-08   1.426          True WARNING (p=0.57, train) WARNING (p=0.61, train)        train                TRAIN split - not evidence
+02HC027 2024-07-16   1.369          True  WARNING (p=0.53, test)  WARNING (p=0.69, test)         test                                          
+02HC027 2024-08-17   0.855          True     NONE (p=0.02, test)     NONE (p=0.05, test)         test                                          
+02HC005 2013-07-08   1.044          True   WATCH (p=0.17, train) WARNING (p=0.95, train)        train                TRAIN split - not evidence
+02HC005 2024-07-16   1.192          True     NONE (p=0.08, test)  WARNING (p=0.98, test)         test                                          
+02HC005 2024-08-17   0.973          True     NONE (p=0.00, test)  WARNING (p=0.99, test)         test                                          
+02HC024 2013-07-08  13.026          True   WATCH (p=0.31, train) WARNING (p=0.58, train)        train                TRAIN split - not evidence
+02HC024 2024-07-16                                                                                    not covered (data 2000-01-01..2023-12-31)
+02HC024 2024-08-17                                                                                    not covered (data 2000-01-01..2023-12-31)
+02HC013 2013-07-08   6.228         False   WATCH (p=0.20, train)   WATCH (p=0.24, train)        train                TRAIN split - not evidence
+02HC013 2024-07-16                                                                                    not covered (data 2005-08-01..2023-12-31)
+02HC013 2024-08-17                                                                                    not covered (data 2005-08-01..2023-12-31)
+02HC058 2013-07-08   2.603         False   WATCH (p=0.24, train)   WATCH (p=0.25, train)        train                TRAIN split - not evidence
+02HC058 2024-07-16                                                                                    not covered (data 2005-10-01..2023-12-31)
+02HC058 2024-08-17                                                                                    not covered (data 2005-10-01..2023-12-31)
+02HC022 2013-07-08   3.447         False    NONE (p=0.05, train) WARNING (p=1.00, train)        train                TRAIN split - not evidence
+02HC022 2024-07-16   3.847          True     NONE (p=0.27, test)  WARNING (p=1.00, test)         test                                          
+02HC022 2024-08-17   3.672         False     NONE (p=0.02, test)  WARNING (p=1.00, test)         test                                          
+02HB030 2013-07-08   2.461          True   WARNING (p=0.22, val)   WARNING (p=0.96, val)          val                                          
+02HB030 2024-07-16   2.588          True     NONE (p=0.11, test)  WARNING (p=0.82, test)         test                                          
+02HB030 2024-08-17   2.426          True     NONE (p=0.02, test)  WARNING (p=0.94, test)         test                                          
+02HC003 2013-07-08   2.935          True   WATCH (p=0.17, train) WARNING (p=0.83, train)        train                TRAIN split - not evidence
+02HC003 2024-07-16    2.99          True  WARNING (p=0.70, test)  WARNING (p=0.83, test)         test                                          
+02HC003 2024-08-17   2.687          True     NONE (p=0.00, test)  WARNING (p=0.54, test)         test                                          
+  'issued_day_before' = forecast made on D-1 for day D; 'issued_on_day' = forecast made on D for D+1.
+  Days in a gauge's TRAIN split were fitted on and do not count as evidence.
+
+  excluded from the leave-one-out test: 02HB030 (too few high-water events to validate: val 3, test 2 positive days (need >= 10 in each); run `python -m src.diagnose 02HB030` for the data causes)
+
+=== STEP 4 (fleet): leave-one-gauge-out test, 10 usable gauges, TEST dates only ===
+
+  ----- R = 10 km -----
+  PR-AUC on G's real TEST labels (all usable gauges):
+                                              nearest_gauge nearest_km n_neighbours test_days test_pos    raw   norm    own mean_all mean_R nearest
+02HC033                                             02HC027        3.3            3       824       33  0.254  0.268  0.262    0.216  0.204   0.272
+02HC030                                             02HC033        5.8            2      1186       41  0.301  0.294  0.346    0.358   0.34   0.287
+02HC032  no usable neighbour within 10 km (nearest 23.9 km)                                                                                        
+02HC027                                             02HC003        3.1            3       891       38  0.185  0.299   0.35    0.303  0.274   0.147
+02HC005                                             02HC024        6.8            1       254       20  0.489  0.489  0.553    0.488  0.489   0.489
+02HC024                                             02HC005        6.8            1      1128       37  0.182  0.182  0.217     0.29  0.182   0.182
+02HC013                                             02HC058        4.4            2       964       34  0.241  0.188  0.203    0.197  0.259   0.182
+02HC058                                             02HC013        4.4            1       936       34  0.162  0.162  0.165    0.184  0.162   0.162
+02HC022                                             02HC013        9.5            1       860       35  0.364  0.364  0.521     0.59  0.364   0.364
+02HC003                                             02HC027        3.1            2      1239       63  0.459   0.47   0.71    0.709  0.473   0.438
+  precision/recall + events at cut-offs chosen on G's VALIDATION window:
+method               raw             norm              own           norm cut from            raw cut from
+gauge                                                                                                     
+02HC003  0.29/0.65 30/32  0.40/0.52 26/32  0.49/0.78 26/32             F2 on G val             F2 on G val
+02HC005   0.40/0.50 8/11   0.40/0.50 8/11  0.48/0.80 11/11             F2 on G val             F2 on G val
+02HC013  0.16/0.76 24/31  0.14/0.68 22/31  0.13/0.68 23/31             F2 on G val             F2 on G val
+02HC022  0.29/0.60 18/24  0.29/0.60 18/24  0.42/0.71 18/24             F2 on G val             F2 on G val
+02HC024  0.14/0.41 13/32  0.14/0.41 13/32  0.21/0.49 16/32  deploy (val too small)  deploy (val too small)
+02HC027  0.21/0.45 18/32  0.27/0.45 17/32  0.21/0.76 25/32             F2 on G val             F2 on G val
+02HC030  0.15/0.80 29/32  0.16/0.80 29/32  0.23/0.66 24/32             F2 on G val             F2 on G val
+02HC033  0.18/0.55 19/28  0.19/0.58 19/28  0.17/0.76 24/28             F2 on G val             F2 on G val
+02HC058  0.14/0.65 20/28  0.14/0.65 20/28  0.16/0.47 15/28             F2 on G val             F2 on G val
+  mean over 9 gauges:  raw PR-AUC 0.293 P 0.22 R 0.60  norm PR-AUC 0.302 P 0.24 R 0.58  own PR-AUC 0.370 P 0.28 R 0.68  mean_all PR-AUC 0.371 P 0.29 R 0.74  mean_R PR-AUC 0.305 P 0.24 R 0.59  nearest PR-AUC 0.280 P 0.21 R 0.55
+  norm - raw PR-AUC: +0.009 on the full test windows; per chronological fold +0.004, +0.014, +0.001, +0.013, +0.017 -> fold mean +0.010, fold std 0.007
+
+  ----- R = 15 km -----
+  PR-AUC on G's real TEST labels (all usable gauges):
+                                              nearest_gauge nearest_km n_neighbours test_days test_pos    raw   norm    own mean_all mean_R nearest
+02HC033                                             02HC027        3.3            5       798       33  0.258  0.269  0.264    0.217  0.197   0.273
+02HC030                                             02HC033        5.8            3      1186       41  0.309  0.295  0.346    0.358  0.314   0.287
+02HC032  no usable neighbour within 15 km (nearest 23.9 km)                                                                                        
+02HC027                                             02HC003        3.1            5       865       38  0.187  0.298  0.351    0.304  0.274   0.147
+02HC005                                             02HC024        6.8            5       254       20  0.509  0.494  0.553    0.488  0.502   0.489
+02HC024                                             02HC005        6.8            5      1128       37  0.204  0.234  0.217     0.29  0.269   0.182
+02HC013                                             02HC058        4.4            2       964       34  0.241  0.188  0.203    0.197  0.259   0.182
+02HC058                                             02HC013        4.4            4       910       34  0.197  0.166  0.167    0.185  0.206   0.164
+02HC022                                             02HC013        9.5            2       860       35   0.36  0.364  0.521     0.59  0.354   0.364
+02HC003                                             02HC027        3.1            5       847       39  0.379  0.377  0.687    0.583   0.45   0.362
+  precision/recall + events at cut-offs chosen on G's VALIDATION window:
+method               raw             norm              own           norm cut from            raw cut from
+gauge                                                                                                     
+02HC003  0.20/0.74 19/19  0.20/0.74 19/19  0.45/0.74 14/19  deploy (val too small)  deploy (val too small)
+02HC005   0.47/0.40 8/11   0.35/0.40 8/11  0.48/0.80 11/11             F2 on G val             F2 on G val
+02HC013  0.16/0.76 24/31  0.14/0.68 22/31  0.13/0.68 23/31             F2 on G val             F2 on G val
+02HC022  0.26/0.66 20/24  0.29/0.60 18/24  0.42/0.71 18/24             F2 on G val             F2 on G val
+02HC024  0.15/0.57 19/32  0.15/0.68 23/32  0.21/0.49 16/32  deploy (val too small)  deploy (val too small)
+02HC027  0.20/0.79 27/32  0.19/0.68 24/32  0.21/0.76 25/32             F2 on G val             F2 on G val
+02HC030  0.23/0.54 22/32  0.16/0.83 29/32  0.23/0.66 24/32             F2 on G val             F2 on G val
+02HC033  0.27/0.36 13/28  0.29/0.36 13/28  0.17/0.76 24/28             F2 on G val             F2 on G val
+02HC058  0.13/0.88 25/28  0.13/0.65 20/28  0.16/0.47 15/28  deploy (val too small)  deploy (val too small)
+  mean over 9 gauges:  raw PR-AUC 0.294 P 0.23 R 0.63  norm PR-AUC 0.298 P 0.21 R 0.62  own PR-AUC 0.368 P 0.28 R 0.67  mean_all PR-AUC 0.357 P 0.25 R 0.71  mean_R PR-AUC 0.314 P 0.23 R 0.62  nearest PR-AUC 0.272 P 0.21 R 0.60
+  norm - raw PR-AUC: +0.005 on the full test windows; per chronological fold -0.005, +0.011, -0.011, +0.019, +0.006 -> fold mean +0.004, fold std 0.012
+
+  ----- R = 25 km -----
+  PR-AUC on G's real TEST labels (all usable gauges):
+        nearest_gauge nearest_km n_neighbours test_days test_pos    raw   norm    own mean_all mean_R nearest
+02HC033       02HC027        3.3            5       798       33  0.258  0.269  0.264    0.217  0.197   0.273
+02HC030       02HC033        5.8            5      1096       41  0.308  0.295   0.35    0.358  0.315   0.289
+02HC032       02HC003       23.9            2      1073       45   0.59  0.538  0.772    0.441   0.44   0.651
+02HC027       02HC003        3.1            6       865       38  0.187  0.298  0.351    0.304  0.294   0.147
+02HC005       02HC024        6.8            9       254       20  0.498  0.491  0.553    0.488  0.488   0.489
+02HC024       02HC005        6.8            8      1091       37  0.219   0.24  0.224    0.296  0.304   0.185
+02HC013       02HC058        4.4            4       938       34  0.232  0.188  0.205    0.198  0.222   0.184
+02HC058       02HC013        4.4            6       910       34  0.194  0.167  0.167    0.185   0.19   0.164
+02HC022       02HC013        9.5            4       834       35  0.382  0.368  0.521    0.591  0.433   0.367
+02HC003       02HC027        3.1            7       847       39   0.38   0.38  0.687    0.583   0.56   0.362
+  precision/recall + events at cut-offs chosen on G's VALIDATION window:
+method               raw             norm              own           norm cut from            raw cut from
+gauge                                                                                                     
+02HC003  0.20/0.74 19/19  0.21/0.77 19/19  0.45/0.74 14/19  deploy (val too small)  deploy (val too small)
+02HC005   0.50/0.40 8/11   0.42/0.40 8/11  0.48/0.80 11/11             F2 on G val             F2 on G val
+02HC013  0.10/0.91 28/31  0.08/0.91 28/31  0.14/0.68 23/31             F2 on G val             F2 on G val
+02HC022  0.15/0.83 22/24  0.18/0.83 22/24  0.42/0.71 18/24  deploy (val too small)  deploy (val too small)
+02HC024  0.15/0.62 21/32  0.15/0.68 23/32  0.22/0.49 16/32  deploy (val too small)  deploy (val too small)
+02HC027  0.19/0.79 27/32  0.19/0.68 24/32  0.21/0.76 25/32             F2 on G val             F2 on G val
+02HC030  0.15/0.85 29/32  0.17/0.83 29/32  0.24/0.66 24/32  deploy (val too small)  deploy (val too small)
+02HC032  0.26/0.82 16/17  0.25/0.82 16/17  0.49/0.80 15/17  deploy (val too small)  deploy (val too small)
+02HC033  0.27/0.36 13/28  0.29/0.36 13/28  0.17/0.76 24/28             F2 on G val             F2 on G val
+02HC058  0.13/0.88 25/28  0.13/0.65 20/28  0.16/0.47 15/28  deploy (val too small)  deploy (val too small)
+  mean over 10 gauges:  raw PR-AUC 0.325 P 0.21 R 0.72  norm PR-AUC 0.323 P 0.21 R 0.69  own PR-AUC 0.409 P 0.30 R 0.69  mean_all PR-AUC 0.366 P 0.21 R 0.80  mean_R PR-AUC 0.344 P 0.21 R 0.75  nearest PR-AUC 0.311 P 0.21 R 0.66
+  norm - raw PR-AUC: -0.002 on the full test windows; per chronological fold +0.000, +0.004, -0.020, +0.017, +0.003 -> fold mean +0.001, fold std 0.013
+
+  ===== raw vs normalised combiner =====
+  R=10 km: norm - raw PR-AUC +0.009 vs fold std 0.007 -> normalised better beyond noise; recall raw 0.60 vs norm 0.58, precision raw 0.22 vs norm 0.24
+  R=15 km: norm - raw PR-AUC +0.005 vs fold std 0.012 -> NOT beyond noise; recall raw 0.63 vs norm 0.62, precision raw 0.23 vs norm 0.21
+  R=25 km: norm - raw PR-AUC -0.002 vs fold std 0.013 -> NOT beyond noise; recall raw 0.72 vs norm 0.69, precision raw 0.21 vs norm 0.21
+  DECISION (default R = 15 km): keep the current raw-probability combiner
+
+  ----- Highland pair: 02HC013 Highland Creek <-> 02HC058 West Highland Creek (4.4 km) -----
+  gauge                 method  eval_days  pos_days  pr_auc  precision  recall events
+02HC013              own model        964        34   0.203      0.135   0.676  23/31
+02HC013 partner only (02HC058)        964        34   0.182      0.158   0.471  17/31
+02HC058              own model        936        34   0.165      0.160   0.471  15/28
+02HC058 partner only (02HC013)        936        34   0.162      0.129   0.647  20/28
+
+  Scope: this measures how well OTHER gauges predict a gauge's creek high water. It does not validate street-level flooding.
+
+Fleet done in 328s -> results/fleet_results.csv, results/fleet/, models/<station>.joblib, models/thresholds.json

@@ -1,0 +1,216 @@
+{
+  "02HC033": {
+    "feature_set": "LEAN",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos"
+    ]
+  },
+  "02HC030": {
+    "feature_set": "LEAN",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos"
+    ]
+  },
+  "02HC032": {
+    "feature_set": "LEAN",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos"
+    ]
+  },
+  "02HC027": {
+    "feature_set": "LEAN",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos"
+    ]
+  },
+  "02HC005": {
+    "feature_set": "LEAN",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos"
+    ]
+  },
+  "02HC024": {
+    "feature_set": "LEAN",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos"
+    ]
+  },
+  "02HC013": {
+    "feature_set": "LEAN+INT",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos",
+      "max_1h_rain",
+      "max_3h_rain",
+      "hours_with_rain",
+      "rain_total_day",
+      "intensity_ratio"
+    ]
+  },
+  "02HC058": {
+    "feature_set": "LEAN",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos"
+    ]
+  },
+  "02HC022": {
+    "feature_set": "LEAN",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos"
+    ]
+  },
+  "02HB030": {
+    "feature_set": "LEAN",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos"
+    ]
+  },
+  "02HC003": {
+    "feature_set": "LEAN",
+    "features": [
+      "level",
+      "disch",
+      "level_chg_1d",
+      "level_chg_3d",
+      "disch_chg_1d",
+      "level_accel",
+      "level_max_3d",
+      "level_max_7d",
+      "level_z30",
+      "rain_today",
+      "rain_sum_3d",
+      "rain_sum_7d",
+      "month_sin",
+      "month_cos"
+    ]
+  }
+}

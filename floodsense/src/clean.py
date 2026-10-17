@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from .config import CLEAN_DIR, MAX_INTERP_GAP, RAIN_FILE, STATIONS, find_input
+from .config import CLEAN_DIR, MAX_INTERP_GAP, RAIN_FILE, REALTIME_DIR, STATIONS, find_input
 
 KEEP = ["DATE", "LEVEL", "DISCHARGE", "LEVEL_SYMBOL_EN", "DISCHARGE_SYMBOL_EN"]
 # Symbol values whose wording suggests the reading is not a clean measurement.
@@ -15,7 +15,10 @@ def check_station_name(station: str, df: pd.DataFrame, path: Path) -> str:
     if len(names) != 1:
         raise SystemExit(f"{path.name}: expected one STATION_NAME, found {list(names)}")
     name = names[0]
-    expected = STATIONS[station]
+    expected = STATIONS.get(station)
+    if expected is None:      # gauges beyond the original three: match the name in station_screen.csv
+        from .gauges import load_gauges
+        expected = str(load_gauges().loc[station, "name"]).upper()
     ok = expected in name.upper()
     print(f"  {path.name}: STATION_NAME = {name!r} (expected to contain {expected!r}) -> {'OK' if ok else 'MISMATCH'}")
     if not ok:
@@ -56,7 +59,7 @@ def merge_rain(df: pd.DataFrame, rain: pd.DataFrame, station: str) -> pd.DataFra
     run_len = isna.groupby((isna != isna.shift()).cumsum()).transform("sum")
     short = isna & (run_len <= MAX_INTERP_GAP)
     df.loc[short, "TOTAL_PRECIPITATION"] = 0.0
-    print(f"    rain: {100 * (1 - isna.mean()):.1f}% of station days have Pearson precipitation; "
+    print(f"    rain: {100 * (1 - isna.mean()):.1f}% of station days have climate-station precipitation; "
           f"{int(short.sum())} days in gaps <= {MAX_INTERP_GAP} filled with 0; "
           f"{int(df['TOTAL_PRECIPITATION'].isna().sum())} days left NaN (longer gaps)")
     if "SNOW_ON_GROUND" in df:
@@ -109,9 +112,14 @@ def clean_station(station: str, rain=None) -> pd.DataFrame:
     return df
 
 
+def realtime_path(station: str) -> Path:
+    p = REALTIME_DIR / f"{station}_realtime.csv"
+    return p if p.exists() else find_input(f"{station}_realtime.csv")
+
+
 def load_realtime(station: str, path=None) -> pd.DataFrame:
     """5-minute realtime readings indexed by local standard time (the clock WSC daily values use)."""
-    path = Path(path) if path else find_input(f"{station}_realtime.csv")
+    path = Path(path) if path else realtime_path(station)
     rt = pd.read_csv(path)
     check_station_name(station, rt, path)
     t = pd.to_datetime(rt["DATETIME_LST"], utc=True).dt.tz_convert("Etc/GMT+5").dt.tz_localize(None)

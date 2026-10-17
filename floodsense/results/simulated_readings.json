@@ -1,0 +1,98 @@
+{
+  "02HC033": {
+    "p": 0.01571072936033442,
+    "time": "2026-10-17T04:50:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC030": {
+    "p": 0.010883137980930754,
+    "time": "2026-10-17T05:15:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC032": {
+    "p": 0.0005321204662322998,
+    "time": "2026-10-17T05:15:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC027": {
+    "p": 0.015636153519153595,
+    "time": "2026-10-17T08:15:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC005": {
+    "p": 0.00903630004651565,
+    "time": "2026-10-17T08:50:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC024": {
+    "p": 0.02794591523706913,
+    "time": "2026-10-17T08:50:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC013": {
+    "p": 0.056063681840896606,
+    "time": "2026-10-17T08:50:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": true,
+    "simulation": {
+      "percentile": 98.0,
+      "level": 6.4642602062225345,
+      "discharge": 9.61599979400635
+    }
+  },
+  "02HC058": {
+    "p": 0.06474920362234116,
+    "time": "2026-10-17T08:25:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": true,
+    "simulation": {
+      "percentile": 99.0,
+      "level": 2.88100004196167,
+      "discharge": 6.5359999656677825
+    }
+  },
+  "02HC022": {
+    "p": 0.018474310001029472,
+    "time": "2026-10-17T08:45:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": false,
+    "simulation": null
+  },
+  "02HB030": {
+    "p": 0.021267973039807125,
+    "time": "2026-10-17T08:50:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": false,
+    "simulation": null
+  },
+  "02HC003": {
+    "p": 0.0012412427458912134,
+    "time": "2026-10-17T08:55:00+00:00",
+    "level": "NONE",
+    "features_day": "2026-10-16",
+    "simulated": false,
+    "simulation": null
+  }
+}
