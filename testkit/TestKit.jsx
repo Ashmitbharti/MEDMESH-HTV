@@ -121,6 +121,20 @@ export default function TestKit() {
           );
         })}
 
+        <View style={{ marginTop: 12, padding: 14, borderRadius: 20, backgroundColor: c.panel, borderWidth: 1, borderColor: c.line }}>
+          <Text style={{ color: c.ink, fontSize: 14.5, fontWeight: '800' }}>Weather alert from the command centre</Text>
+          <Text style={{ color: c.dim, fontSize: 12, marginTop: 2 }}>Citizen home screen shows it as live weather around the Shield</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
+            {[['STORM', 'Storm'], ['SNOW', 'Snow'], ['FLOOD', 'Flood'], ['RAIN', 'Rain'], ['FIRE', 'Wildfire'], ['NONE', 'All clear']].map(([k, label]) => (
+              <Pressable key={k} accessibilityRole="button" accessibilityLabel={`Weather ${label}`} disabled={!BASE}
+                onPress={async () => { try { await call('/api/hazard', { type: k, severity: 'WARN', area: 'Scarborough' }); setSt((x) => ({ ...x, hazard: k })); } catch { setSt((x) => ({ ...x, hazard: 'fail' })); } }}
+                style={{ paddingHorizontal: 12, minHeight: 38, borderRadius: 12, justifyContent: 'center', borderWidth: 1, borderColor: st.hazard === k ? c.sky : c.line2, backgroundColor: st.hazard === k ? 'rgba(125,211,252,0.15)' : 'transparent' }}>
+                <Text style={{ color: c.ink, fontSize: 13, fontWeight: '700' }}>{label}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
         <Pressable accessibilityRole="button" accessibilityLabel={relayDown ? 'Bring the relay node back' : 'Take the relay node down'} onPress={relay} disabled={!BASE}
           style={({ pressed }) => [{ flexDirection: 'row', gap: 12, alignItems: 'center', marginTop: 12, padding: 14, borderRadius: 20, backgroundColor: c.panel, borderWidth: 1, borderColor: relayDown ? 'rgba(244,63,94,0.5)' : c.line }, pressed && { opacity: 0.8 }]}>
           <View style={{ width: 40, height: 40, borderRadius: 13, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(251,191,36,0.15)' }}><RadioTower size={19} color={c.amber} /></View>

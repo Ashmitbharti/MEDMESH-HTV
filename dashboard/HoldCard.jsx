@@ -6,12 +6,12 @@ import s from './Dashboard.styles';
 
 // Press and hold for 3 seconds (stops accidental SOS). Releasing early cancels.
 const HOLD_MS = 3000;
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export default function HoldCard({ title, sub, icon: Icon, colors, accent, primary, disabled, onComplete }) {
   const [p] = useState(() => new Animated.Value(0));
   const [holding, setHolding] = useState(false);
   const [left, setLeft] = useState(3);
+  const [frac, setFrac] = useState(0);   // ring progress (a plain value: animated SVG props warn on web)
   const anim = useRef(null);
   const timer = useRef(null);
 
@@ -20,11 +20,16 @@ export default function HoldCard({ title, sub, icon: Icon, colors, accent, prima
     setHolding(true);
     setLeft(3);
     const t0 = Date.now();
-    timer.current = setInterval(() => setLeft(Math.max(1, 3 - Math.floor((Date.now() - t0) / 1000))), 200);
+    timer.current = setInterval(() => {
+      const el = Date.now() - t0;
+      setLeft(Math.max(1, 3 - Math.floor(el / 1000)));
+      setFrac(Math.min(1, el / HOLD_MS));
+    }, 40);
     anim.current = Animated.timing(p, { toValue: 1, duration: HOLD_MS, easing: Easing.linear, useNativeDriver: false });
     anim.current.start(({ finished }) => {
       clearInterval(timer.current);
       setHolding(false);
+      setFrac(0);
       p.setValue(0);
       if (finished) onComplete();
     });
@@ -33,6 +38,7 @@ export default function HoldCard({ title, sub, icon: Icon, colors, accent, prima
   function stop() {
     anim.current?.stop();
     clearInterval(timer.current);
+    setFrac(0);
   }
 
   const size = primary ? 64 : 50;
@@ -57,8 +63,8 @@ export default function HoldCard({ title, sub, icon: Icon, colors, accent, prima
         <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
           <Svg width={size} height={size} style={{ position: 'absolute', transform: [{ rotate: '-90deg' }] }}>
             <Circle cx={size / 2} cy={size / 2} r={r} stroke="rgba(255,255,255,0.15)" strokeWidth={3} fill="none" />
-            <AnimatedCircle cx={size / 2} cy={size / 2} r={r} stroke="#fff" strokeWidth={3} fill="none" strokeLinecap="round"
-              strokeDasharray={`${circ}`} strokeDashoffset={p.interpolate({ inputRange: [0, 1], outputRange: [circ, 0] })} />
+            <Circle cx={size / 2} cy={size / 2} r={r} stroke="#fff" strokeWidth={3} fill="none" strokeLinecap="round"
+              strokeDasharray={`${circ}`} strokeDashoffset={circ * (1 - frac)} />
           </Svg>
           {holding ? <Text style={s.holdCount}>{left}</Text> : <Icon size={primary ? 26 : 21} color="#fff" strokeWidth={2.4} />}
         </View>

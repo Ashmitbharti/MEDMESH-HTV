@@ -59,3 +59,14 @@ export const HOSPITAL_DATA = {
   BIR: { total: 16, free: 3, icuTotal: 2, icu: 0, caps: 'T', wait: 60, erSpaces: 6 },
   UFC: { total: 10, free: 8, icuTotal: 0, icu: 0, caps: '', wait: 15, erSpaces: 4 },
 };
+
+// Everything around a person for the Shield: hospitals and clinics, pharmacies, the home-oxygen supplier (only for
+// people who use oxygen or a powered device) and the nearest radio node. Nearest first.
+export function around(pos, { oxygen = false } = {}) {
+  const at = (x) => ({ ...x, km: distanceKm(pos, x), bearing: bearing(pos, x) });
+  const care = SITES.filter((x) => (x.kind === 'hospital' || x.kind === 'clinic') && x.open).map(at).sort((a, b) => a.km - b.km).slice(0, 3);
+  const rx = SITES.filter((x) => x.kind === 'pharmacy' && x.open).map(at).sort((a, b) => a.km - b.km).slice(0, 2);
+  const o2 = oxygen ? SITES.filter((x) => x.kind === 'supplier' && x.open).map(at).slice(0, 1) : [];
+  const node = NODES.map(at).sort((a, b) => a.km - b.km)[0];
+  return { care, rx, o2, node };
+}
