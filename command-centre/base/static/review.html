@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedMesh After-Action Review</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #05070f; --surface-1: #0b1020; --surface-2: #0f1629; --line: rgba(255,255,255,.09);
+    --text-primary: #eef1f7; --text-secondary: #9ca3af; --text-muted: #6b7280;
+    --series-1: #3987e5; --accent: #7dd3fc; --violet: #a78bfa;
+    --good: #0ca30c; --warning: #fab219; --critical: #d03b3b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text-primary); font: 15px/1.5 Inter, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { overflow: hidden; height: 100vh; }
+  #deck { height: 100vh; overflow-y: auto; scroll-snap-type: y mandatory; }
+  .slide { min-height: 100vh; scroll-snap-align: start; padding: 56px 7vw; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .eyebrow { font: 700 11px ui-monospace, Menlo, monospace; letter-spacing: .22em; color: var(--accent); text-transform: uppercase; }
+  h1 { font-size: clamp(34px, 6vw, 64px); line-height: 1.02; letter-spacing: -.03em; margin: 10px 0 14px; }
+  h2 { font-size: clamp(26px, 3.6vw, 40px); letter-spacing: -.02em; margin: 8px 0 22px; }
+  .sub { color: var(--text-secondary); max-width: 60ch; font-size: 16px; }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .tile { background: var(--surface-1); border: 1px solid var(--line); border-radius: 20px; padding: 18px 20px; }
+  .num { font-size: 44px; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+  .num small { font-size: 16px; color: var(--text-secondary); font-weight: 700; margin-left: 3px; }
+  .label { color: var(--text-secondary); font-size: 13px; margin-top: 6px; }
+  .two { display: grid; gap: 18px; grid-template-columns: 1.2fr 1fr; align-items: start; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } .slide { padding: 44px 16px; } }
+  .chart { background: var(--surface-1); border: 1px solid var(--line); border-radius: 20px; padding: 18px; }
+  .chart h3 { margin: 0 0 12px; font-size: 15px; }
+  .bar-row { display: grid; grid-template-columns: 150px 1fr 60px; align-items: center; gap: 10px; padding: 5px 0; }
+  .bar-row .name { color: var(--text-secondary); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-track { height: 18px; position: relative; }
+  .bar { height: 18px; border-radius: 0 4px 4px 0; background: var(--series-1); min-width: 2px; transition: filter .15s; }
+  .bar:hover { filter: brightness(1.25); }
+  .bar-row .val { font-variant-numeric: tabular-nums; font-size: 13px; text-align: right; }
+  .status { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); margin: 0 8px 8px 0; font-weight: 700; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  th { color: var(--text-muted); font-weight: 600; }
+  details { margin-top: 10px; color: var(--text-secondary); font-size: 13px; }
+  .finding { background: var(--surface-1); border: 1px solid var(--line); border-radius: 20px; padding: 18px 20px; position: relative; }
+  .finding h3 { margin: 0 0 6px; font-size: 17px; }
+  .finding p { margin: 4px 0; color: var(--text-secondary); font-size: 14px; }
+  .finding .rec { color: var(--text-primary); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .chip { font: 600 11px ui-monospace, Menlo, monospace; color: var(--accent); border: 1px solid rgba(125,211,252,.3); border-radius: 8px; padding: 2px 7px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; font: 800 11px ui-monospace, Menlo, monospace; letter-spacing: .1em; color: var(--violet); border: 1px solid rgba(167,139,250,.45); border-radius: 8px; padding: 4px 8px; }
+  .owner { display: block; font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 4px; }
+  /* 3D title ornament: tilted rings */
+  .orb { position: absolute; right: -6vw; top: 50%; width: 46vw; height: 46vw; transform: translateY(-50%) perspective(900px) rotateX(64deg); pointer-events: none; }
+  .orb i { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(125,211,252,.25); animation: spin 18s linear infinite; }
+  .orb i:nth-child(2) { inset: 12%; border-color: rgba(125,211,252,.35); animation-duration: 12s; animation-direction: reverse; }
+  .orb i:nth-child(3) { inset: 26%; border-color: rgba(52,211,153,.4); animation-duration: 9s; }
+  .orb i:nth-child(4) { inset: 40%; background: radial-gradient(circle, rgba(56,189,248,.35), transparent 70%); border: 0; }
+  .orb b { position: absolute; left: 50%; top: -4px; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 16px var(--accent); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .orb i { animation: none; } }
+  .nav { position: fixed; right: 16px; bottom: 16px; display: flex; gap: 8px; z-index: 5; }
+  .nav button { background: var(--surface-2); color: var(--text-primary); border: 1px solid var(--line); border-radius: 12px; padding: 9px 14px; font: inherit; cursor: pointer; }
+  .loading { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); z-index: 9; color: var(--text-secondary); }
+  @media print {
+    body, #deck { height: auto; overflow: visible; } .nav, .loading { display: none; }
+    .slide { min-height: auto; height: 100vh; page-break-after: always; border: 0; }
+    .orb i { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="loading" id="loading">Building the review from the command centre's records…</div>
+<div class="nav"><button onclick="go(-1)" aria-label="Previous slide">↑</button><button onclick="go(1)" aria-label="Next slide">↓</button><button onclick="print()">Save as PDF</button></div>
+<main id="deck"></main>
+<script>
+const pl = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const STATUS = { 1: ['Immediate', 'var(--critical)', '●'], 2: ['Delayed', 'var(--warning)', '▲'], 3: ['Minor', 'var(--good)', '■'], 4: ['Expectant', 'var(--text-muted)', '◆'] };
+
+function bars(title, rows, unit = '') {
+  // single series: one hue, direct value labels, table view for accessibility
+  const max = Math.max(1, ...rows.map((r) => r[1]));
+  return `<div class="chart"><h3>${esc(title)}</h3>
+    ${rows.length ? rows.map(([k, v, extra]) => `<div class="bar-row"><span class="name" title="${esc(k)}">${esc(k)}</span>
+      <div class="bar-track"><div class="bar" style="width:${(100 * v) / max}%" title="${esc(k)}: ${v}${unit}${extra ? ' · ' + esc(extra) : ''}"></div></div>
+      <span class="val">${v}${unit}</span></div>`).join('') : '<p class="label">No data in this run.</p>'}
+    <details><summary>Table view</summary><table><tr><th>Item</th><th>Value</th></tr>${rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${v}${unit}</td></tr>`).join('')}</table></details></div>`;
+}
+
+function slide(inner, cls = '') { return `<section class="slide ${cls}">${inner}</section>`; }
+
+async function load() {
+  const r = await fetch('/api/review').then((x) => x.json());
+  const m = r.metrics, rv = r.review, cs = m.cases;
+  const diverted = m.diversions.length;
+  const s1 = slide(`<div class="orb" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
+    <div class="eyebrow">MedMesh · after-action review · ${esc(r.generated.replace('T', ' '))}</div>
+    <h1>${esc(rv.headline || 'Response review')}</h1>
+    <p class="sub">Built from the command centre's own records: every report, dispatch decision, radio message, road report and supply request in this run. Names and MedMesh IDs are removed.</p>
+    <div class="grid" style="margin-top:26px;max-width:900px">
+      <div class="tile"><div class="num">${cs.total}</div><div class="label">people helped${cs.duplicates_merged ? ` · ${cs.duplicates_merged} duplicate reports merged` : ''}</div></div>
+      <div class="tile"><div class="num">${cs.decision_seconds_median == null ? '–' : cs.decision_seconds_median < 1 ? '&lt;1' : cs.decision_seconds_median}<small>s</small></div><div class="label">median time from report to dispatch decision</div></div>
+      <div class="tile"><div class="num">${cs.pickup_eta_min_median ?? '–'}<small>min</small></div><div class="label">median planned ambulance arrival</div></div>
+      <div class="tile"><div class="num">${diverted}</div><div class="label">sent past the nearest hospital, for faster care</div></div>
+    </div>`);
+  const tri = Object.entries(cs.by_triage).sort();
+  const s2 = slide(`<div class="eyebrow">01 · Who needed help</div><h2>${pl(cs.total, 'patient')}, ${cs.with_medmesh_id} with a MedMesh ID</h2>
+    <div>${tri.map(([k, n]) => { const s = STATUS[k] || ['Unknown', 'var(--text-muted)', '○']; return `<span class="status"><span aria-hidden="true" style="color:${s[1]}">${s[2]}</span>${s[0]} <span style="color:var(--text-secondary);font-weight:600">${n}</span></span>`; }).join('')}</div>
+    <div class="two" style="margin-top:14px">${bars('Main problem', Object.entries(cs.by_complaint).sort((a, b) => b[1] - a[1]))}
+    <div class="chart"><h3>Scenes and check-ins</h3><table>
+      <tr><td>Scenes with several casualties</td><td>${m.scenes.count} (${m.scenes.people} people)</td></tr>
+      <tr><td>Scenes with danger reported</td><td>${m.scenes.with_danger}</td></tr>
+      <tr><td>"I'm safe" check-ins</td><td>${m.checkins.SAFE || 0}</td></tr>
+      <tr><td>Non-urgent help requests</td><td>${m.checkins.NEED || 0}</td></tr>
+      <tr><td>Reports with no route</td><td>${cs.no_route.length}</td></tr></table></div></div>`);
+  const hosp = Object.entries(m.hospitals);
+  const s3 = slide(`<div class="eyebrow">02 · Hospitals</div><h2>Where patients went, and why</h2>
+    <div class="two">${bars('Patients sent', hosp.map(([id, h]) => [h.name, h.patients_sent, `${h.load_pct ?? '?'}% beds in use now`]))}
+    <div class="chart"><h3>Sent past the nearest hospital</h3>${diverted ? `<table><tr><th>Case</th><th>Nearest</th><th>Chosen</th><th>Extra drive</th></tr>
+      ${m.diversions.slice(0, 8).map((d) => `<tr><td>${esc(d.case)}</td><td>${esc(d.nearest)}</td><td>${esc(d.chosen)}</td><td>${d.extra_drive_min} min</td></tr>`).join('')}</table>
+      <p class="label">The engine sends a patient further only when care would start sooner there (shorter wait, free bed or the right specialist).</p>` : '<p class="label">Every patient went to the nearest suitable hospital.</p>'}
+      <p class="label">Load now: ${hosp.map(([id, h]) => `${esc(h.name)} ${h.load_pct ?? '?'}%`).join(' · ')}</p></div></div>`);
+  const hops = Object.entries(m.mesh.hops).sort((a, b) => a[0] - b[0]).map(([k, v]) => [`${k} hop${k === '1' ? '' : 's'}`, v]);
+  const s4 = slide(`<div class="eyebrow">03 · Roads and radio</div><h2>${pl(m.roads.blocked.length, 'road')} closed · ${pl(m.mesh.messages_in, 'radio message')}</h2>
+    <div class="two"><div class="chart"><h3>Roads</h3><table>
+      <tr><td>Closed</td><td>${m.roads.blocked.map(esc).join(', ') || 'none'}</td></tr>
+      <tr><td>Flood zones</td><td>${m.roads.flood_zones}</td></tr>
+      <tr><td>Slowed (debris / unconfirmed)</td><td>${Object.keys(m.roads.slow).map(esc).join(', ') || 'none'}</td></tr>
+      <tr><td>Citizen road reports</td><td>${m.roads.citizen_reports} (${m.roads.citizen_confirmed} confirmed)</td></tr>
+      <tr><td>Ambulance reroutes</td><td>${cs.reroutes}</td></tr></table></div>
+    ${bars('How far messages travelled', hops)}</div>
+    <p class="label" style="margin-top:12px">${m.mesh.undelivered} undelivered · ${(m.mesh.bytes_total / 1024).toFixed(1)} KB over the air in total · ${Math.round(m.mesh.multi_hop_share * 100)}% of messages needed 2+ hops</p>`);
+  const s5 = slide(`<div class="eyebrow">04 · Medicine and families</div><h2>${pl(m.supplies.requests, 'supply request')} · ${pl(m.contacts.texts, 'family text')}</h2>
+    <div class="two">${bars('Requests by item', Object.entries(m.supplies.by_item).sort((a, b) => b[1] - a[1]))}
+    <div class="chart"><h3>Outcome</h3><table>
+      <tr><td>Fulfilled (held with a pickup code)</td><td>${m.supplies.fulfilled}</td></tr>
+      <tr><td>Nobody nearby had it</td><td>${Object.entries(m.supplies.unavailable).map(([k, v]) => `${esc(k)} ×${v}`).join(', ') || 'none'}</td></tr>
+      <tr><td>Matched the person's MedMesh ID</td><td>${m.supplies.on_medmesh_id}</td></tr>
+      <tr><td>Texts to emergency contacts sent</td><td>${m.contacts.sent}</td></tr>
+      <tr><td>Texts waiting for a connection</td><td>${m.contacts.queued}</td></tr></table></div></div>`);
+  const s6 = slide(`<div class="eyebrow">05 · Findings</div>
+    <h2>What to do differently <span class="badge" title="${esc(rv.note || '')}">${rv.source === 'gemini' ? '✦ GEMINI · CHECKED AGAINST THE DATA' : 'RULES · OFFLINE'}</span></h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">${rv.findings.map((f, i) => `<div class="finding"><span class="owner">${f.owner ? 'For ' + esc(f.owner) : ''}</span>
+      <h3>${i + 1}. ${esc(f.title)}</h3><p>${esc(f.detail)}</p><p class="rec">→ ${esc(f.recommendation)}</p>
+      <div class="chips">${(f.evidence || []).map((e) => `<span class="chip">${esc(e)}</span>`).join('')}</div></div>`).join('')}</div>
+    ${rv.source === 'gemini' && rv.dropped ? `<p class="label">${rv.dropped} finding(s) dropped because they did not cite real data.</p>` : ''}`);
+  const s7 = slide(`<div class="eyebrow">06 · Next drill</div><h2>Practise the weakest point</h2>
+    <div class="tile" style="max-width:760px;font-size:20px;line-height:1.45">${esc(rv.next_drill)}</div>
+    <p class="sub" style="margin-top:18px">Run it in the command-centre simulator before the next storm season. Every number in this deck comes from MedMesh's own records; findings must cite them. A person reviews this before it is shared.</p>`);
+  document.getElementById('deck').innerHTML = s1 + s2 + s3 + s4 + s5 + s6 + s7;
+  document.getElementById('loading').remove();
+}
+function go(d) { const deck = document.getElementById('deck'); deck.scrollBy({ top: d * deck.clientHeight, behavior: 'smooth' }); }
+addEventListener('keydown', (e) => { if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(1); } if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(-1); } });
+load().catch((e) => { document.getElementById('loading').textContent = 'Could not build the review: ' + e.message; });
+</script>
+</body>
+</html>

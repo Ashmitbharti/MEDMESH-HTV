@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedMesh Command Centre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05070f; --ink:#e8eaf0; --muted:#a1a1aa; --dim:#71717a; --line:rgba(255,255,255,.10); --line2:rgba(255,255,255,.18);
+  --glass:rgba(255,255,255,.03); --glass2:rgba(255,255,255,.06);
+  --sky:#7dd3fc; --sky4:#38bdf8; --blue:#3b82f6; --blue6:#2563eb; --green:#34d399; --red:#f87171; --red6:#ef4444;
+  --yel:#fbbf24; --cyan:#22d3ee; --violet:#818cf8;
+  --mono:"Geist Mono",ui-monospace,Menlo,monospace; --sans:Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{color:var(--ink);font:14px/1.45 var(--sans);background-color:var(--bg);
+  background-image:radial-gradient(1100px 760px at 12% -12%,rgba(37,99,235,.18),transparent 60%),radial-gradient(900px 640px at 102% -4%,rgba(34,211,238,.10),transparent 55%),linear-gradient(180deg,#04060c,#070c18 70%,#080e1d);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.mono{font-family:var(--mono)}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid var(--line);background:rgba(5,7,15,.8);backdrop-filter:blur(20px)}
+.logo{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--sky4),var(--blue6));box-shadow:0 8px 24px rgba(37,99,235,.35)}
+h1{font-size:16px;margin:0;font-weight:600;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:12px}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:var(--glass2);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--muted);white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.dot.off{background:var(--red);box-shadow:0 0 8px var(--red)}
+.dot.warn{background:var(--yel);box-shadow:0 0 8px var(--yel)}
+.spacer{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:8px;border:1px solid var(--line2);background:rgba(255,255,255,.03);padding:7px 12px;font-size:13px;font-weight:500;cursor:pointer;transition:.15s;white-space:nowrap}
+.btn:hover{border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.07)}
+.btn.primary{border:0;color:#fff;font-weight:600;background:linear-gradient(90deg,var(--sky4),var(--blue6));box-shadow:0 8px 20px rgba(30,58,138,.4)}
+.btn.danger{border-color:rgba(248,113,113,.4);color:#fecaca}
+.btn.on{border-color:var(--sky4);background:rgba(56,189,248,.15);color:var(--sky)}
+.btn.sm{padding:4px 8px;font-size:12px;border-radius:7px}
+main{display:grid;grid-template-columns:330px minmax(0,1fr) 390px;gap:14px;padding:14px 20px;align-items:start}
+@media(max-width:1300px){main{grid-template-columns:300px minmax(0,1fr)} #detailCol{grid-column:1/-1}}
+@media(max-width:860px){main{grid-template-columns:minmax(0,1fr);padding:12px} header{flex-wrap:wrap}}
+.card{border:1px solid var(--line);background:var(--glass);border-radius:16px;backdrop-filter:blur(4px);min-width:0}
+.card-h{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.card-h h2{margin:0;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(125,211,252,.85)}
+.card-b{padding:12px 14px}
+.stack{display:grid;gap:14px}
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(125,211,252,.8);font-weight:600}
+/* map */
+#mapCard{position:relative;overflow:hidden;height:min(64vh,620px);min-height:420px}
+#map{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}
+#map.flood{cursor:crosshair}
+#labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-100%);font:500 10.5px/1.3 var(--mono);color:#e4e4e7;white-space:nowrap;text-align:center;text-shadow:0 0 10px rgba(5,7,15,1),0 0 4px rgba(5,7,15,1)}
+.lab small{display:block;color:var(--muted);font-size:9.5px}
+.lab.h{color:var(--sky);font-weight:600}.lab.best{color:var(--green)}.lab.node{color:var(--violet)}.lab.node.off{color:var(--red)}
+.lab.case1{color:#fca5a5}.lab.case2{color:#fde68a}.lab.case3{color:#a7f3d0}
+.seg{display:inline-flex;gap:4px}
+.steps{display:grid;gap:4px;font-size:13px}.steps div{display:grid;grid-template-columns:18px 1fr auto;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.steps .slow{color:#fbbf24}.steps .jam{color:#fca5a5}
+.map-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:rgba(5,7,15,.55);backdrop-filter:blur(8px)}
+.map-legend{position:absolute;left:12px;bottom:30px;display:flex;flex-wrap:wrap;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:rgba(5,7,15,.72);backdrop-filter:blur(8px);font-size:11px;color:var(--muted);max-width:calc(100% - 24px)}
+.lg{display:inline-flex;align-items:center;gap:6px}.sw{width:12px;height:3px;border-radius:2px}
+.map-tools{position:absolute;right:12px;top:64px;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.toast{position:absolute;left:14px;top:64px;max-width:320px;padding:10px 12px;border-radius:12px;border:1px solid rgba(248,113,113,.4);background:rgba(40,8,12,.85);backdrop-filter:blur(8px);font-size:13px;opacity:0;transform:translateY(-6px);transition:.3s}
+.toast.on{opacity:1;transform:none}
+/* cases */
+.case{display:grid;grid-template-columns:6px 1fr auto;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02);cursor:pointer;transition:.15s;margin-bottom:8px}
+.case:hover{border-color:var(--line2);background:rgba(255,255,255,.05)}
+.case.sel{border-color:rgba(56,189,248,.6);background:rgba(56,189,248,.07)}
+.bar{border-radius:3px}
+.t1{background:var(--red6)}.t2{background:var(--yel)}.t3{background:var(--green)}.t4{background:#52525b}
+.tri{display:inline-block;font:600 10.5px var(--mono);letter-spacing:.06em;padding:2px 7px;border-radius:6px}
+.tri.t1{background:rgba(239,68,68,.18);color:#fca5a5}.tri.t2{background:rgba(251,191,36,.16);color:#fde68a}.tri.t3{background:rgba(52,211,153,.15);color:#a7f3d0}.tri.t4{background:rgba(82,82,91,.4);color:#d4d4d8}
+.case h3{margin:0 0 2px;font-size:14px;font-weight:600}
+.meta{color:var(--muted);font-size:12px}
+.pill{font:500 11px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 7px}
+.empty{color:var(--dim);font-size:13px;padding:18px 4px;text-align:center}
+.new{animation:flash 1.2s ease-out 2}
+@keyframes flash{0%{box-shadow:0 0 0 0 rgba(239,68,68,.7)}100%{box-shadow:0 0 0 14px rgba(239,68,68,0)}}
+/* detail */
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px}
+.kv dt{color:var(--muted)}.kv dd{margin:0}
+.sbar{display:grid;grid-template-columns:22px 1fr;gap:6px 8px;font-size:13px}
+.sbar b{font:700 13px var(--mono);color:var(--sky)}
+.flag{display:flex;gap:9px;align-items:flex-start;padding:7px 9px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;font-size:13px}
+.flag.ack{border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.06)}
+.flag .box{width:16px;height:16px;border-radius:5px;border:1.5px solid var(--line2);flex:none;margin-top:1px;display:grid;place-items:center;font-size:11px}
+.flag.ack .box{border-color:var(--green);background:var(--green);color:#052e1f}
+.flag small{display:block;color:var(--dim);font-size:11.5px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{text-align:left;padding:6px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:600}
+tr.win td{color:var(--green)}
+.events{font:12px/1.6 var(--mono);color:var(--muted);max-height:150px;overflow:auto}
+.ai-note{font-size:11.5px;color:var(--dim);margin-top:6px}
+/* bottom grid */
+.lower{grid-column:1/-1;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+.span4{grid-column:span 4}.span5{grid-column:span 5}.span7{grid-column:span 7}.span8{grid-column:span 8}.span6{grid-column:span 6}.span3{grid-column:span 3}
+@media(max-width:1300px){.span4,.span5,.span7,.span8,.span3{grid-column:span 6}}
+@media(max-width:860px){.lower>*{grid-column:1/-1!important}}
+.hcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.hc{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:rgba(255,255,255,.02)}
+.hc.closed{opacity:.55}
+.hc h4{margin:0;font-size:13.5px;font-weight:600}
+.big{font:600 26px/1 var(--sans);letter-spacing:-.02em}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+.stepper button{border:0;background:rgba(255,255,255,.04);width:26px;height:26px;cursor:pointer}
+.stepper button:hover{background:rgba(255,255,255,.1)}
+.stepper span{min-width:30px;text-align:center;font:600 13px var(--mono)}
+.caps{display:flex;gap:4px;flex-wrap:wrap}
+.cap{font:600 10.5px var(--mono);padding:2px 6px;border-radius:6px;border:1px solid var(--line);color:var(--dim);cursor:pointer;background:none}
+.cap.on{border-color:rgba(56,189,248,.5);color:var(--sky);background:rgba(56,189,248,.1)}
+.meter{height:5px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden;margin:8px 0 6px}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--yel) 70%,var(--red6))}
+.stock{display:grid;grid-template-columns:1fr auto;gap:3px 8px;font-size:12.5px;margin-top:6px}
+.stock input{width:52px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:6px;padding:2px 6px;text-align:right;font-family:var(--mono)}
+.switch{position:relative;width:34px;height:19px;border-radius:999px;background:rgba(255,255,255,.12);border:0;cursor:pointer;flex:none}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;transition:.2s}
+.switch.on{background:var(--green)}.switch.on::after{left:17px}
+.node{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.node:last-child{border:0}
+.log{font:11.5px/1.55 var(--mono);max-height:260px;overflow:auto}
+.log div{display:grid;grid-template-columns:62px 34px 70px 1fr 40px;gap:8px;padding:2px 0;border-bottom:1px dashed rgba(255,255,255,.05)}
+.log .in{color:var(--sky)}.log .out{color:var(--green)}.log .err,.log .drop{color:var(--red)}
+.log .b{color:var(--dim);text-align:right}
+select.inp,input.inp{background:rgba(255,255,255,.04);border:1px solid var(--line2);border-radius:8px;padding:6px 9px}
+select.inp option{background:#0b1222}
+.req{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:8px;font-size:13px}
+.summary{white-space:pre-wrap;font-size:13px;color:var(--ink)}
+.ctrls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.hint{font-size:12px;color:var(--dim)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">M</div>
+  <div><h1>MedMesh Command Centre</h1><div class="sub">Offline emergency coordination over LoRa mesh</div></div>
+  <span class="spacer"></span>
+  <span class="badge" id="modeBadge"><span class="dot"></span>…</span>
+  <span class="badge" id="netBadge"><span class="dot"></span>nodes</span>
+  <span class="badge" id="aiBadge"><span class="dot warn"></span>AI</span>
+  <a class="badge" href="/review" target="_blank" rel="noopener" style="text-decoration:none;color:inherit" title="After-action review deck built from this run's records">✦ Review</a>
+  <span class="badge mono" id="clock">--:--:--</span>
+</header>
+
+<main>
+  <!-- LEFT: case queue -->
+  <section class="card" id="casesCard">
+    <div class="card-h"><h2>Case queue</h2><span class="spacer"></span><span class="pill" id="caseCount">0</span></div>
+    <div class="card-b" id="cases"><div class="empty">Waiting for reports from the mesh…</div></div>
+  </section>
+
+  <!-- CENTER: 3D aerial map -->
+  <section class="card" id="mapCard">
+    <canvas id="street" style="position:absolute;inset:0;width:100%;height:100%;display:block"></canvas>
+    <canvas id="map" style="display:none"></canvas>
+    <div id="labels" style="display:none"></div>
+    <div class="map-top">
+      <span class="logo" style="width:28px;height:28px;font-size:11px;background:linear-gradient(135deg,rgba(56,189,248,.2),rgba(37,99,235,.2));color:var(--sky);box-shadow:none">3D</span>
+      <div><div style="font-weight:600;font-size:13.5px">Scarborough · live operations</div><div class="sub" id="mapSub">offline street map</div></div>
+      <span class="spacer"></span>
+      <span class="seg"><button class="btn sm on" id="vStreet">Street map</button><button class="btn sm" id="v3d">3D network</button></span>
+      <span class="badge" id="blockedBadge">0 roads blocked</span>
+    </div>
+    <div class="toast" id="toast"></div>
+    <div class="map-legend">
+      <span class="lg"><span class="sw" style="background:#3b82f6;height:5px"></span>Route to hospital</span>
+      <span class="lg"><span class="sw" style="background:var(--sky4)"></span>Ambulance → patient</span>
+      <span class="lg"><span class="sw" style="background:#f59e0b;height:5px"></span>Slow</span>
+      <span class="lg"><span class="sw" style="background:#ef4444;height:5px"></span>Jammed / blocked</span>
+      <span class="lg"><span class="sw" style="background:#60a5fa;height:6px;opacity:.6"></span>Flood</span>
+    </div>
+    <div class="map-tools">
+      <button class="btn sm" id="floodBtn">💧 Draw flood zone</button>
+      <button class="btn sm" id="viewBtn">↺ Reset view</button>
+    </div>
+  </section>
+
+  <!-- RIGHT: selected case -->
+  <section class="stack" id="detailCol">
+    <div class="card"><div class="card-h"><h2>Selected case</h2><span class="spacer"></span><span id="detTri"></span></div>
+      <div class="card-b" id="detail"><div class="empty">Select a case to see the handoff note, red flags and hospital choice.</div></div></div>
+  </section>
+
+  <section class="lower">
+    <div class="card span8"><div class="card-h"><h2>Hospitals</h2><span class="spacer"></span><span class="hint">Live-editable for the demo · in the field each hospital updates from its own node</span></div>
+      <div class="card-b"><div class="hcards" id="hospitals"></div></div></div>
+
+    <div class="card span4"><div class="card-h"><h2>Situation summary</h2><span class="spacer"></span><button class="btn sm primary" id="sumBtn">Generate</button></div>
+      <div class="card-b"><div class="summary" id="summary"><span class="hint">Offline AI summarises cases, capacity, blocked roads and alerts for the coordinator.</span></div></div></div>
+
+    <div class="card span5"><div class="card-h"><h2>Pharmacies</h2></div><div class="card-b"><div class="hcards" id="pharmacies"></div></div></div>
+
+    <div class="card span3"><div class="card-h"><h2>Requests</h2><span class="spacer"></span><span class="pill" id="reqCount">0</span></div>
+      <div class="card-b" id="requests"><div class="empty">No medication or supply requests.</div></div></div>
+
+    <div class="card span4"><div class="card-h"><h2>Mesh network</h2><span class="spacer"></span><span class="pill" id="modePill"></span></div>
+      <div class="card-b"><div id="nodes"></div><div class="hint" id="nodeHint" style="margin-top:6px"></div></div></div>
+
+    <div class="card span7"><div class="card-h"><h2>Over the air</h2><span class="spacer"></span><span class="hint">every LoRa message, with size in bytes</span></div>
+      <div class="card-b"><div class="log" id="log"></div></div></div>
+
+    <div class="card span5"><div class="card-h"><h2>Roads & demo controls</h2></div>
+      <div class="card-b ctrls">
+        <button class="btn primary" id="scenarioBtn">▶ Run sample scenario</button>
+        <select class="inp" id="roadSel"></select>
+        <button class="btn danger" id="blockBtn">⛔ Block</button>
+        <button class="btn" id="slowBtn">🐢 Mark slow</button>
+        <button class="btn" id="jamBtn" title="Simulator: a jam the base doesn't know about until an ambulance drives into it">🚗 Hidden jam (sim)</button>
+        <button class="btn" id="clearBtn">Clear all road issues</button>
+        <button class="btn" id="resetBtn">Reset demo</button>
+        <span class="hint" style="width:100%"><b>Block</b> removes a road. <b>Mark slow</b> makes it count 3× slower (evacuation traffic, passable debris). A <b>hidden jam</b> is only discovered when an ambulance's speed drops on that road, then MedMesh reroutes everyone. That's live traffic over the mesh.</span>
+      </div></div>
+    <div class="card span6"><div class="card-h"><h2>Broadcast alert</h2><span class="spacer"></span><span class="hint">to every phone on the mesh</span></div>
+      <div class="card-b"><div class="ctrls"><select class="inp" id="alertLvl"><option value="WARN">⚠️ Warning</option><option value="INFO">ℹ️ Info</option><option value="EVAC">🚨 Evacuate</option></select>
+        <input class="inp" id="alertTxt" style="flex:1;min-width:200px" maxlength="140" placeholder="e.g. Flooding on Lawrence Ave E: avoid area. Shelter open at UTSC.">
+        <button class="btn primary" id="alertBtn">Send</button></div>
+        <div id="alerts" class="events" style="margin-top:10px;max-height:140px"></div></div></div>
+    <div class="card span6"><div class="card-h"><h2>Community check-ins</h2><span class="spacer"></span><span class="pill" id="ciCount">0</span></div>
+      <div class="card-b"><div id="checkins" class="events" style="max-height:190px"></div></div></div>
+    <div class="card span7"><div class="card-h"><h2>Live traffic</h2><span class="spacer"></span><span class="hint">learned from ambulance GPS over the mesh</span></div>
+      <div class="card-b"><div id="traffic" class="events" style="max-height:200px"></div></div></div>
+  </section>
+</main>
+
+<script src="/static/three.min.js"></script>
+<script src="/static/mapview.js"></script>
+<script src="/static/dashboard.js"></script>
+</body>
+</html>
