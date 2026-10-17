@@ -1,0 +1,23 @@
+{
+  "02HC033": [
+    "1. Winner logreg: validation PR-AUC 0.114, F2 0.284 at cut-off 0.5721 (train CV PR-AUC 0.112 +/- 0.012).",
+    "2. Runner-up xgb: validation PR-AUC 0.082, F2 0.243; ties within 0.01 go to the simpler model.",
+    "3. On TEST (cut-off fixed from validation): precision 0.108, recall 0.333, F2 0.236, PR-AUC 0.144, events caught 12/31.",
+    "4. Persistence on TEST: precision 0.154, recall 0.154, F2 0.154, events caught 8/31.",
+    "5. Only 39 high days / 31 events in test and train-CV PR-AUC std up to 0.060: small gaps are within noise."
+  ],
+  "02HC030": [
+    "1. Winner logreg: validation PR-AUC 0.289, F2 0.375 at cut-off 0.6111 (train CV PR-AUC 0.232 +/- 0.076).",
+    "2. Runner-up xgb: validation PR-AUC 0.269, F2 0.390; ties within 0.01 go to the simpler model.",
+    "3. On TEST (cut-off fixed from validation): precision 0.111, recall 0.379, F2 0.256, PR-AUC 0.168, events caught 10/25.",
+    "4. Persistence on TEST: precision 0.138, recall 0.138, F2 0.138, events caught 4/25.",
+    "5. Only 29 high days / 25 events in test and train-CV PR-AUC std up to 0.076: small gaps are within noise."
+  ],
+  "02HC032": [
+    "1. Winner logreg: validation PR-AUC 0.566, F2 0.636 at cut-off 0.0507 (train CV PR-AUC 0.653 +/- 0.155).",
+    "2. Runner-up rf: validation PR-AUC 0.494, F2 0.517; ties within 0.01 go to the simpler model.",
+    "3. On TEST (cut-off fixed from validation): precision 0.293, recall 0.654, F2 0.525, PR-AUC 0.390, events caught 9/13.",
+    "4. Persistence on TEST: precision 0.423, recall 0.423, F2 0.423, events caught 7/13.",
+    "5. Only 26 high days / 13 events in test and train-CV PR-AUC std up to 0.157: small gaps are within noise."
+  ]
+}

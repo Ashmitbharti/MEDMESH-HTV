@@ -1,0 +1,56 @@
+{
+  "02HC033": {
+    "next/p95": {
+      "winner": "logreg",
+      "feature_set": "LEAN"
+    },
+    "next/p97": {
+      "winner": "lgbm",
+      "feature_set": "LEAN"
+    },
+    "same/p95": {
+      "winner": "logreg",
+      "feature_set": "LEAN"
+    },
+    "same/p97": {
+      "winner": "xgb",
+      "feature_set": "LEAN"
+    }
+  },
+  "02HC030": {
+    "next/p95": {
+      "winner": "lgbm",
+      "feature_set": "LEAN"
+    },
+    "next/p97": {
+      "winner": "xgb",
+      "feature_set": "LEAN"
+    },
+    "same/p95": {
+      "winner": "xgb",
+      "feature_set": "LEAN"
+    },
+    "same/p97": {
+      "winner": "xgb",
+      "feature_set": "LEAN"
+    }
+  },
+  "02HC032": {
+    "next/p95": {
+      "winner": "logreg",
+      "feature_set": "LEAN"
+    },
+    "next/p97": {
+      "winner": "logreg",
+      "feature_set": "LEAN"
+    },
+    "same/p95": {
+      "winner": "logreg",
+      "feature_set": "LEAN"
+    },
+    "same/p97": {
+      "winner": "logreg",
+      "feature_set": "LEAN"
+    }
+  }
+}

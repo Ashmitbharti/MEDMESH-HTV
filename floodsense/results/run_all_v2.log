@@ -1,0 +1,419 @@
+
+=== STEP 1: clean ===
+  02HC033_daily.csv: STATION_NAME = 'MIMICO CREEK AT ISLINGTON' (expected to contain 'MIMICO') -> OK
+  02HC033 MIMICO CREEK AT ISLINGTON: 2000-01-01 -> 2024-12-31, 9132 calendar days, 0 duplicate dates dropped
+    % missing LEVEL: 9.9%
+    % missing DISCHARGE: 3.9%
+    LEVEL_SYMBOL_EN: <blank>=9087, Partial Day=45
+    DISCHARGE_SYMBOL_EN: <blank>=7663, Ice Conditions=1288, Estimated=172, Partial Day=9
+    top-3% LEVEL days (all years, n=247) carrying ice/estimated symbols: DISCHARGE_SYMBOL_EN='Ice Conditions': 25, DISCHARGE_SYMBOL_EN='Estimated': 4
+    LEVEL: interpolated 5 days (gaps <= 2 days)
+    DISCHARGE: interpolated 0 days (gaps <= 2 days)
+    1192 days still missing LEVEL or DISCHARGE (kept as NaN on the calendar so lags stay aligned; rows that need them are dropped later)
+    rain: 99.7% of station days have Pearson precipitation; 26 days in gaps <= 2 filled with 0; 0 days left NaN (longer gaps)
+    SNOW_ON_GROUND coverage: 65.0% of station days
+  02HC033_realtime.csv: STATION_NAME = 'MIMICO CREEK AT ISLINGTON' (expected to contain 'MIMICO') -> OK
+  02HC033 realtime: 2026-09-17 19:00:00 -> 2026-10-16 23:50:00 LST, 8411 rows, 29 complete days
+    LEVEL: realtime daily mean [5.564, 5.825] | daily file [5.170, 6.723], median 5.605
+    DISCHARGE: realtime daily mean [0.079, 4.640] | daily file [0.031, 40.900], median 0.300
+    units/range check passed for 02HC033
+  02HC030_daily.csv: STATION_NAME = 'ETOBICOKE CREEK BELOW QUEEN ELIZABETH HIGHWAY' (expected to contain 'ETOBICOKE') -> OK
+  02HC030 ETOBICOKE CREEK BELOW QUEEN ELIZABETH HIGHWAY: 2000-01-01 -> 2023-12-31, 8766 calendar days, 0 duplicate dates dropped
+    % missing LEVEL: 9.7%
+    % missing DISCHARGE: 0.0%
+    LEVEL_SYMBOL_EN: <blank>=8675, Partial Day=91
+    DISCHARGE_SYMBOL_EN: <blank>=7275, Ice Conditions=1227, Estimated=250, Partial Day=14
+    top-3% LEVEL days (all years, n=241) carrying ice/estimated symbols: DISCHARGE_SYMBOL_EN='Ice Conditions': 13, DISCHARGE_SYMBOL_EN='Estimated': 7
+    LEVEL: interpolated 8 days (gaps <= 2 days)
+    DISCHARGE: interpolated 0 days (gaps <= 2 days)
+    846 days still missing LEVEL or DISCHARGE (kept as NaN on the calendar so lags stay aligned; rows that need them are dropped later)
+    rain: 99.7% of station days have Pearson precipitation; 26 days in gaps <= 2 filled with 0; 0 days left NaN (longer gaps)
+    SNOW_ON_GROUND coverage: 67.1% of station days
+  02HC030_realtime.csv: STATION_NAME = 'ETOBICOKE CREEK BELOW QUEEN ELIZABETH HIGHWAY' (expected to contain 'ETOBICOKE') -> OK
+  02HC030 realtime: 2026-09-17 19:00:00 -> 2026-10-17 00:15:00 LST, 8413 rows, 29 complete days
+    LEVEL: realtime daily mean [3.449, 3.795] | daily file [3.419, 4.688], median 3.546
+    DISCHARGE: realtime daily mean [0.282, 9.985] | daily file [0.120, 110.000], median 1.100
+    units/range check passed for 02HC030
+  02HC032_daily.csv: STATION_NAME = 'EAST HUMBER RIVER AT KING CREEK' (expected to contain 'EAST HUMBER') -> OK
+  02HC032 EAST HUMBER RIVER AT KING CREEK: 2002-10-01 -> 2024-12-31, 8128 calendar days, 0 duplicate dates dropped
+    % missing LEVEL: 8.3%
+    % missing DISCHARGE: 7.4%
+    LEVEL_SYMBOL_EN: <blank>=8019, Partial Day=109
+    DISCHARGE_SYMBOL_EN: <blank>=6365, Ice Conditions=1364, Estimated=377, Partial Day=22
+    top-3% LEVEL days (all years, n=224) carrying ice/estimated symbols: DISCHARGE_SYMBOL_EN='Ice Conditions': 50, DISCHARGE_SYMBOL_EN='Estimated': 4
+    LEVEL: interpolated 27 days (gaps <= 2 days)
+    DISCHARGE: interpolated 0 days (gaps <= 2 days)
+    877 days still missing LEVEL or DISCHARGE (kept as NaN on the calendar so lags stay aligned; rows that need them are dropped later)
+    rain: 99.7% of station days have Pearson precipitation; 26 days in gaps <= 2 filled with 0; 0 days left NaN (longer gaps)
+    SNOW_ON_GROUND coverage: 60.7% of station days
+  02HC032_realtime.csv: STATION_NAME = 'EAST HUMBER RIVER AT KING CREEK' (expected to contain 'EAST HUMBER') -> OK
+  02HC032 realtime: 2026-09-17 19:00:00 -> 2026-10-17 00:15:00 LST, 8416 rows, 29 complete days
+    LEVEL: realtime daily mean [1.271, 1.306] | daily file [1.248, 3.045], median 1.356
+    DISCHARGE: realtime daily mean [0.097, 0.188] | daily file [0.053, 20.700], median 0.366
+    units/range check passed for 02HC032
+Step 1 summary: 3 stations cleaned to C:\Users\Shiven\hackathon\MEDMESH-HTV\floodsense\data\clean; days with LEVEL and DISCHARGE: {'02HC033': 7940, '02HC030': 7920, '02HC032': 7251}; rain used.
+
+################ v2 02HC033 ################
+  SNOW_ON_GROUND coverage train 80%, val+test 23% (need >= 80% in both) -> snow_on_ground SKIPPED
+  NEXT-DAY feature sets:
+    LEVEL_ONLY (3): ['level', 'level_chg_1d', 'level_chg_3d']
+    LEAN (14): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos']
+    BIG (36): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos', 'level_lag1', 'disch_lag1', 'level_lag2', 'disch_lag2', 'level_lag3', 'disch_lag3', 'level_lag7', 'disch_lag7', 'level_rmean7', 'level_rstd7', 'disch_rmean7', 'disch_rstd7', 'level_rmean14', 'level_rstd14', 'disch_rmean14', 'disch_rstd14', 'level_rmean30', 'level_rstd30', 'disch_rmean30', 'disch_rstd30', 'disch_level_ratio', 'days_since_high']
+    LEAN_NO_RAIN (11): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'month_sin', 'month_cos']
+  SAME-DAY feature sets:
+    LEVEL_ONLY (3): ['level_y1', 'level_chg_1d_y1', 'level_chg_3d_y1']
+    LEAN (9): ['level_y1', 'level_chg_1d_y1', 'disch_y1', 'disch_chg_1d_y1', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos']
+    BIG (36): ['level_y1', 'level_chg_1d_y1', 'disch_y1', 'disch_chg_1d_y1', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos', 'level_chg_3d_y1', 'level_accel_y1', 'level_max_3d_y1', 'level_max_7d_y1', 'level_z30_y1', 'level_lag1_y1', 'disch_lag1_y1', 'level_lag2_y1', 'disch_lag2_y1', 'level_lag3_y1', 'disch_lag3_y1', 'level_lag7_y1', 'disch_lag7_y1', 'level_rmean7_y1', 'level_rstd7_y1', 'disch_rmean7_y1', 'disch_rstd7_y1', 'level_rmean14_y1', 'level_rstd14_y1', 'disch_rmean14_y1', 'disch_rstd14_y1', 'level_rmean30_y1', 'level_rstd30_y1', 'disch_rmean30_y1', 'disch_rstd30_y1', 'disch_level_ratio_y1', 'days_since_high_y1']
+    LEAN_NO_RAIN (6): ['level_y1', 'level_chg_1d_y1', 'disch_y1', 'disch_chg_1d_y1', 'month_sin', 'month_cos']
+  [02HC033 NEXT-DAY p95] threshold LEVEL > 5.826 m above gauge datum (train p95)
+    train 2002-01-01 -> 2018-06-25  n= 5552  positives= 269 (4.85%)
+    val   2018-06-26 -> 2021-09-27  n= 1190  positives=  51 (4.29%)
+    test  2021-09-28 -> 2024-12-30  n= 1190  positives=  59 (4.96%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.129 +/- 0.016
+      LEAN          14 features  CV PR-AUC 0.340 +/- 0.082
+      BIG           36 features  CV PR-AUC 0.316 +/- 0.065
+      LEAN_NO_RAIN  11 features  CV PR-AUC 0.198 +/- 0.025
+    -> chosen set LEAN (BIG - LEAN = -0.023, one std = 0.082); rain ablation LEAN - LEAN_NO_RAIN = +0.142 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): logreg; time 51s
+    top-14 importances (xgb, gain): rain_today=0.255, disch=0.083, disch_chg_1d=0.074, level=0.067, month_sin=0.062, rain_sum_3d=0.060, level_chg_1d=0.059, level_accel=0.052, level_z30=0.052, level_chg_3d=0.051, rain_sum_7d=0.050, month_cos=0.048, level_max_3d=0.044, level_max_7d=0.043
+  [02HC033 NEXT-DAY p97] threshold LEVEL > 5.888 m above gauge datum (train p97)
+    train 2002-01-01 -> 2018-06-25  n= 5552  positives= 155 (2.79%)
+    val   2018-06-26 -> 2021-09-27  n= 1190  positives=  28 (2.35%)
+    test  2021-09-28 -> 2024-12-30  n= 1190  positives=  38 (3.19%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.083 +/- 0.018
+      LEAN          14 features  CV PR-AUC 0.284 +/- 0.068
+      BIG           36 features  CV PR-AUC 0.255 +/- 0.074
+      LEAN_NO_RAIN  11 features  CV PR-AUC 0.132 +/- 0.046
+    -> chosen set LEAN (BIG - LEAN = -0.029, one std = 0.074); rain ablation LEAN - LEAN_NO_RAIN = +0.152 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): lgbm; time 66s
+    top-14 importances (lgbm, gain): rain_today=0.248, rain_sum_3d=0.083, level_accel=0.075, disch_chg_1d=0.071, level_max_7d=0.067, level_z30=0.066, rain_sum_7d=0.059, level_max_3d=0.058, level_chg_3d=0.055, disch=0.051, level_chg_1d=0.050, level=0.049, month_sin=0.037, month_cos=0.032
+  [02HC033 SAME-DAY p95] threshold LEVEL > 5.826 m above gauge datum (train p95)
+    train 2002-01-02 -> 2018-06-25  n= 5551  positives= 269 (4.85%)
+    val   2018-06-26 -> 2021-09-27  n= 1190  positives=  51 (4.29%)
+    test  2021-09-28 -> 2024-12-31  n= 1191  positives=  59 (4.95%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.129 +/- 0.015
+      LEAN           9 features  CV PR-AUC 0.683 +/- 0.062
+      BIG           36 features  CV PR-AUC 0.678 +/- 0.057
+      LEAN_NO_RAIN   6 features  CV PR-AUC 0.183 +/- 0.052
+    -> chosen set LEAN (BIG - LEAN = -0.005, one std = 0.062); rain ablation LEAN - LEAN_NO_RAIN = +0.500 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): logreg; time 56s
+    top-9 importances (xgb, gain): rain_sum_3d=0.354, rain_today=0.215, disch_chg_1d_y1=0.075, disch_y1=0.075, level_y1=0.071, rain_sum_7d=0.060, level_chg_1d_y1=0.054, month_sin=0.053, month_cos=0.043
+  [02HC033 SAME-DAY p97] threshold LEVEL > 5.888 m above gauge datum (train p97)
+    train 2002-01-02 -> 2018-06-25  n= 5551  positives= 155 (2.79%)
+    val   2018-06-26 -> 2021-09-27  n= 1190  positives=  28 (2.35%)
+    test  2021-09-28 -> 2024-12-31  n= 1191  positives=  38 (3.19%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.087 +/- 0.024
+      LEAN           9 features  CV PR-AUC 0.521 +/- 0.077
+      BIG           36 features  CV PR-AUC 0.549 +/- 0.101
+      LEAN_NO_RAIN   6 features  CV PR-AUC 0.121 +/- 0.042
+    -> chosen set LEAN (BIG - LEAN = +0.027, one std = 0.101); rain ablation LEAN - LEAN_NO_RAIN = +0.400 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): xgb; time 54s
+    top-9 importances (xgb, gain): rain_sum_3d=0.320, rain_today=0.193, disch_chg_1d_y1=0.088, rain_sum_7d=0.071, disch_y1=0.069, month_cos=0.068, month_sin=0.068, level_y1=0.066, level_chg_1d_y1=0.057
+
+  ===== 02HC033: VAL PR-AUC/F2 and TEST metrics (cut-offs fixed on validation) =====
+target  pct  experiment  feature_set       model  val_PR  val_F2  prec   rec    F2  PR-AUC     CV PR-AUC    TN FP FN TP events day_before
+  next   95 set_compare   LEVEL_ONLY        lgbm   0.176   0.291 0.122 0.458 0.295   0.119 0.129+/-0.016  936 195 32 27  26/45         19
+  next   95 set_compare         LEAN        lgbm   0.332   0.409 0.290 0.610 0.500   0.397  0.34+/-0.082  1043 88 23 36  32/45         25
+  next   95 set_compare          BIG        lgbm   0.263   0.397 0.259 0.712 0.528   0.352 0.316+/-0.065 1011 120 17 42  37/45         30
+  next   95 set_compare LEAN_NO_RAIN        lgbm   0.224   0.318 0.123 0.339 0.251   0.183 0.198+/-0.025  989 142 39 20  22/45         12
+  next   95      models         LEAN      logreg   0.355   0.442 0.197 0.729 0.474   0.367 0.358+/-0.046  956 175 16 43  39/45         31
+  next   95      models         LEAN          rf   0.313   0.456 0.270 0.678 0.521   0.394 0.358+/-0.065 1023 108 19 40  35/45         28
+  next   95      models         LEAN        lgbm   0.342   0.422 0.315 0.593 0.504   0.370 0.371+/-0.079  1055 76 24 35  32/45         23
+  next   95      models         LEAN         xgb   0.346   0.422 0.302 0.712 0.560   0.389 0.381+/-0.084  1034 97 17 42  37/45         30
+  next   95    baseline            - persistence   0.106   0.275 0.136 0.136 0.136   0.061 0.098+/-0.024   1080 51 51 8  13/45          0
+  next   95    baseline            -   always_no   0.043   0.000 0.000 0.000 0.000   0.050  0.05+/-0.007    1131 0 59 0   0/45          0
+  next   97 set_compare   LEVEL_ONLY        lgbm   0.064   0.221 0.075 0.342 0.200   0.074 0.083+/-0.018  992 160 25 13  15/30          9
+  next   97 set_compare         LEAN        lgbm   0.275   0.410 0.370 0.263 0.279   0.297 0.284+/-0.068  1135 17 28 10   9/30          5
+  next   97 set_compare          BIG        lgbm   0.229   0.376 0.222 0.421 0.357   0.201 0.255+/-0.074  1096 56 22 16  13/30          9
+  next   97 set_compare LEAN_NO_RAIN        lgbm   0.133   0.294 0.145 0.237 0.210   0.135 0.132+/-0.046   1099 53 29 9  10/30          6
+  next   97      models         LEAN      logreg   0.238   0.380 0.254 0.447 0.388   0.348 0.274+/-0.089  1102 50 21 17  16/30         10
+  next   97      models         LEAN          rf   0.252   0.409 0.295 0.342 0.332   0.285 0.296+/-0.096  1121 31 25 13  10/30          6
+  next   97      models         LEAN        lgbm   0.305   0.468 0.407 0.289 0.307   0.284  0.32+/-0.104  1136 16 27 11   9/30          6
+  next   97      models         LEAN         xgb   0.267   0.452 0.232 0.421 0.362   0.266 0.329+/-0.104  1099 53 22 16  14/30          9
+  next   97    baseline            - persistence   0.064   0.214 0.158 0.158 0.158   0.052 0.045+/-0.007   1120 32 32 6   8/30          0
+  next   97    baseline            -   always_no   0.024   0.000 0.000 0.000 0.000   0.032 0.029+/-0.005    1152 0 38 0   0/30          0
+  same   95 set_compare   LEVEL_ONLY        lgbm   0.177   0.293 0.141 0.373 0.281   0.121 0.129+/-0.015  998 134 37 22  22/45          -
+  same   95 set_compare         LEAN        lgbm   0.481   0.641 0.345 0.847 0.656   0.535 0.683+/-0.062   1037 95 9 50  39/45          -
+  same   95 set_compare          BIG        lgbm   0.570   0.609 0.351 0.881 0.677   0.544 0.678+/-0.057   1036 96 7 52  40/45          -
+  same   95 set_compare LEAN_NO_RAIN        lgbm   0.166   0.311 0.160 0.288 0.249   0.177 0.183+/-0.052  1043 89 42 17  19/45          -
+  same   95      models         LEAN      logreg   0.568   0.604 0.522 0.610 0.590   0.545 0.653+/-0.069  1099 33 23 36  26/45          -
+  same   95      models         LEAN          rf   0.489   0.638 0.377 0.831 0.669   0.568 0.683+/-0.064  1051 81 10 49  39/45          -
+  same   95      models         LEAN        lgbm   0.520   0.623 0.350 0.847 0.660   0.573 0.703+/-0.064   1039 93 9 50  39/45          -
+  same   95      models         LEAN         xgb   0.528   0.629 0.400 0.814 0.674   0.559 0.704+/-0.059  1060 72 11 48  37/45          -
+  same   95    baseline            - persistence   0.106   0.275 0.136 0.136 0.136   0.061 0.098+/-0.024   1081 51 51 8  13/45          -
+  same   95    baseline            -   always_no   0.043   0.000 0.000 0.000 0.000   0.050  0.05+/-0.007    1132 0 59 0   0/45          -
+  same   97 set_compare   LEVEL_ONLY        lgbm   0.088   0.225 0.110 0.263 0.206   0.084 0.087+/-0.024  1072 81 28 10  11/30          -
+  same   97 set_compare         LEAN        lgbm   0.562   0.596 0.469 0.605 0.572   0.493 0.521+/-0.077  1127 26 15 23  20/30          -
+  same   97 set_compare          BIG        lgbm   0.564   0.574 0.449 0.579 0.547   0.528 0.549+/-0.101  1126 27 16 22  20/30          -
+  same   97 set_compare LEAN_NO_RAIN        lgbm   0.115   0.286 0.127 0.237 0.202   0.112 0.121+/-0.042   1091 62 29 9  10/30          -
+  same   97      models         LEAN      logreg   0.553   0.625 0.455 0.658 0.604   0.593 0.561+/-0.106  1123 30 13 25  19/30          -
+  same   97      models         LEAN          rf   0.468   0.633 0.511 0.605 0.584   0.507  0.546+/-0.08  1131 22 15 23  21/30          -
+  same   97      models         LEAN        lgbm   0.574   0.604 0.561 0.605 0.596   0.549 0.542+/-0.093  1135 18 15 23  20/30          -
+  same   97      models         LEAN         xgb   0.587   0.621 0.472 0.447 0.452   0.516 0.541+/-0.094  1134 19 21 17  17/30          -
+  same   97    baseline            - persistence   0.064   0.214 0.158 0.158 0.158   0.052 0.045+/-0.007   1121 32 32 6   8/30          -
+  same   97    baseline            -   always_no   0.024   0.000 0.000 0.000 0.000   0.032 0.029+/-0.005    1153 0 38 0   0/30          -
+  NOTE: with this few high-water events, differences of a few hundredths are within noise (compare against the CV std).
+
+  Known-flood check 02HC033 (p97 winners; NEXT-DAY = forecast issued the day before):
+      date  named  level  next_thr split                                  next_flag  same_thr                                 same_flag
+2013-07-08   True  6.543     5.888 train YES (p=0.36, lgbm)  [TRAIN - not evidence]     5.888 YES (p=0.68, xgb)  [TRAIN - not evidence]
+2024-07-16   True  6.419     5.888  test                         YES (p=0.37, lgbm)     5.888                         YES (p=0.71, xgb)
+2024-08-17   True  6.221     5.888  test                          no (p=0.00, lgbm)     5.888                         YES (p=0.77, xgb)
+2022-02-17  False  6.723     5.888  test                          no (p=0.04, lgbm)     5.888                         YES (p=0.87, xgb)
+2014-01-11  False  6.583     5.888   NaN                              no usable row     5.888                             no usable row
+2024-01-24  False  6.442     5.888  test                          no (p=0.09, lgbm)     5.888                          no (p=0.06, xgb)
+2009-02-12  False  6.306     5.888 train YES (p=0.35, lgbm)  [TRAIN - not evidence]     5.888 YES (p=0.60, xgb)  [TRAIN - not evidence]
+2020-01-12  False  6.296     5.888   val                         YES (p=0.65, lgbm)     5.888                         YES (p=0.86, xgb)
+2008-07-20  False  6.219     5.888 train YES (p=0.49, lgbm)  [TRAIN - not evidence]     5.888 YES (p=0.84, xgb)  [TRAIN - not evidence]
+2011-10-20  False  6.209     5.888 train YES (p=0.62, lgbm)  [TRAIN - not evidence]     5.888 YES (p=0.91, xgb)  [TRAIN - not evidence]
+  Days in the TRAIN split were seen during fitting and do NOT count as evidence.
+
+################ v2 02HC030 ################
+  SNOW_ON_GROUND coverage train 83%, val+test 24% (need >= 80% in both) -> snow_on_ground SKIPPED
+  NEXT-DAY feature sets:
+    LEVEL_ONLY (3): ['level', 'level_chg_1d', 'level_chg_3d']
+    LEAN (14): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos']
+    BIG (36): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos', 'level_lag1', 'disch_lag1', 'level_lag2', 'disch_lag2', 'level_lag3', 'disch_lag3', 'level_lag7', 'disch_lag7', 'level_rmean7', 'level_rstd7', 'disch_rmean7', 'disch_rstd7', 'level_rmean14', 'level_rstd14', 'disch_rmean14', 'disch_rstd14', 'level_rmean30', 'level_rstd30', 'disch_rmean30', 'disch_rstd30', 'disch_level_ratio', 'days_since_high']
+    LEAN_NO_RAIN (11): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'month_sin', 'month_cos']
+  SAME-DAY feature sets:
+    LEVEL_ONLY (3): ['level_y1', 'level_chg_1d_y1', 'level_chg_3d_y1']
+    LEAN (9): ['level_y1', 'level_chg_1d_y1', 'disch_y1', 'disch_chg_1d_y1', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos']
+    BIG (36): ['level_y1', 'level_chg_1d_y1', 'disch_y1', 'disch_chg_1d_y1', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos', 'level_chg_3d_y1', 'level_accel_y1', 'level_max_3d_y1', 'level_max_7d_y1', 'level_z30_y1', 'level_lag1_y1', 'disch_lag1_y1', 'level_lag2_y1', 'disch_lag2_y1', 'level_lag3_y1', 'disch_lag3_y1', 'level_lag7_y1', 'disch_lag7_y1', 'level_rmean7_y1', 'level_rstd7_y1', 'disch_rmean7_y1', 'disch_rstd7_y1', 'level_rmean14_y1', 'level_rstd14_y1', 'disch_rmean14_y1', 'disch_rstd14_y1', 'level_rmean30_y1', 'level_rstd30_y1', 'disch_rmean30_y1', 'disch_rstd30_y1', 'disch_level_ratio_y1', 'days_since_high_y1']
+    LEAN_NO_RAIN (6): ['level_y1', 'level_chg_1d_y1', 'disch_y1', 'disch_chg_1d_y1', 'month_sin', 'month_cos']
+  [02HC030 NEXT-DAY p95] threshold LEVEL > 3.838 m above gauge datum (train p95)
+    train 2002-01-01 -> 2017-05-26  n= 5536  positives= 277 (5.00%)
+    val   2017-05-27 -> 2020-08-29  n= 1186  positives=  54 (4.55%)
+    test  2020-08-30 -> 2023-12-30  n= 1186  positives=  41 (3.46%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.227 +/- 0.039
+      LEAN          14 features  CV PR-AUC 0.435 +/- 0.042
+      BIG           36 features  CV PR-AUC 0.417 +/- 0.078
+      LEAN_NO_RAIN  11 features  CV PR-AUC 0.321 +/- 0.067
+    -> chosen set LEAN (BIG - LEAN = -0.018, one std = 0.078); rain ablation LEAN - LEAN_NO_RAIN = +0.114 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): lgbm; time 42s
+    top-14 importances (lgbm, gain): rain_today=0.261, disch=0.098, level_accel=0.077, level=0.067, disch_chg_1d=0.065, rain_sum_3d=0.063, level_z30=0.054, rain_sum_7d=0.053, level_chg_1d=0.052, level_chg_3d=0.049, level_max_3d=0.047, level_max_7d=0.047, month_sin=0.039, month_cos=0.028
+  [02HC030 NEXT-DAY p97] threshold LEVEL > 3.911 m above gauge datum (train p97)
+    train 2002-01-01 -> 2017-05-26  n= 5536  positives= 166 (3.00%)
+    val   2017-05-27 -> 2020-08-29  n= 1186  positives=  28 (2.36%)
+    test  2020-08-30 -> 2023-12-30  n= 1186  positives=  29 (2.45%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.158 +/- 0.039
+      LEAN          14 features  CV PR-AUC 0.348 +/- 0.040
+      BIG           36 features  CV PR-AUC 0.367 +/- 0.063
+      LEAN_NO_RAIN  11 features  CV PR-AUC 0.231 +/- 0.033
+    -> chosen set LEAN (BIG - LEAN = +0.019, one std = 0.063); rain ablation LEAN - LEAN_NO_RAIN = +0.117 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): xgb; time 33s
+    top-14 importances (xgb, gain): rain_today=0.252, disch_chg_1d=0.087, disch=0.082, month_sin=0.080, level=0.059, level_accel=0.056, level_z30=0.055, rain_sum_7d=0.052, rain_sum_3d=0.051, level_max_3d=0.050, level_max_7d=0.049, level_chg_1d=0.047, level_chg_3d=0.043, month_cos=0.036
+  [02HC030 SAME-DAY p95] threshold LEVEL > 3.838 m above gauge datum (train p95)
+    train 2002-01-02 -> 2017-05-26  n= 5535  positives= 277 (5.00%)
+    val   2017-05-27 -> 2020-08-29  n= 1186  positives=  54 (4.55%)
+    test  2020-08-30 -> 2023-12-31  n= 1187  positives=  41 (3.45%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.215 +/- 0.052
+      LEAN           9 features  CV PR-AUC 0.667 +/- 0.066
+      BIG           36 features  CV PR-AUC 0.645 +/- 0.101
+      LEAN_NO_RAIN   6 features  CV PR-AUC 0.334 +/- 0.069
+    -> chosen set LEAN (BIG - LEAN = -0.023, one std = 0.101); rain ablation LEAN - LEAN_NO_RAIN = +0.333 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): xgb; time 30s
+    top-9 importances (xgb, gain): rain_sum_3d=0.318, rain_today=0.148, level_y1=0.110, disch_chg_1d_y1=0.101, disch_y1=0.100, month_sin=0.089, rain_sum_7d=0.048, month_cos=0.044, level_chg_1d_y1=0.042
+  [02HC030 SAME-DAY p97] threshold LEVEL > 3.911 m above gauge datum (train p97)
+    train 2002-01-02 -> 2017-05-26  n= 5535  positives= 166 (3.00%)
+    val   2017-05-27 -> 2020-08-29  n= 1186  positives=  28 (2.36%)
+    test  2020-08-30 -> 2023-12-31  n= 1187  positives=  29 (2.44%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.163 +/- 0.049
+      LEAN           9 features  CV PR-AUC 0.563 +/- 0.113
+      BIG           36 features  CV PR-AUC 0.575 +/- 0.105
+      LEAN_NO_RAIN   6 features  CV PR-AUC 0.257 +/- 0.043
+    -> chosen set LEAN (BIG - LEAN = +0.012, one std = 0.113); rain ablation LEAN - LEAN_NO_RAIN = +0.305 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): xgb; time 29s
+    top-9 importances (xgb, gain): rain_sum_3d=0.391, rain_today=0.122, disch_chg_1d_y1=0.100, disch_y1=0.089, level_y1=0.080, month_sin=0.070, rain_sum_7d=0.069, level_chg_1d_y1=0.043, month_cos=0.036
+
+  ===== 02HC030: VAL PR-AUC/F2 and TEST metrics (cut-offs fixed on validation) =====
+target  pct  experiment  feature_set       model  val_PR  val_F2  prec   rec    F2  PR-AUC     CV PR-AUC    TN FP FN TP events day_before
+  next   95 set_compare   LEVEL_ONLY        lgbm   0.259   0.388 0.091 0.610 0.285   0.148 0.227+/-0.039  895 250 16 25  22/32         17
+  next   95 set_compare         LEAN        lgbm   0.447   0.517 0.209 0.585 0.430   0.320 0.435+/-0.042  1054 91 17 24  23/32         17
+  next   95 set_compare          BIG        lgbm   0.418   0.541 0.190 0.756 0.474   0.366 0.417+/-0.078 1013 132 10 31  26/32         23
+  next   95 set_compare LEAN_NO_RAIN        lgbm   0.367   0.479 0.124 0.463 0.300   0.247 0.321+/-0.067 1011 134 22 19  17/32         12
+  next   95      models         LEAN      logreg   0.350   0.484 0.241 0.463 0.391   0.285 0.405+/-0.023  1085 60 22 19  20/32         12
+  next   95      models         LEAN          rf   0.444   0.522 0.185 0.659 0.435   0.331  0.46+/-0.058 1026 119 14 27  23/32         19
+  next   95      models         LEAN        lgbm   0.458   0.523 0.231 0.659 0.480   0.346 0.464+/-0.061  1055 90 14 27  24/32         19
+  next   95      models         LEAN         xgb   0.457   0.530 0.280 0.634 0.506   0.377 0.478+/-0.083  1078 67 15 26  23/32         18
+  next   95    baseline            - persistence   0.141   0.333 0.146 0.146 0.146   0.051 0.145+/-0.036   1110 35 35 6   8/32          0
+  next   95    baseline            -   always_no   0.046   0.000 0.000 0.000 0.000   0.035 0.052+/-0.006    1145 0 41 0   0/32          0
+  next   97 set_compare   LEVEL_ONLY        lgbm   0.149   0.298 0.205 0.276 0.258   0.118 0.158+/-0.039   1126 31 21 8   7/25          4
+  next   97 set_compare         LEAN        lgbm   0.380   0.544 0.375 0.310 0.321   0.285  0.348+/-0.04   1142 15 20 9   9/25          5
+  next   97 set_compare          BIG        lgbm   0.366   0.490 0.267 0.276 0.274   0.228 0.367+/-0.063   1135 22 21 8   8/25          5
+  next   97 set_compare LEAN_NO_RAIN        lgbm   0.272   0.468 0.148 0.448 0.319   0.253 0.231+/-0.033  1082 75 16 13  12/25          9
+  next   97      models         LEAN      logreg   0.336   0.516 0.290 0.310 0.306   0.269 0.346+/-0.057   1135 22 20 9   9/25          5
+  next   97      models         LEAN          rf   0.432   0.529 0.231 0.310 0.290   0.279 0.342+/-0.053   1127 30 20 9   9/25          5
+  next   97      models         LEAN        lgbm   0.407   0.516 0.294 0.345 0.333   0.285 0.377+/-0.055  1133 24 19 10  10/25          6
+  next   97      models         LEAN         xgb   0.464   0.540 0.381 0.276 0.292   0.297 0.387+/-0.075   1144 13 21 8   8/25          4
+  next   97    baseline            - persistence   0.098   0.286 0.138 0.138 0.138   0.040 0.077+/-0.026   1132 25 25 4   4/25          0
+  next   97    baseline            -   always_no   0.024   0.000 0.000 0.000 0.000   0.024 0.033+/-0.006    1157 0 29 0   0/25          0
+  same   95 set_compare   LEVEL_ONLY        lgbm   0.253   0.374 0.090 0.585 0.279   0.159 0.215+/-0.052  904 242 17 24  22/32          -
+  same   95 set_compare         LEAN        lgbm   0.548   0.648 0.438 0.854 0.717   0.598 0.667+/-0.066   1101 45 6 35  29/32          -
+  same   95 set_compare          BIG        lgbm   0.615   0.714 0.409 0.878 0.714   0.616 0.645+/-0.101   1094 52 5 36  29/32          -
+  same   95 set_compare LEAN_NO_RAIN        lgbm   0.337   0.461 0.149 0.439 0.316   0.272 0.334+/-0.069 1043 103 23 18  18/32          -
+  same   95      models         LEAN      logreg   0.520   0.635 0.369 0.756 0.625   0.544 0.599+/-0.114  1093 53 10 31  24/32          -
+  same   95      models         LEAN          rf   0.525   0.638 0.271 0.951 0.633   0.548  0.67+/-0.073  1041 105 2 39  31/32          -
+  same   95      models         LEAN        lgbm   0.570   0.660 0.262 0.951 0.623   0.614 0.668+/-0.066  1036 110 2 39  31/32          -
+  same   95      models         LEAN         xgb   0.578   0.694 0.336 0.951 0.696   0.616  0.67+/-0.071   1069 77 2 39  31/32          -
+  same   95    baseline            - persistence   0.139   0.332 0.146 0.146 0.146   0.051 0.145+/-0.036   1111 35 35 6   8/32          -
+  same   95    baseline            -   always_no   0.046   0.000 0.000 0.000 0.000   0.035 0.052+/-0.006    1146 0 41 0   0/32          -
+  same   97 set_compare   LEVEL_ONLY        lgbm   0.198   0.337 0.114 0.310 0.231   0.169 0.163+/-0.049   1088 70 20 9   9/25          -
+  same   97 set_compare         LEAN        lgbm   0.490   0.629 0.364 0.414 0.403   0.459 0.563+/-0.113  1137 21 17 12  10/25          -
+  same   97 set_compare          BIG        lgbm   0.521   0.679 0.389 0.724 0.618   0.434 0.575+/-0.105   1125 33 8 21  18/25          -
+  same   97 set_compare LEAN_NO_RAIN        lgbm   0.254   0.387 0.250 0.414 0.366   0.267 0.257+/-0.043  1122 36 17 12  11/25          -
+  same   97      models         LEAN      logreg   0.528   0.628 0.299 0.690 0.546   0.571 0.505+/-0.115   1111 47 9 20  16/25          -
+  same   97      models         LEAN          rf   0.529   0.683 0.447 0.724 0.644   0.499 0.579+/-0.077   1132 26 8 21  19/25          -
+  same   97      models         LEAN        lgbm   0.560   0.728 0.429 0.517 0.497   0.596 0.595+/-0.088  1138 20 14 15  13/25          -
+  same   97      models         LEAN         xgb   0.577   0.719 0.457 0.724 0.648   0.598   0.6+/-0.088   1133 25 8 21  17/25          -
+  same   97    baseline            - persistence   0.096   0.284 0.138 0.138 0.138   0.040 0.077+/-0.026   1133 25 25 4   4/25          -
+  same   97    baseline            -   always_no   0.024   0.000 0.000 0.000 0.000   0.024 0.033+/-0.006    1158 0 29 0   0/25          -
+  NOTE: with this few high-water events, differences of a few hundredths are within noise (compare against the CV std).
+
+  Known-flood check 02HC030 (p97 winners; NEXT-DAY = forecast issued the day before):
+      date  named  level  next_thr split                                 next_flag  same_thr                                 same_flag      status
+2013-07-08   True  3.911     3.911 train  no (p=0.16, xgb)  [TRAIN - not evidence]     3.911 YES (p=0.95, xgb)  [TRAIN - not evidence]         NaN
+2024-07-16   True    NaN       NaN   NaN                                       NaN       NaN                                       NaN not in data
+2024-08-17   True    NaN       NaN   NaN                                       NaN       NaN                                       NaN not in data
+2020-01-12  False  4.688     3.911   val                         YES (p=0.83, xgb)     3.911                         YES (p=1.00, xgb)         NaN
+2009-02-12  False  4.571     3.911 train YES (p=0.87, xgb)  [TRAIN - not evidence]     3.911 YES (p=1.00, xgb)  [TRAIN - not evidence]         NaN
+2017-05-05  False  4.405     3.911 train YES (p=0.37, xgb)  [TRAIN - not evidence]     3.911 YES (p=0.99, xgb)  [TRAIN - not evidence]         NaN
+2013-07-09  False  4.400     3.911 train YES (p=0.54, xgb)  [TRAIN - not evidence]     3.911 YES (p=0.91, xgb)  [TRAIN - not evidence]         NaN
+2022-02-17  False  4.388     3.911  test                          no (p=0.01, xgb)     3.911                         YES (p=0.98, xgb)         NaN
+2008-12-28  False  4.366     3.911 train  no (p=0.07, xgb)  [TRAIN - not evidence]     3.911  no (p=0.79, xgb)  [TRAIN - not evidence]         NaN
+2011-10-20  False  4.366     3.911 train YES (p=0.30, xgb)  [TRAIN - not evidence]     3.911 YES (p=0.97, xgb)  [TRAIN - not evidence]         NaN
+2011-03-11  False  4.324     3.911 train YES (p=0.42, xgb)  [TRAIN - not evidence]     3.911 YES (p=0.99, xgb)  [TRAIN - not evidence]         NaN
+2006-12-01  False  4.300     3.911 train  no (p=0.10, xgb)  [TRAIN - not evidence]     3.911 YES (p=0.99, xgb)  [TRAIN - not evidence]         NaN
+2008-07-20  False  4.291     3.911 train YES (p=0.53, xgb)  [TRAIN - not evidence]     3.911 YES (p=0.99, xgb)  [TRAIN - not evidence]         NaN
+  Days in the TRAIN split were seen during fitting and do NOT count as evidence.
+
+################ v2 02HC032 ################
+  SNOW_ON_GROUND coverage train 74%, val+test 23% (need >= 80% in both) -> snow_on_ground SKIPPED
+  NEXT-DAY feature sets:
+    LEVEL_ONLY (3): ['level', 'level_chg_1d', 'level_chg_3d']
+    LEAN (14): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos']
+    BIG (36): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos', 'level_lag1', 'disch_lag1', 'level_lag2', 'disch_lag2', 'level_lag3', 'disch_lag3', 'level_lag7', 'disch_lag7', 'level_rmean7', 'level_rstd7', 'disch_rmean7', 'disch_rstd7', 'level_rmean14', 'level_rstd14', 'disch_rmean14', 'disch_rstd14', 'level_rmean30', 'level_rstd30', 'disch_rmean30', 'disch_rstd30', 'disch_level_ratio', 'days_since_high']
+    LEAN_NO_RAIN (11): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'month_sin', 'month_cos']
+  SAME-DAY feature sets:
+    LEVEL_ONLY (3): ['level_y1', 'level_chg_1d_y1', 'level_chg_3d_y1']
+    LEAN (9): ['level_y1', 'level_chg_1d_y1', 'disch_y1', 'disch_chg_1d_y1', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos']
+    BIG (36): ['level_y1', 'level_chg_1d_y1', 'disch_y1', 'disch_chg_1d_y1', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos', 'level_chg_3d_y1', 'level_accel_y1', 'level_max_3d_y1', 'level_max_7d_y1', 'level_z30_y1', 'level_lag1_y1', 'disch_lag1_y1', 'level_lag2_y1', 'disch_lag2_y1', 'level_lag3_y1', 'disch_lag3_y1', 'level_lag7_y1', 'disch_lag7_y1', 'level_rmean7_y1', 'level_rstd7_y1', 'disch_rmean7_y1', 'disch_rstd7_y1', 'level_rmean14_y1', 'level_rstd14_y1', 'disch_rmean14_y1', 'disch_rstd14_y1', 'level_rmean30_y1', 'level_rstd30_y1', 'disch_rmean30_y1', 'disch_rstd30_y1', 'disch_level_ratio_y1', 'days_since_high_y1']
+    LEAN_NO_RAIN (6): ['level_y1', 'level_chg_1d_y1', 'disch_y1', 'disch_chg_1d_y1', 'month_sin', 'month_cos']
+  [02HC032 NEXT-DAY p95] threshold LEVEL > 1.647 m above gauge datum (train p95)
+    train 2003-05-23 -> 2019-01-24  n= 5058  positives= 249 (4.92%)
+    val   2019-01-25 -> 2022-01-11  n= 1083  positives=  30 (2.77%)
+    test  2022-01-12 -> 2024-12-30  n= 1084  positives=  45 (4.15%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.689 +/- 0.118
+      LEAN          14 features  CV PR-AUC 0.760 +/- 0.107
+      BIG           36 features  CV PR-AUC 0.755 +/- 0.114
+      LEAN_NO_RAIN  11 features  CV PR-AUC 0.700 +/- 0.130
+    -> chosen set LEAN (BIG - LEAN = -0.005, one std = 0.114); rain ablation LEAN - LEAN_NO_RAIN = +0.060 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): logreg; time 31s
+    top-14 importances (xgb, gain): level=0.385, disch=0.184, rain_today=0.070, disch_chg_1d=0.056, level_max_3d=0.050, month_sin=0.041, level_accel=0.035, month_cos=0.035, level_chg_1d=0.030, level_max_7d=0.026, level_chg_3d=0.024, level_z30=0.024, rain_sum_7d=0.022, rain_sum_3d=0.021
+  [02HC032 NEXT-DAY p97] threshold LEVEL > 1.738 m above gauge datum (train p97)
+    train 2003-05-23 -> 2019-01-24  n= 5058  positives= 151 (2.99%)
+    val   2019-01-25 -> 2022-01-11  n= 1083  positives=  17 (1.57%)
+    test  2022-01-12 -> 2024-12-30  n= 1084  positives=  25 (2.31%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.615 +/- 0.137
+      LEAN          14 features  CV PR-AUC 0.710 +/- 0.119
+      BIG           36 features  CV PR-AUC 0.706 +/- 0.137
+      LEAN_NO_RAIN  11 features  CV PR-AUC 0.659 +/- 0.145
+    -> chosen set LEAN (BIG - LEAN = -0.004, one std = 0.137); rain ablation LEAN - LEAN_NO_RAIN = +0.051 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): logreg; time 28s
+    top-14 importances (xgb, gain): level=0.347, disch=0.188, disch_chg_1d=0.069, rain_today=0.065, level_max_3d=0.051, month_sin=0.049, level_z30=0.035, level_chg_1d=0.031, level_accel=0.031, rain_sum_7d=0.030, level_max_7d=0.028, level_chg_3d=0.027, month_cos=0.026, rain_sum_3d=0.025
+  [02HC032 SAME-DAY p95] threshold LEVEL > 1.647 m above gauge datum (train p95)
+    train 2003-05-24 -> 2019-01-24  n= 5057  positives= 249 (4.92%)
+    val   2019-01-25 -> 2022-01-11  n= 1083  positives=  30 (2.77%)
+    test  2022-01-12 -> 2024-12-31  n= 1085  positives=  45 (4.15%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.686 +/- 0.115
+      LEAN           9 features  CV PR-AUC 0.744 +/- 0.114
+      BIG           36 features  CV PR-AUC 0.750 +/- 0.115
+      LEAN_NO_RAIN   6 features  CV PR-AUC 0.708 +/- 0.145
+    -> chosen set LEAN (BIG - LEAN = +0.006, one std = 0.115); rain ablation LEAN - LEAN_NO_RAIN = +0.036 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): logreg; time 26s
+    top-9 importances (xgb, gain): level_y1=0.423, disch_y1=0.194, rain_sum_3d=0.080, disch_chg_1d_y1=0.062, rain_today=0.060, month_sin=0.056, month_cos=0.050, level_chg_1d_y1=0.038, rain_sum_7d=0.036
+  [02HC032 SAME-DAY p97] threshold LEVEL > 1.738 m above gauge datum (train p97)
+    train 2003-05-24 -> 2019-01-24  n= 5057  positives= 151 (2.99%)
+    val   2019-01-25 -> 2022-01-11  n= 1083  positives=  17 (1.57%)
+    test  2022-01-12 -> 2024-12-31  n= 1085  positives=  25 (2.30%)
+    feature-set comparison (LightGBM, n_iter=10, TimeSeriesSplit CV on train):
+      LEVEL_ONLY     3 features  CV PR-AUC 0.618 +/- 0.142
+      LEAN           9 features  CV PR-AUC 0.709 +/- 0.154
+      BIG           36 features  CV PR-AUC 0.685 +/- 0.167
+      LEAN_NO_RAIN   6 features  CV PR-AUC 0.672 +/- 0.164
+    -> chosen set LEAN (BIG - LEAN = -0.024, one std = 0.167); rain ablation LEAN - LEAN_NO_RAIN = +0.037 CV PR-AUC
+    winner (validation PR-AUC, then F2, then simplicity): logreg; time 28s
+    top-9 importances (rf, impurity): level_y1=0.293, disch_y1=0.218, level_chg_1d_y1=0.117, disch_chg_1d_y1=0.102, rain_sum_3d=0.079, rain_sum_7d=0.062, rain_today=0.057, month_sin=0.046, month_cos=0.025
+
+  ===== 02HC032: VAL PR-AUC/F2 and TEST metrics (cut-offs fixed on validation) =====
+target  pct  experiment  feature_set       model  val_PR  val_F2  prec   rec    F2  PR-AUC     CV PR-AUC   TN FP FN TP events day_before
+  next   95 set_compare   LEVEL_ONLY        lgbm   0.475   0.543 0.370 0.600 0.534   0.531 0.689+/-0.118  993 46 18 27  11/17          3
+  next   95 set_compare         LEAN        lgbm   0.617   0.622 0.400 0.844 0.691   0.713  0.76+/-0.107   982 57 7 38  15/17         11
+  next   95 set_compare          BIG        lgbm   0.645   0.653 0.532 0.733 0.682   0.723 0.755+/-0.114 1010 29 12 33  13/17          8
+  next   95 set_compare LEAN_NO_RAIN        lgbm   0.549   0.588 0.600 0.600 0.600   0.625    0.7+/-0.13 1021 18 18 27  11/17          5
+  next   95      models         LEAN      logreg   0.703   0.688 0.604 0.711 0.687   0.670  0.78+/-0.102 1018 21 13 32  15/17          9
+  next   95      models         LEAN          rf   0.597   0.672 0.443 0.867 0.728   0.722   0.77+/-0.12   990 49 6 39  15/17         11
+  next   95      models         LEAN        lgbm   0.640   0.676 0.440 0.889 0.738   0.760 0.773+/-0.111   988 51 5 40  16/17         12
+  next   95      models         LEAN         xgb   0.657   0.654 0.410 0.911 0.732   0.785 0.775+/-0.118   980 59 4 41  16/17         13
+  next   95    baseline            - persistence   0.297   0.533 0.556 0.556 0.556   0.327 0.429+/-0.127 1019 20 20 25  10/17          0
+  next   95    baseline            -   always_no   0.028   0.000 0.000 0.000 0.000   0.042  0.05+/-0.012   1039 0 45 0   0/17          0
+  next   97 set_compare   LEVEL_ONLY        lgbm   0.495   0.474 0.286 0.480 0.423   0.347 0.615+/-0.137 1029 30 13 12   9/14          3
+  next   97 set_compare         LEAN        lgbm   0.663   0.714 0.480 0.480 0.480   0.491  0.71+/-0.119 1046 13 13 12   8/14          3
+  next   97 set_compare          BIG        lgbm   0.661   0.714 0.356 0.640 0.552   0.447 0.706+/-0.137  1030 29 9 16  11/14          7
+  next   97 set_compare LEAN_NO_RAIN        lgbm   0.599   0.648 0.304 0.680 0.545   0.410 0.659+/-0.145  1020 39 8 17  11/14          6
+  next   97      models         LEAN      logreg   0.726   0.800 0.383 0.720 0.612   0.474 0.732+/-0.128  1030 29 7 18  12/14          8
+  next   97      models         LEAN          rf   0.657   0.708 0.339 0.800 0.629   0.465 0.705+/-0.151  1020 39 5 20  13/14          9
+  next   97      models         LEAN        lgbm   0.670   0.735 0.419 0.720 0.629   0.520 0.727+/-0.135  1034 25 7 18  12/14          8
+  next   97      models         LEAN         xgb   0.683   0.748 0.339 0.800 0.629   0.550  0.718+/-0.12  1020 39 5 20  14/14         10
+  next   97    baseline            - persistence   0.230   0.471 0.440 0.440 0.440   0.207 0.414+/-0.145 1045 14 14 11   8/14          0
+  next   97    baseline            -   always_no   0.016   0.000 0.000 0.000 0.000   0.023 0.032+/-0.008   1059 0 25 0   0/14          0
+  same   95 set_compare   LEVEL_ONLY        lgbm   0.497   0.515 0.419 0.578 0.537   0.544 0.686+/-0.115 1004 36 19 26  11/17          -
+  same   95 set_compare         LEAN        lgbm   0.642   0.710 0.420 0.756 0.651   0.656 0.744+/-0.114  993 47 11 34  14/17          -
+  same   95 set_compare          BIG        lgbm   0.647   0.680 0.471 0.711 0.645   0.660  0.75+/-0.115 1004 36 13 32  13/17          -
+  same   95 set_compare LEAN_NO_RAIN        lgbm   0.575   0.610 0.517 0.689 0.646   0.640 0.708+/-0.145 1011 29 14 31  14/17          -
+  same   95      models         LEAN      logreg   0.695   0.756 0.442 0.756 0.661   0.557 0.746+/-0.106  997 43 11 34  13/17          -
+  same   95      models         LEAN          rf   0.633   0.772 0.509 0.622 0.596   0.668 0.756+/-0.118 1013 27 17 28  12/17          -
+  same   95      models         LEAN        lgbm   0.638   0.730 0.395 0.756 0.639   0.675  0.761+/-0.11  988 52 11 34  14/17          -
+  same   95      models         LEAN         xgb   0.684   0.756 0.453 0.756 0.667   0.694 0.756+/-0.125  999 41 11 34  14/17          -
+  same   95    baseline            - persistence   0.297   0.533 0.556 0.556 0.556   0.327 0.429+/-0.127 1020 20 20 25  10/17          -
+  same   95    baseline            -   always_no   0.028   0.000 0.000 0.000 0.000   0.041  0.05+/-0.012   1040 0 45 0   0/17          -
+  same   97 set_compare   LEVEL_ONLY        lgbm   0.480   0.460 0.346 0.360 0.357   0.356 0.618+/-0.142  1043 17 16 9   8/14          -
+  same   97 set_compare         LEAN        lgbm   0.550   0.631 0.246 0.640 0.485   0.428 0.709+/-0.154  1011 49 9 16  11/14          -
+  same   97 set_compare          BIG        lgbm   0.603   0.595 0.232 0.640 0.473   0.426 0.685+/-0.167  1007 53 9 16  10/14          -
+  same   97 set_compare LEAN_NO_RAIN        lgbm   0.569   0.642 0.273 0.720 0.542   0.441 0.672+/-0.164  1012 48 7 18  11/14          -
+  same   97      models         LEAN      logreg   0.678   0.688 0.306 0.760 0.586   0.394 0.701+/-0.146  1017 43 6 19  10/14          -
+  same   97      models         LEAN          rf   0.614   0.682 0.250 0.720 0.523   0.421  0.71+/-0.167  1006 54 7 18  11/14          -
+  same   97      models         LEAN        lgbm   0.550   0.631 0.246 0.640 0.485   0.428 0.709+/-0.154  1011 49 9 16  11/14          -
+  same   97      models         LEAN         xgb   0.608   0.658 0.274 0.800 0.578   0.447 0.687+/-0.164  1007 53 5 20  12/14          -
+  same   97    baseline            - persistence   0.230   0.471 0.440 0.440 0.440   0.207 0.414+/-0.145 1046 14 14 11   8/14          -
+  same   97    baseline            -   always_no   0.016   0.000 0.000 0.000 0.000   0.023 0.032+/-0.008   1060 0 25 0   0/14          -
+  NOTE: with this few high-water events, differences of a few hundredths are within noise (compare against the CV std).
+
+  Known-flood check 02HC032 (p97 winners; NEXT-DAY = forecast issued the day before):
+      date  named  level  next_thr                                    next_flag  same_thr                                    same_flag split
+2013-07-08   True  2.491     1.738                                no usable row     1.738                                no usable row   NaN
+2024-07-16   True  1.506     1.738                          no (p=0.06, logreg)     1.738                         YES (p=1.00, logreg)  test
+2024-08-17   True  1.362     1.738                          no (p=0.00, logreg)     1.738                         YES (p=1.00, logreg)  test
+2020-01-12  False  3.045     1.738                         YES (p=1.00, logreg)     1.738                         YES (p=1.00, logreg)   val
+2009-02-12  False  3.041     1.738 YES (p=0.76, logreg)  [TRAIN - not evidence]     1.738 YES (p=0.25, logreg)  [TRAIN - not evidence] train
+2008-12-28  False  2.852     1.738 YES (p=0.24, logreg)  [TRAIN - not evidence]     1.738  no (p=0.07, logreg)  [TRAIN - not evidence] train
+2018-02-21  False  2.797     1.738 YES (p=0.98, logreg)  [TRAIN - not evidence]     1.738 YES (p=0.99, logreg)  [TRAIN - not evidence] train
+2019-03-15  False  2.717     1.738                         YES (p=0.42, logreg)     1.738                         YES (p=0.18, logreg)   val
+2004-03-06  False  2.619     1.738 YES (p=1.00, logreg)  [TRAIN - not evidence]     1.738 YES (p=0.98, logreg)  [TRAIN - not evidence] train
+2013-03-12  False  2.542     1.738 YES (p=0.98, logreg)  [TRAIN - not evidence]     1.738 YES (p=0.70, logreg)  [TRAIN - not evidence] train
+2014-04-08  False  2.523     1.738 YES (p=0.99, logreg)  [TRAIN - not evidence]     1.738 YES (p=0.90, logreg)  [TRAIN - not evidence] train
+2008-04-01  False  2.512     1.738 YES (p=0.15, logreg)  [TRAIN - not evidence]     1.738  no (p=0.04, logreg)  [TRAIN - not evidence] train
+2019-02-05  False  2.494     1.738                         YES (p=0.13, logreg)     1.738                         YES (p=0.09, logreg)   val
+  Days in the TRAIN split were seen during fitting and do NOT count as evidence.
+
+v2 done in 478s -> results/model_comparison_v2.csv, results/v2/, models/v2/

@@ -1,0 +1,81 @@
+{
+  "02HC033": {
+    "logreg": {
+      "model__C": 0.0010090061869151559,
+      "model__class_weight": "balanced"
+    },
+    "rf": {
+      "model__n_estimators": 300,
+      "model__min_samples_leaf": 5,
+      "model__max_depth": null,
+      "model__class_weight": "balanced_subsample"
+    },
+    "lgbm": {
+      "model__colsample_bytree": 0.9386644568953224,
+      "model__learning_rate": 0.13004797369462248,
+      "model__min_child_samples": 10,
+      "model__n_estimators": 319,
+      "model__num_leaves": 7,
+      "model__scale_pos_weight": 32.041666666666664,
+      "model__subsample": 0.9403713795070051
+    },
+    "xgb": {}
+  },
+  "02HC030": {
+    "logreg": {
+      "model__C": 7.510418138777549,
+      "model__class_weight": "balanced"
+    },
+    "rf": {
+      "model__n_estimators": 300,
+      "model__min_samples_leaf": 3,
+      "model__max_depth": 4,
+      "model__class_weight": "balanced_subsample"
+    },
+    "lgbm": {
+      "model__colsample_bytree": 0.9687496940092467,
+      "model__learning_rate": 0.01303561122512888,
+      "model__min_child_samples": 20,
+      "model__n_estimators": 451,
+      "model__num_leaves": 7,
+      "model__scale_pos_weight": 31.952380952380953,
+      "model__subsample": 0.7301321323053057
+    },
+    "xgb": {
+      "model__colsample_bytree": 0.8607845038010402,
+      "model__learning_rate": 0.019578575885031306,
+      "model__max_depth": 2,
+      "model__min_child_weight": 1,
+      "model__n_estimators": 597,
+      "model__scale_pos_weight": 1.0,
+      "model__subsample": 0.6715290836885315
+    }
+  },
+  "02HC032": {
+    "logreg": {},
+    "rf": {
+      "model__n_estimators": 300,
+      "model__min_samples_leaf": 5,
+      "model__max_depth": 4,
+      "model__class_weight": "balanced_subsample"
+    },
+    "lgbm": {
+      "model__colsample_bytree": 0.662397808134481,
+      "model__learning_rate": 0.011900590783184251,
+      "model__min_child_samples": 5,
+      "model__n_estimators": 299,
+      "model__num_leaves": 31,
+      "model__scale_pos_weight": 32.496688741721854,
+      "model__subsample": 0.6225646316108401
+    },
+    "xgb": {
+      "model__colsample_bytree": 0.8607845038010402,
+      "model__learning_rate": 0.019578575885031306,
+      "model__max_depth": 2,
+      "model__min_child_weight": 1,
+      "model__n_estimators": 597,
+      "model__scale_pos_weight": 1.0,
+      "model__subsample": 0.6715290836885315
+    }
+  }
+}
