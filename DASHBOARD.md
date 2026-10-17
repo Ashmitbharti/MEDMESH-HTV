@@ -83,3 +83,18 @@ change `EXPO_PUBLIC_*` values (the bundler caches them otherwise).
 ## Not wired yet
 
 Native (non-browser) Bluetooth transport for the installed app. Hospital and pharmacy dashboards.
+
+## Hospital login (3 tabs)
+
+Sign in with the hospital demo account (Centenary Hospital). The device joins the mesh as `HOSP_<id>` (`J|H|CEN|…`).
+
+- **Hospital**: the 3D Bed Tower (ICU / beds / ER floors; glowing cubes are free beds, the ground aura is the status).
+  Edit status, beds, ICU, ER bays and wait (lists with a Custom option), capabilities and a note, then send one
+  `C|CEN|free|icu|caps|open|wait|note` message. A freshness card explains that routing trusts recent numbers more.
+- **Incoming**: patients the command centre is sending here (`I|…`), placed on 3D arrival rings by ETA and coloured by
+  its triage. Cards show complaint, age, blood group, allergies, a get-ready checklist, and send `HA|id|READY`.
+  "We're full" sends `HA|…|FULL`: the hospital stops receiving new patients and ambulances not yet carrying a patient are re-routed.
+  `IU` keeps arrivals current; `ZA` shows multi-casualty scenes.
+- **Supplies**: fair-price requests to every pharmacy and supplier at once (`S|…`). The cap is normal price + 10%;
+  sellers above it are skipped and logged in the hash-chained audit log, unless the hospital knowingly allows them
+  for a critical shortage (`|ALLOW`, also logged). Prices are demo values.
