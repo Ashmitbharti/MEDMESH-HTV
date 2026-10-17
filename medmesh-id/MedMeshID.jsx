@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
 import styles from './MedMeshID.styles';
 import PdfAutofill from './PdfAutofill';
+import MedMeshIDCard from './MedMeshIDCard';
 import { loadProfile, saveProfile } from './profileService';
 import { Keyboard, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 
@@ -119,16 +120,7 @@ export default function MedMeshID() {
         {loading ? <Text style={styles.hint}>Loading your saved profile…</Text> : null}
 
         {profile ? (
-          <View style={styles.uploadCard}>
-            <Text style={styles.label}>Your saved MedMesh ID</Text>
-            <Text style={styles.medmeshId}>{profile.medmeshId || 'Awaiting registration'}</Text>
-            <Text style={styles.hint}>
-              {dirty ? 'You have unsaved changes.' : profile.status === 'synced'
-                ? 'Saved on this phone and in Supabase.'
-                : 'Saved on this phone. Internet is needed to sync.'}
-            </Text>
-            <Text style={styles.hint}>Command centre backup sync is not connected yet.</Text>
-          </View>
+          <MedMeshIDCard profile={profile} dirty={dirty} />
         ) : null}
 
         <PdfAutofill

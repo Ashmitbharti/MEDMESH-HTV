@@ -113,6 +113,32 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 4,
   },
+  cardName: {
+    color: '#f5f6fa',
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  qrContainer: {
+    alignSelf: 'center',
+    marginTop: 24,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  qrCaption: {
+    color: '#aeb3bd',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 16,
+  },
+  qrOffline: {
+    color: '#7dcfff',
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 8,
+  },
   reviewRow: {
     borderBottomWidth: 1,
     borderBottomColor: '#232734',
