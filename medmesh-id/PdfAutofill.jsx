@@ -1,7 +1,9 @@
 import { useRef, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
+import { FileUp, Sparkles } from 'lucide-react-native';
 import styles from './MedMeshID.styles';
+import { c } from './theme';
 import { readReport } from './reportService';
 
 export default function PdfAutofill({ fields, details, onApply }) {
@@ -100,9 +102,15 @@ export default function PdfAutofill({ fields, details, onApply }) {
         style={({ pressed }) => [styles.uploadButton, pressed && styles.pressed]}
         onPress={choosePdf}
       >
-        <Text style={styles.backText}>{loading ? 'Reading PDF…' : 'Auto-fill from checkup PDF'}</Text>
+        <View style={styles.uploadIcon}>
+          <FileUp size={20} color={c.sky} strokeWidth={2.2} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.uploadTitle}>{loading ? 'Reading PDF…' : 'Auto-fill from a checkup report'}</Text>
+          <Text style={styles.uploadSub}>Optional · text PDF · up to 5 MB, 20 pages</Text>
+        </View>
+        <Sparkles size={16} color={c.violet} />
       </Pressable>
-      <Text style={styles.hint}>Optional · text PDF · up to 5 MB and 20 pages</Text>
 
       {file && !suggestions ? (
         <View style={styles.uploadDetails}>
