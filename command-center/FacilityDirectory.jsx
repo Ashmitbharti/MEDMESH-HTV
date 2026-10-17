@@ -21,7 +21,9 @@ export default function FacilityDirectory({ type }) {
     loadHospitals().then((records) => {
       if (!active) return;
       setHospitalRecords(records);
-      setDatabaseStatus('Hospital database loaded · availability refreshes when you reopen this tab');
+      setDatabaseStatus(records.every((item) => item.loadedFromCloud)
+        ? 'Hospital database loaded · availability refreshes when you reopen this tab'
+        : 'Using saved hospital details · database unavailable');
     }).catch(() => {
       if (active) setDatabaseStatus('Database unavailable · showing last loaded or bundled hospital details');
     });
@@ -69,7 +71,7 @@ export default function FacilityDirectory({ type }) {
             <View key={facility.id} style={styles.card}>
               <Text style={styles.organization}>{facility.organization}</Text>
               <Text style={styles.cardTitle}>{facility.name}</Text>
-              {isHospital ? <Text style={styles.body}>MedMesh HosID: {facility.hosid}</Text> : null}
+              {isHospital ? <Text style={styles.body}>MedMesh HosID: {facility.hospitalCode || facility.hosid}</Text> : null}
               <Text style={styles.body}>{facility.address}</Text>
               <Text style={styles.body}>Phone: {facility.phone}</Text>
               <View style={styles.tags}>
@@ -93,6 +95,7 @@ export default function FacilityDirectory({ type }) {
                 </Text>
                 <Text style={styles.muted}>{isHospital && availability ? simulated ? 'Fictional demo snapshot · not a real hospital update' : 'Hospital-reported snapshot · confirm freshness before assignment' : 'Last live update: none received'}</Text>
                 {facility.statusReceivedAt ? <Text style={styles.muted}>Database received: {new Date(facility.statusReceivedAt).toLocaleString()}</Text> : null}
+                {facility.localUpdate ? <Text style={styles.muted}>Local demo update: {new Date(facility.localUpdate.savedAt).toLocaleString()} · {facility.localUpdate.pending ? 'cloud sync pending' : 'saved copy'}</Text> : null}
                 {facility.availableServices?.length ? <Text style={styles.muted}>{simulated ? 'Simulated available care' : 'Reported available care'}: {facility.availableServices.join(', ')}</Text> : null}
               </View>
               <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }}

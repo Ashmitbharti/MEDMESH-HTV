@@ -1,19 +1,29 @@
 import { getSupabase } from '../lib/supabase';
+import { hospitals } from './facilities';
+import { readHospitalUpdates } from '../hospital/hospitalStore';
 
 export async function loadHospitals() {
-  const { data, error } = await getSupabase()
-    .from('hospitals')
-    .select('*, hospital_status(*)')
-    .order('hosid');
-  if (error) throw new Error('Hospital database is unavailable. Showing saved demo details.');
-  if (!data?.length) throw new Error('Hospital database has no records. Showing saved demo details.');
+  const local = await readHospitalUpdates();
+  let data;
+  let cloud = true;
+  try {
+    const response = await getSupabase()
+      .from('hospitals')
+      .select('*, hospital_status(*)')
+      .order('hosid');
+    if (response.error || !response.data?.length) throw new Error('No hospital data');
+    data = response.data;
+  } catch {
+    cloud = false;
+  }
 
-  return data.map((hospital) => {
+  const records = cloud ? data.map((hospital) => {
     const statuses = hospital.hospital_status || [];
     const status = statuses.find((item) => !item.is_simulated) || statuses.find((item) => item.is_simulated);
     return {
       id: hospital.slug,
       hosid: hospital.hosid,
+      hospitalCode: hospital.entry_code || hospitals.find((item) => item.hosid === hospital.hosid)?.hospitalCode,
       name: hospital.name,
       organization: 'Scarborough Health Network',
       address: hospital.address,
@@ -37,6 +47,19 @@ export async function loadHospitals() {
       availabilityIsSimulated: status?.is_simulated ?? true,
       statusReceivedAt: status?.received_at,
       availableServices: status?.available_services || [],
+    };
+  }) : hospitals;
+  return records.map((hospital) => {
+    const update = local[hospital.hosid];
+    if (!update || cloud && !update.pending) return { ...hospital, loadedFromCloud: cloud };
+    return {
+      ...hospital,
+      loadedFromCloud: cloud,
+      demoAvailability: update,
+      availabilityIsSimulated: true,
+      availableServices: update.services,
+      statusReceivedAt: update.pending ? null : update.receivedAt,
+      localUpdate: update,
     };
   });
 }

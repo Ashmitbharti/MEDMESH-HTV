@@ -33,6 +33,7 @@ export const hospitals = [
   {
     id: 'shn-centenary',
     hosid: 'MMH-CEN',
+    hospitalCode: '100001',
     capacity: { beds: 307, simulated: false, period: 'Reporting year unspecified', source: 'https://en.wikipedia.org/wiki/Centenary_Hospital' },
     demoAvailability: { freeBeds: 12, freeIcuBeds: 2, erWaitMinutes: 45, open: true },
     name: 'Centenary Hospital',
@@ -46,6 +47,7 @@ export const hospitals = [
   {
     id: 'shn-general',
     hosid: 'MMH-GEN',
+    hospitalCode: '100002',
     capacity: { beds: 556, simulated: false, period: 'Reporting year unspecified', source: 'https://en.wikipedia.org/wiki/Scarborough_General_Hospital_(Toronto)' },
     demoAvailability: { freeBeds: 6, freeIcuBeds: 1, erWaitMinutes: 75, open: true },
     name: 'General Hospital',
@@ -59,6 +61,7 @@ export const hospitals = [
   {
     id: 'shn-birchmount',
     hosid: 'MMH-BIR',
+    hospitalCode: '100003',
     capacity: { beds: 250, simulated: true, period: 'Demo assumption' },
     demoAvailability: { freeBeds: 18, freeIcuBeds: 3, erWaitMinutes: 30, open: true },
     name: 'Birchmount Hospital',
