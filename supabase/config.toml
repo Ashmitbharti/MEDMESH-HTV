@@ -1,0 +1,5 @@
+[functions.pdf-autofill]
+entrypoint = './functions/pdf-autofill/index.js'
+# The handler validates the user's token with Supabase Auth. This also supports
+# projects using newer signing keys rather than the gateway's legacy JWT check.
+verify_jwt = false

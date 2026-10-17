@@ -28,6 +28,28 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#232734',
   },
+  uploadCard: {
+    marginTop: 24,
+    padding: 16,
+    backgroundColor: '#10141e',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#232734',
+  },
+  uploadButton: {
+    padding: 15,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#36526b',
+    backgroundColor: '#122332',
+    borderRadius: 14,
+  },
+  uploadDetails: {
+    marginTop: 18,
+  },
+  suggestion: {
+    marginTop: 16,
+  },
   label: {
     color: '#aeb3bd',
     fontSize: 13,
@@ -84,6 +106,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     marginBottom: 20,
+  },
+  medmeshId: {
+    color: '#7dcfff',
+    fontSize: 30,
+    fontWeight: '700',
+    letterSpacing: 4,
   },
   reviewRow: {
     borderBottomWidth: 1,
