@@ -1,1 +1,1 @@
-export { default } from '../../../command-center/CommandNavbar';
+export { default } from '../../../command-center/CommandAccess';

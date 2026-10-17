@@ -77,6 +77,8 @@ export const hospitals = [
 export const pharmacies = [
   {
     id: 'care-ida-ellesmere',
+    pharmacyCode: '200001',
+    demoStock: { paracetamol: 120, saline: 20, dressings: 50, gloves: 200, antiseptic: 15 },
     name: 'Care IDA Pharmacy',
     organization: 'Ellesmere Road',
     address: '3600 Ellesmere Road, Unit 2, Scarborough, ON M1C 4Y8',
@@ -88,6 +90,8 @@ export const pharmacies = [
   },
   {
     id: 'food-basics-ellesmere',
+    pharmacyCode: '200002',
+    demoStock: { paracetamol: 80, saline: 8, dressings: 30, gloves: 100, antiseptic: 10 },
     name: 'Food Basics Pharmacy',
     organization: 'Ellesmere Road',
     address: '2900 Ellesmere Road, Scarborough, ON M1E 4B8',
@@ -98,6 +102,8 @@ export const pharmacies = [
   },
   {
     id: 'highland-creek-drugs',
+    pharmacyCode: '200003',
+    demoStock: { paracetamol: 100, saline: 12, dressings: 40, gloves: 150, antiseptic: 5 },
     name: 'Highland Creek Drugs',
     organization: 'Old Kingston Road',
     address: '371 Old Kingston Road, Toronto, ON M1C 1B6',
