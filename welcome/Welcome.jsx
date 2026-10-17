@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { Building2, ChevronRight, CircleAlert, FlaskConical, HeartPulse, Landmark, Pill, Radio, User, WifiOff } from 'lucide-react-native';
+import { Building2, ChevronLeft, ChevronRight, CircleAlert, FlaskConical, HeartPulse, Landmark, Pill, Radio, User, WifiOff } from 'lucide-react-native';
 import MeshRadar from './MeshRadar';
 import s from './Welcome.styles';
 import { c, grad } from '../medmesh-id/theme';
@@ -13,11 +13,18 @@ import { DEMO_ACCOUNTS, ROLES } from '../auth/authService';
 
 const ROLE_ICON = { citizen: User, hospital: Building2, pharmacy: Pill, government: Landmark };
 const ROLE_TINT = { citizen: c.sky, hospital: c.redl, pharmacy: c.green, government: c.violet };
+const ROLE_SUB = {
+  citizen: 'Your MedMesh ID, SOS, status, medicine and first aid',
+  hospital: 'Share beds and see incoming patients',
+  pharmacy: 'Answer medicine requests and share stock',
+  government: 'Overview, analysis and the vulnerable-people watchlist',
+};
 
 export default function Welcome() {
   const { width } = useWindowDimensions();
   const { signIn, signUp, demo } = useAuth();
   const [role, setRole] = useState('citizen');
+  const [picked, setPicked] = useState(null);
   const [mode, setMode] = useState('in'); // in | up
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -81,21 +88,36 @@ export default function Welcome() {
             centre that sends the right help to the right hospital.
           </Text>
 
+          <Text style={[s.demoLabel, { marginTop: 22 }]}>HOW WOULD YOU LIKE TO ENTER?</Text>
+          {!picked ? Object.entries(ROLES).map(([k, v], i) => {
+            const I = ROLE_ICON[k];
+            const tint = ROLE_TINT[k];
+            return (
+              <Pressable key={k} accessibilityRole="button" accessibilityLabel={`Enter as ${v.label}`} onPress={() => { setPicked(k); setRole(k); }}
+                style={({ pressed }) => [{ flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, borderRadius: 22, marginBottom: 10,
+                  backgroundColor: 'rgba(11,16,32,0.85)', borderWidth: 1, borderColor: tint + '55',
+                  transform: [{ perspective: 800 }, { rotateX: pressed ? '0deg' : `${6 - i * 2}deg` }, { scale: pressed ? 0.98 : 1 }] }]}>
+                <LinearGradient colors={[tint + '55', tint + '10']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+                  style={{ width: 52, height: 52, borderRadius: 17, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: tint + '88' }}>
+                  <I size={24} color={tint} strokeWidth={2.2} />
+                </LinearGradient>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: c.ink, fontSize: 17.5, fontWeight: '800' }}>Enter as {v.label}</Text>
+                  <Text style={{ color: c.muted, fontSize: 12.5, marginTop: 3, lineHeight: 17 }}>{ROLE_SUB[k]}</Text>
+                </View>
+                <ChevronRight size={20} color={tint} />
+              </Pressable>
+            );
+          }) : (
+            <Pressable accessibilityRole="button" onPress={() => setPicked(null)} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 6, marginBottom: 6 }}>
+              <ChevronLeft size={16} color={c.muted} />
+              <Text style={{ color: c.muted, fontWeight: '700' }}>{ROLES[picked].label} · choose another role</Text>
+            </Pressable>
+          )}
+
+          {picked ? (
+          <>
           <View style={s.card}>
-            <Text style={s.cardLabel}>I AM SIGNING IN AS</Text>
-            <View style={[s.seg, { flexWrap: 'wrap' }]}>
-              {Object.entries(ROLES).map(([k, v]) => {
-                const I = ROLE_ICON[k];
-                const on = role === k;
-                return (
-                  <Pressable key={k} accessibilityRole="radio" accessibilityState={{ checked: on }} onPress={() => setRole(k)}
-                    style={[s.segBtn, { flexBasis: '47%' }, on && s.segOn]}>
-                    <I size={15} color={on ? '#e0f2fe' : c.muted} strokeWidth={2.2} />
-                    <Text style={[s.segText, on && s.segTextOn]}>{v.label}</Text>
-                  </Pressable>
-                );
-              })}
-            </View>
 
             {mode === 'up' ? (
               <TextInput style={s.input} placeholder={role === 'citizen' ? 'Your name' : `${ROLES[role].label} name`}
@@ -124,7 +146,7 @@ export default function Welcome() {
           </View>
 
           <Text style={s.demoLabel}>OR TRY A DEMO ACCOUNT · NO INTERNET NEEDED</Text>
-          {Object.keys(ROLES).map((r) => (
+          {[picked].map((r) => (
             <View key={r} style={{ marginBottom: 6 }}>
               <Text style={[s.demoLabel, { marginTop: 6, marginBottom: 6, color: ROLE_TINT[r] }]}>{ROLES[r].label.toUpperCase()}</Text>
               {DEMO_ACCOUNTS.filter((a) => a.role === r).map((a) => {
@@ -144,6 +166,9 @@ export default function Welcome() {
               })}
             </View>
           ))}
+
+          </>
+          ) : null}
 
           <Pressable accessibilityRole="button" accessibilityLabel="Open the test kit" onPress={() => router.push('/testkit')}
             style={({ pressed }) => [s.demo, { borderStyle: 'dashed', marginTop: 8 }, pressed && s.pressed]}>

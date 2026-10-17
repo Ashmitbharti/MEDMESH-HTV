@@ -215,6 +215,7 @@ export default function Requests() {
           <View style={{ flex: 1 }}>
             <Text style={{ color: c.green, fontFamily: mono, fontSize: 10.5, letterSpacing: 2, fontWeight: '700' }}>{pharmacy?.kind === 'supplier' ? 'SUPPLIER ACCOUNT' : 'PHARMACY ACCOUNT'}</Text>
             <Text style={{ color: c.ink, fontSize: 17, fontWeight: '800' }} numberOfLines={1}>{pharmacy?.name || 'Pharmacy'}</Text>
+            {pharmacy?.address ? <Text style={{ color: c.dim, fontSize: 11.5 }} numberOfLines={1}>{pharmacy.address}{pharmacy.phone ? ` · ${pharmacy.phone}` : ''}</Text> : null}
           </View>
           <Pressable accessibilityRole="button" accessibilityLabel="Open the test kit" onPress={() => router.push('/testkit')}
             style={{ width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: c.line2 }}>

@@ -245,6 +245,7 @@ export default function Supplies() {
                 <View style={{ flex: 1 }}>
                   <Text style={[s.rowTitle, !p.open && { color: c.dim }]}>{p.name}</Text>
                   <Text style={s.rowSub}>{p.km.toFixed(1)} km {compass(bearing(pos, p))} · {p.open ? 'Open' : 'Closed'} · {p.kind === 'supplier' ? 'oxygen & equipment' : 'pharmacy'}</Text>
+                  {p.address ? <Text style={s.rowSub} numberOfLines={1}>{p.address}{p.phone ? ` · ${p.phone}` : ''}</Text> : null}
                 </View>
               </View>
             </View>

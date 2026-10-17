@@ -28,8 +28,8 @@ const SCENARIOS = [
     msgs: () => [['FIELD', `R|${rid()}|1|CP|A|1|0F10|43.7840,-79.1870|MX4K9P|`]],
   },
   {
-    id: 'meds', icon: Pill, tint: '#34d399', title: '5 people ask for medicine near Morningside',
-    watch: 'Pharmacy (Morningside) → Requests & Nearby · Government',
+    id: 'meds', icon: Pill, tint: '#34d399', title: '5 people ask for medicine near Care IDA (Ellesmere Rd)',
+    watch: 'Pharmacy (Care IDA) → Requests & Nearby · Government',
     msgs: () => [['FIELD', `M|${rid()}|INSULIN|N|1|43.7880,-79.2040|`], ['FIELD', `M|${rid()}|INHALER|D|0|43.8000,-79.2050|`],
       ['FIELD', `M|${rid()}|EPIPEN|3|1|43.7900,-79.1900|`], ['FIELD', `M|${rid()}|HEART|D|1|43.7750,-79.2250|`], ['FIELD', `M|${rid()}|INSULIN|D|1|43.8200,-79.2000|`]],
   },

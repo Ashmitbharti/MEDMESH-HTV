@@ -2,17 +2,32 @@
 // Bundled in the app so "nearest help" works with no internet. GPS works offline.
 export const DEFAULT_POS = { lat: 43.7845, lon: -79.1867, approx: true }; // UTSC, used until GPS is available
 
+// Names, addresses, phones and bed totals: public sources gathered by Ashmit (command-center/facilities.js, checked
+// 2026-10-17). Map positions are approximate (placed from the street address). Live beds, stock, prices and open/closed
+// status are SIMULATED for the demo; fictional places are marked "(demo)".
+const SHN = { title: 'SHN emergency services', url: 'https://www.shn.ca/areas-of-care/emergency-and-urgent-care/' };
 export const SITES = [
-  { id: 'SGH', kind: 'hospital', name: 'Scarborough General', short: 'Scarborough Gen.', lat: 43.7556, lon: -79.2462, open: true },
-  { id: 'CEN', kind: 'hospital', name: 'Centenary Hospital', short: 'Centenary', lat: 43.7783, lon: -79.2053, open: true },
-  { id: 'UFC', kind: 'clinic', name: 'UTSC Field Clinic', short: 'Field Clinic', lat: 43.7839, lon: -79.1874, open: true },
-  { id: 'BIR', kind: 'hospital', name: 'Birchmount Hospital', short: 'Birchmount', lat: 43.8039, lon: -79.3005, open: true },
-  { id: 'MSP', kind: 'pharmacy', name: 'Morningside Pharmacy', short: 'Morningside Rx', lat: 43.79, lon: -79.205, open: true },
-  { id: 'ECP', kind: 'pharmacy', name: 'Ellesmere Community Rx', short: 'Ellesmere Rx', lat: 43.7765, lon: -79.243, open: true },
-  { id: 'MVR', kind: 'pharmacy', name: 'Malvern Rx', short: 'Malvern Rx', lat: 43.808, lon: -79.224, open: false },
+  { id: 'SGH', kind: 'hospital', name: 'SHN General Hospital', short: 'General', lat: 43.7556, lon: -79.2462, open: true,
+    address: '3050 Lawrence Avenue East, Scarborough, ON M1P 2V5', phone: '416-438-2911', beds: 556, source: SHN },
+  { id: 'CEN', kind: 'hospital', name: 'Centenary Hospital', short: 'Centenary', lat: 43.7783, lon: -79.2053, open: true,
+    address: '2867 Ellesmere Road, Scarborough, ON M1E 4B9', phone: '416-284-8131', beds: 307, source: SHN },
+  { id: 'UFC', kind: 'clinic', name: 'UTSC Field Clinic (demo)', short: 'Field Clinic', lat: 43.7839, lon: -79.1874, open: true,
+    address: 'Temporary clinic at UTSC, 1265 Military Trail (demo)', beds: 10 },
+  { id: 'BIR', kind: 'hospital', name: 'Birchmount Hospital', short: 'Birchmount', lat: 43.8016, lon: -79.3046, open: true,
+    address: '3030 Birchmount Road, Scarborough, ON M1W 3W3', phone: '416-495-2400', beds: 250, bedsSimulated: true, source: SHN },
+  { id: 'MSP', kind: 'pharmacy', name: 'Care IDA Pharmacy', short: 'Care IDA', lat: 43.7868, lon: -79.1745, open: true,
+    address: '3600 Ellesmere Road, Unit 2, Scarborough, ON M1C 4Y8', phone: '416-287-6674',
+    source: { title: 'Ontario Health atHome service directory', url: 'https://lignesantecentre-est.ca/displayService.aspx?id=150258' } },
+  { id: 'ECP', kind: 'pharmacy', name: 'Ellesmere Community Rx (demo)', short: 'Ellesmere Rx', lat: 43.7765, lon: -79.243, open: true,
+    address: 'Fictional pharmacy used to demonstrate the price cap' },
+  { id: 'MVR', kind: 'pharmacy', name: 'Highland Creek Drugs', short: 'Highland Creek', lat: 43.7853, lon: -79.1717, open: false,
+    address: '371 Old Kingston Road, Toronto, ON M1C 1B6', phone: '416-286-6522',
+    source: { title: 'Ontario Health atHome service directory', url: 'https://www.centraleasthealthline.ca/displayservice.aspx?id=150690' } },
   // Home oxygen in Ontario comes from home-oxygen suppliers, not drugstores (demo supplier, not a real company)
-  { id: 'SHO', kind: 'supplier', name: 'Scarborough Home Oxygen (demo)', short: 'Home Oxygen', lat: 43.7712, lon: -79.23, open: true },
+  { id: 'SHO', kind: 'supplier', name: 'Scarborough Home Oxygen (demo)', short: 'Home Oxygen', lat: 43.7712, lon: -79.23, open: true,
+    address: 'Fictional home-oxygen supplier (demo)' },
 ];
+export const REFERENCE = { name: 'Sam Ibrahim Building, UTSC', address: '1050 Military Trail, Toronto, ON', lat: 43.7845, lon: -79.1867 };
 
 const DIRS = ['north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west'];
 export const compass = (rad) => DIRS[Math.round((((rad * 180) / Math.PI + 360) % 360) / 45) % 8];
@@ -54,9 +69,9 @@ export function nearestNode(pos) {
 
 // Starting values for a hospital's dashboard (same as the command centre's demo data; the hospital edits them)
 export const HOSPITAL_DATA = {
-  SGH: { total: 24, free: 4, icuTotal: 4, icu: 1, caps: 'CTD', wait: 95, erSpaces: 10 },
-  CEN: { total: 20, free: 6, icuTotal: 4, icu: 2, caps: 'CTOPD', wait: 70, erSpaces: 8 },
-  BIR: { total: 16, free: 3, icuTotal: 2, icu: 0, caps: 'T', wait: 60, erSpaces: 6 },
+  SGH: { total: 556, free: 4, icuTotal: 12, icu: 1, caps: 'CTD', wait: 95, erSpaces: 10 },
+  CEN: { total: 307, free: 6, icuTotal: 10, icu: 2, caps: 'CTOPD', wait: 70, erSpaces: 8 },
+  BIR: { total: 250, free: 3, icuTotal: 8, icu: 0, caps: 'T', wait: 60, erSpaces: 6 },
   UFC: { total: 10, free: 8, icuTotal: 0, icu: 0, caps: '', wait: 15, erSpaces: 4 },
 };
 
