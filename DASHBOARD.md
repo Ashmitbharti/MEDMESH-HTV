@@ -101,7 +101,7 @@ Sign in with the hospital demo account (Centenary Hospital). The device joins th
 
 ## Pharmacy login (3 tabs)
 
-Sign in with the pharmacy demo account (Morningside Pharmacy). The device joins as `PHARM_<id>` (`J|X|MSP|…`).
+Sign in with the pharmacy demo account (Care IDA Pharmacy). The device joins as `PHARM_<id>` (`J|X|MSP|…`).
 
 - **Requests**: the 3D Beacon (a turning pharmacy cross; ripples = requests waiting). People nearby (`MR`, asked of up to
   3 places at once, with distance and whether the item matches their MedMesh ID, never who they are): answer "We have it,

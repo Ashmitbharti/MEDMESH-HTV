@@ -13,10 +13,10 @@ export const ROLES = {
 export const DEMO_ACCOUNTS = [
   { id: 'citizen-margaret', role: 'citizen', name: 'Margaret', email: 'citizen@medmesh.demo', sub: 'Citizen · 79, heart failure, home oxygen, lives alone · MedMesh ID ready' },
   { id: 'citizen-new', role: 'citizen', name: '', email: 'newcitizen@medmesh.demo', sub: 'Citizen · brand-new phone, no MedMesh ID yet (test the setup questions)' },
-  { id: 'hospital-cen', role: 'hospital', name: 'Centenary Hospital', email: 'centenary@medmesh.demo', sub: 'Hospital · cardiac, trauma, obstetrics, paediatrics, dialysis' },
-  { id: 'hospital-sgh', role: 'hospital', name: 'Scarborough General', email: 'sgh@medmesh.demo', sub: 'Hospital · busiest ER (95 min wait)' },
-  { id: 'pharmacy-msp', role: 'pharmacy', name: 'Morningside Pharmacy', email: 'pharmacy@medmesh.demo', sub: 'Pharmacy · fair prices' },
-  { id: 'pharmacy-ecp', role: 'pharmacy', name: 'Ellesmere Community Rx', email: 'ellesmere@medmesh.demo', sub: 'Pharmacy · insulin and EpiPen above the cap (tests price flags)' },
+  { id: 'hospital-cen', role: 'hospital', name: 'Centenary Hospital', email: 'centenary@medmesh.demo', sub: 'Hospital · 307 beds · cardiac, trauma, obstetrics, paediatrics, dialysis' },
+  { id: 'hospital-sgh', role: 'hospital', name: 'SHN General Hospital', email: 'sgh@medmesh.demo', sub: 'Hospital · 556 beds · busiest ER' },
+  { id: 'pharmacy-msp', role: 'pharmacy', name: 'Care IDA Pharmacy', email: 'pharmacy@medmesh.demo', sub: 'Pharmacy · 3600 Ellesmere Rd · fair prices (stock simulated)' },
+  { id: 'pharmacy-ecp', role: 'pharmacy', name: 'Ellesmere Community Rx (demo)', email: 'ellesmere@medmesh.demo', sub: 'Fictional pharmacy · insulin and EpiPen above the cap (tests price flags)' },
   { id: 'supplier-sho', role: 'pharmacy', name: 'Scarborough Home Oxygen (demo)', email: 'oxygen@medmesh.demo', sub: 'Home-oxygen supplier · oxygen, CPAP power' },
   { id: 'government', role: 'government', name: 'City Emergency Operations (demo)', email: 'eoc@medmesh.demo', sub: 'Government · read-only overview, analysis, watchlist' },
 ];

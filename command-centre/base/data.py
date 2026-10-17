@@ -1,8 +1,9 @@
 """Seed data for the MedMesh demo.
 
 Everything here is SIMULATED demo data:
-- Hospital names are real Scarborough facilities, but locations are approximate
-  and every bed count / capability is made up.
+- Hospital and pharmacy names, addresses and total beds come from public sources gathered by Ashmit
+  (SHN key facts, Ontario Health atHome directory; see app dashboard/sites.js). Map positions are approximate.
+  Free beds, ICU, waits, stock, prices and open/closed status are SIMULATED. Places marked (demo) are fictional.
 - Pharmacies, patients and the EMS post are fictional.
 - The road network is a simplified grid of real Scarborough arterial roads.
   Run prepare_map.py (needs internet once) to replace it with real OSM roads.
@@ -13,28 +14,28 @@ HOSPITALS = [
     # caps: C=cardiac T=trauma B=burns O=obstetrics P=paediatrics D=dialysis
     # er_spaces (ED treatment spaces), svc_min (mean ED treatment time) and er_wait feed the queueing model.
     # DEMO VALUES: replace with official figures (CIHI beds, Ontario Health ED times) when loaded.
-    {"id": "SGH", "name": "Scarborough General", "lat": 43.7556, "lon": -79.2462,
-     "total": 24, "free": 4, "icu": 1, "caps": "CTD", "open": True, "er_wait": 95,
+    {"id": "SGH", "name": "SHN General Hospital", "lat": 43.7556, "lon": -79.2462,
+     "total": 556, "free": 4, "icu": 1, "caps": "CTD", "open": True, "er_wait": 95,
      "kind": "hospital", "er_spaces": 10, "svc_min": 50},
     {"id": "CEN", "name": "Centenary Hospital", "lat": 43.7783, "lon": -79.2053,
-     "total": 20, "free": 6, "icu": 2, "caps": "CTOPD", "open": True, "er_wait": 70,
+     "total": 307, "free": 6, "icu": 2, "caps": "CTOPD", "open": True, "er_wait": 70,
      "kind": "hospital", "er_spaces": 8, "svc_min": 45},
-    {"id": "BIR", "name": "Birchmount Hospital", "lat": 43.8039, "lon": -79.3005,
-     "total": 16, "free": 3, "icu": 0, "caps": "T", "open": True, "er_wait": 60,
+    {"id": "BIR", "name": "Birchmount Hospital", "lat": 43.8016, "lon": -79.3046,
+     "total": 250, "free": 3, "icu": 0, "caps": "T", "open": True, "er_wait": 60,
      "kind": "hospital", "er_spaces": 6, "svc_min": 45},
-    {"id": "UFC", "name": "UTSC Field Clinic", "lat": 43.7839, "lon": -79.1874,
+    {"id": "UFC", "name": "UTSC Field Clinic (demo)", "lat": 43.7839, "lon": -79.1874,
      "total": 10, "free": 8, "icu": 0, "caps": "", "open": True, "er_wait": 15,
      "kind": "clinic", "er_spaces": 4, "svc_min": 20},
 ]
 
 PHARMACIES = [
-    {"id": "MSP", "name": "Morningside Pharmacy", "lat": 43.7900, "lon": -79.2050, "open": True, "kind": "pharmacy",
+    {"id": "MSP", "name": "Care IDA Pharmacy", "lat": 43.7868, "lon": -79.1745, "open": True, "kind": "pharmacy",
      "stock": {"INSULIN": 12, "INHALER": 20, "EPIPEN": 4, "HEART": 30, "SEIZURE": 8, "BP": 40, "ONEG": 0,
                "STRIPS": 15, "DRESS": 30, "NEB": 2}},
-    {"id": "ECP", "name": "Ellesmere Community Rx", "lat": 43.7765, "lon": -79.2430, "open": True, "kind": "pharmacy",
+    {"id": "ECP", "name": "Ellesmere Community Rx (demo)", "lat": 43.7765, "lon": -79.2430, "open": True, "kind": "pharmacy",
      "stock": {"INSULIN": 5, "INHALER": 6, "EPIPEN": 10, "HEART": 12, "SEIZURE": 2, "BP": 15, "ONEG": 0,
                "STRIPS": 6, "DRESS": 12, "NEB": 0}},
-    {"id": "MVR", "name": "Malvern Rx", "lat": 43.8080, "lon": -79.2240, "open": False, "kind": "pharmacy",
+    {"id": "MVR", "name": "Highland Creek Drugs", "lat": 43.7853, "lon": -79.1717, "open": False, "kind": "pharmacy",
      "stock": {"INSULIN": 20, "INHALER": 15, "EPIPEN": 6, "HEART": 25, "SEIZURE": 10, "BP": 30, "ONEG": 0,
                "STRIPS": 10, "DRESS": 20, "NEB": 1}},
     # Home oxygen in Ontario comes from home-oxygen suppliers, not drugstores (demo supplier, not a real company)

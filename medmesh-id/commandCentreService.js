@@ -6,6 +6,7 @@
 
 const HOSPITAL_CODES = {
   'Scarborough General': 'SGH',
+  'SHN General Hospital': 'SGH',
   'Centenary Hospital': 'CEN',
   'Birchmount Hospital': 'BIR',
 };

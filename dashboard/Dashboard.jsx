@@ -10,6 +10,7 @@ import {
 import WeatherBackdrop from './WeatherBackdrop';
 import Shield, { STATUS_COLOR } from './Shield';
 import HoldCard from './HoldCard';
+import SosOrb from './SosOrb';
 import s from './Dashboard.styles';
 import { ago, DEMO_ORDER, getHazard, HAZARDS, setDemoHazard } from './hazardService';
 import { around, DEFAULT_POS } from './sites';
@@ -226,16 +227,8 @@ export default function Dashboard() {
 
           {/* actions */}
           <Text style={s.sectionLabel}>WHAT DO YOU NEED?</Text>
-          <HoldCard
-            primary
-            title="I need help"
-            sub="Hold 3 seconds · emergency for you"
-            icon={Siren}
-            colors={['#be123c', '#7f1d1d']}
-            accent="#fecdd3"
-            disabled={!!request}
-            onComplete={() => startSos('self')}
-          />
+          <SosOrb size={Math.min(240, width * 0.62)} disabled={!!request} onComplete={() => startSos('self')} />
+          <View style={{ height: 14 }} />
           <HoldCard
             title="Someone else needs help"
             sub="Hold 3 seconds · SOS for another person"

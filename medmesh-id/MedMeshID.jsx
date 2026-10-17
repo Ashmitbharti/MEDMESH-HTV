@@ -56,7 +56,7 @@ const fields = [
   { key: 'lives_alone', section: 'In an outage', label: 'Do you live alone?', options: ['Yes', 'No'] },
   {
     key: 'home_hospital', section: 'In an outage', label: 'Your usual hospital',
-    options: ['Scarborough General', 'Centenary Hospital', 'Birchmount Hospital', 'Other / not sure'],
+    options: ['SHN General Hospital', 'Centenary Hospital', 'Birchmount Hospital', 'Other / not sure'],
     help: 'Your records and specialists are there. The command centre gives it a small preference.',
   },
   {

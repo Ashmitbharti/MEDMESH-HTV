@@ -84,6 +84,9 @@ export async function getHazard() {
   }
 
   const pos = await getPosition();
+  // Demo accounts always play the disaster: if the command centre can't be reached, keep the thunderstorm going
+  // (labelled as demo) instead of showing the real weather wherever the laptop happens to be.
+  if (pos?.demo) return { kind: 'storm', source: 'Demo storm (command centre not reachable)', at: Date.now(), demo: true, pos };
   if (pos) {
     try {
       const w = await timed(`https://api.open-meteo.com/v1/forecast?latitude=${pos.lat.toFixed(3)}&longitude=${pos.lon.toFixed(3)}&current=weather_code`);

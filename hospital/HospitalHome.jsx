@@ -88,6 +88,7 @@ export default function HospitalHome() {
           <View style={{ flex: 1 }}>
             <Text style={{ color: c.redl, fontFamily: mono, fontSize: 10.5, letterSpacing: 2, fontWeight: '700' }}>HOSPITAL ACCOUNT</Text>
             <Text style={{ color: c.ink, fontSize: 17, fontWeight: '800' }} numberOfLines={1}>{hospital?.name || account?.name}</Text>
+            {hospital?.address ? <Text style={{ color: c.dim, fontSize: 11.5 }} numberOfLines={1}>{hospital.address}{hospital.phone ? ` · ${hospital.phone}` : ''}</Text> : null}
           </View>
           <Pressable accessibilityRole="button" accessibilityLabel="Open the test kit" onPress={() => router.push('/testkit')}
             style={{ width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: c.line2 }}>
@@ -102,6 +103,11 @@ export default function HospitalHome() {
         {!hospital ? <Picker choose={choose} /> : !fig ? null : (
           <>
             <Text style={{ color: c.ink, fontSize: 27, lineHeight: 32, fontWeight: '800', letterSpacing: -0.6, marginTop: 16 }}>Your hospital, as the{'\n'}command centre sees it.</Text>
+            {hospital?.beds ? (
+              <Text style={{ color: c.dim, fontSize: 12, lineHeight: 17, marginTop: 8 }}>
+                Public data: {hospital.beds} beds in total{hospital.bedsSimulated ? ' (demo assumption)' : ''}{hospital.source ? ` · ${hospital.source.title}` : ''}. Free beds, ICU and waits below are what this hospital reports during the emergency (simulated in the demo).
+              </Text>
+            ) : null}
             <LinkBanner link={link} />
 
             <View style={{ marginTop: 10, marginHorizontal: -10 }}>
