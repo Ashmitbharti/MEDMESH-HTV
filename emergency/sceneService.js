@@ -24,6 +24,7 @@ export async function createScene(mode) {
   const me = blankPerson(0);
   if (mode === 'self') {
     me.label = 'You';
+    me.responds = 'yes'; // they are using the phone; if they stop answering, auto-send marks this unknown
     me.mid = /^[A-Z]{6}$/.test(profile?.medmeshId || '') ? profile.medmeshId : '';
   }
   return saveScene({

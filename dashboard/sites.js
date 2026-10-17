@@ -5,6 +5,7 @@ export const DEFAULT_POS = { lat: 43.7845, lon: -79.1867, approx: true }; // UTS
 export const SITES = [
   { id: 'SGH', kind: 'hospital', name: 'Scarborough General', short: 'Scarborough Gen.', lat: 43.7556, lon: -79.2462, open: true },
   { id: 'CEN', kind: 'hospital', name: 'Centenary Hospital', short: 'Centenary', lat: 43.7783, lon: -79.2053, open: true },
+  { id: 'UFC', kind: 'clinic', name: 'UTSC Field Clinic', short: 'Field Clinic', lat: 43.7839, lon: -79.1874, open: true },
   { id: 'BIR', kind: 'hospital', name: 'Birchmount Hospital', short: 'Birchmount', lat: 43.8039, lon: -79.3005, open: true },
   { id: 'MSP', kind: 'pharmacy', name: 'Morningside Pharmacy', short: 'Morningside Rx', lat: 43.79, lon: -79.205, open: true },
   { id: 'ECP', kind: 'pharmacy', name: 'Ellesmere Community Rx', short: 'Ellesmere Rx', lat: 43.7765, lon: -79.243, open: true },
