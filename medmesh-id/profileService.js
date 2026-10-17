@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getSession, getSupabase } from '../lib/supabase';
+import { syncCommandCentre } from './commandCentreService';
 
 const storageKey = `medmesh-profile:${process.env.EXPO_PUBLIC_SUPABASE_URL || 'offline'}`;
 
@@ -80,9 +81,15 @@ export async function saveProfile(details, previous) {
   };
   await storeProfile(draft);
 
+  let result;
   try {
-    return { profile: await syncProfile(draft), syncError: '' };
+    result = { profile: await syncProfile(draft), syncError: '' };
   } catch (error) {
-    return { profile: draft, syncError: error.message || 'Sync failed. Retry when internet is available.' };
+    result = { profile: draft, syncError: error.message || 'Sync failed. Retry when internet is available.' };
   }
+  // Share with the MedMesh command centre once an ID exists, so it can use the profile offline in a disaster.
+  const commandCentre = await syncCommandCentre(result.profile);
+  result.profile = { ...result.profile, commandCentre };
+  await storeProfile(result.profile);
+  return result;
 }
