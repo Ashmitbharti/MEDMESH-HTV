@@ -6,8 +6,8 @@
 |---|---|---|
 | `/welcome` | Sign-in | 3D mesh radar (drag to rotate). Real email sign-in for **Citizen / Hospital / Pharmacy**, plus three demo accounts that need no internet |
 | `/` | Citizen dashboard | Greeting, weather backdrop, **the Shield**, four actions, emergency contact, link status |
-| `/sos` | SOS flow | Ashmit's flow (hold 3 s → identify → 5-second questions → summary), restyled, with one-tap GPS |
-| `/medicine` | Find medicine | Builds `M|id|ITEM|urgency|travel|lat,lon|medmeshID` |
+| `/sos` | Emergency report | Own words in any language (Gemini fills the form) or tap answers · GPS · how many people · one card per person (START questions, injury, age, note, optional QR) · scene alert first · live status per person |
+| `/medicine` | Medicine & supplies | Medicines + oxygen/equipment, suggestions from the MedMesh ID, oxygen "how much is left" (< 2 h → SOS), pickup/delivery, live tracker with pickup code |
 | `/safe` | I'm safe | Builds `O|id|SAFE or NEED|name|lat,lon` |
 | `/profile` | My ID | MedMesh ID |
 | `/hospital`, `/pharmacy` | Placeholders | The next dashboards to build |
@@ -36,6 +36,24 @@ EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
 EXPO_PUBLIC_COMMAND_CENTRE_URL=http://<laptop-ip>:8765
 ```
 
+## Emergency report details
+
+- **Own words, any language:** the phone tries the command centre (`/api/interpret`, Gemini on the laptop), then the `sos-interpret` Supabase function, then a small offline keyword reader (English, French, Spanish, romanised Hindi). The result is always shown for the person to check before sending. "Just send my words" sends the text as `V|` and the command centre fills the form.
+- **To speak instead of typing:** use the microphone on the phone keyboard. It works in any language the keyboard supports, often offline.
+- **"Not sure" counts as urgent.** Unknown answers are treated as possibly serious, so missing information never moves someone down the queue.
+- **Several people:** `Z|scene|count|lat,lon|cause` goes first, so several ambulances can start. Then one `R|` per person with `INC:scene`. The command centre spreads them across hospitals by severity.
+- **"I'm in trouble":** if the person stops interacting for 30 s, what is known is sent automatically.
+
+## Gemini key (never in the app)
+
+- Command centre: `export GEMINI_API_KEY=...` before `python3 server.py`.
+- Supabase (online phones): `supabase secrets set GEMINI_API_KEY=...`, then `supabase functions deploy sos-interpret`.
+- Optional: `GEMINI_MODEL` (default `gemini-3.8-flash`).
+
+## Sending
+
+`link/meshLink.js` sends the outbox. With `EXPO_PUBLIC_COMMAND_CENTRE_URL` set and the command centre started with `--sim`, it uses the command centre's simulated mesh over Wi-Fi (`/api/sim/send` and `/api/sim/inbox`), so replies such as acks, ambulance assignments and pharmacy answers come back to the phone.
+
 ## Not wired yet
 
-Messages queue on the phone (`dashboard/outbox.js`) in the command centre's exact wire format. The next step is the transport: the phone sends them over Bluetooth to a Meshtastic node, or over Wi-Fi to the command centre in simulator mode.
+Bluetooth to a real Meshtastic node, behind the same `send()`/`subscribe()` interface as the Wi-Fi test mesh. This needs a development build.

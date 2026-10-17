@@ -1,1 +1,1 @@
-export { default } from '../../../emergency/SosRequest';
+export { default } from '../../../emergency/Report';
