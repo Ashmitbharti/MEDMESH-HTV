@@ -15,6 +15,7 @@ import { interpret } from './interpret';
 import { blankPerson, CAUSES, HAZARDS, reportWire, sceneWire, triageOf, voiceWire } from './sosLogic';
 import { getPosition } from '../dashboard/hazardService';
 import { newId, queue } from '../dashboard/outbox';
+import { mirrorSos } from '../cloud/cloudSync';
 import { forId, useMesh } from '../link/meshLink';
 
 const AUTO_SEND_S = 30; // "I'm in trouble": if the person stops responding, send what we have
@@ -88,6 +89,8 @@ export default function Report() {
       const id = newId();
       sc.sent[p.key] = id;
       await queue('report', reportWire(id, p, { count, loc: sc.loc, sceneId: sc.sceneId, hazards: sc.hazards || [], cause: sc.cause, ai: p.fromAi ? (sc.ai?.source === 'gemini' ? 'g' : 'o') : '' }), { scene: sc.id });
+      // same report into Ashmit's Supabase SOS table when there is internet (never blocks the mesh path)
+      mirrorSos({ id, mode: sc.mode, person: p, loc: sc.loc, medmeshId: p.mid, summary: sc.ai?.result?.summary }).catch(() => {});
     }
     sc.phase = 'sent';
     await saveScene(sc);

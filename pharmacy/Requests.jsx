@@ -11,6 +11,7 @@ import { useAuth } from '../auth/AuthContext';
 import { useMesh } from '../link/meshLink';
 import { useClock } from '../ui3d/project';
 import LinkBanner from '../components/LinkBanner';
+import PublicInfo from '../components/PublicInfo';
 import { Card, Label } from '../hospital/controls';
 import Beacon from './Beacon';
 import { usePharmacy } from './PharmacyContext';
@@ -233,6 +234,7 @@ export default function Requests() {
             <View style={{ marginHorizontal: -10 }}>
               <Beacon width={width - 20} waiting={waiting.length} urgent={waiting.some((r) => r.urg === 'N')} held={held.length} />
             </View>
+            <PublicInfo site={pharmacy} tint={c.green} />
             <LinkBanner link={link} ids={reqs.map((r) => r.id)} outbox={outbox} />
 
             <Text style={{ color: c.sky, fontFamily: mono, fontSize: 10.5, letterSpacing: 1.8, fontWeight: '700', marginTop: 20 }}>PEOPLE NEARBY</Text>

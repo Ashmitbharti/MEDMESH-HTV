@@ -22,7 +22,8 @@ const ROLE_SUB = {
 
 export default function Welcome() {
   const { width } = useWindowDimensions();
-  const { signIn, signUp, demo } = useAuth();
+  const { signIn, signUp, demo, enterCode } = useAuth();
+  const [code, setCode] = useState('');
   const [role, setRole] = useState('citizen');
   const [picked, setPicked] = useState(null);
   const [mode, setMode] = useState('in'); // in | up
@@ -117,6 +118,23 @@ export default function Welcome() {
 
           {picked ? (
           <>
+          {picked === 'hospital' || picked === 'pharmacy' ? (
+            <View style={[s.card, { marginBottom: 14 }]}>
+              <Text style={s.cardLabel}>{picked === 'hospital' ? 'ENTER YOUR HOSID' : 'ENTER YOUR PHARMID'}</Text>
+              <TextInput style={s.input} placeholder={picked === 'hospital' ? '100001' : '200001'} placeholderTextColor={c.dim} value={code}
+                onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))} keyboardType="number-pad" accessibilityLabel={picked === 'hospital' ? 'HosID' : 'PharmID'} />
+              <Pressable accessibilityRole="button" disabled={code.length !== 6}
+                onPress={async () => { setError(''); try { go(await enterCode(picked, code)); } catch (e) { setError(e.message); } }}
+                style={({ pressed }) => [s.cta, pressed && s.pressed, code.length !== 6 && { opacity: 0.5 }]}>
+                <LinearGradient colors={grad.primary} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={s.ctaFill}>
+                  <Text style={s.ctaText}>{picked === 'hospital' ? 'Open hospital dashboard' : 'Open pharmacy dashboard'}</Text>
+                </LinearGradient>
+              </Pressable>
+              <Text style={[s.note, { marginTop: 8 }]}>
+                {picked === 'hospital' ? 'Centenary 100001 · General 100002 · Birchmount 100003' : 'Care IDA 200001 · Food Basics 200002 · Highland Creek 200003'}
+              </Text>
+            </View>
+          ) : null}
           <View style={s.card}>
 
             {mode === 'up' ? (

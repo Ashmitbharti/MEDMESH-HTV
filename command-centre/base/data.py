@@ -32,6 +32,9 @@ PHARMACIES = [
     {"id": "MSP", "name": "Care IDA Pharmacy", "lat": 43.7868, "lon": -79.1745, "open": True, "kind": "pharmacy",
      "stock": {"INSULIN": 12, "INHALER": 20, "EPIPEN": 4, "HEART": 30, "SEIZURE": 8, "BP": 40, "ONEG": 0,
                "STRIPS": 15, "DRESS": 30, "NEB": 2}},
+    {"id": "FBP", "name": "Food Basics Pharmacy", "lat": 43.7797, "lon": -79.2042, "open": True, "kind": "pharmacy",
+     "stock": {"INSULIN": 6, "INHALER": 10, "EPIPEN": 3, "HEART": 15, "SEIZURE": 4, "BP": 20, "ONEG": 0,
+               "STRIPS": 8, "DRESS": 30, "NEB": 0}},
     {"id": "ECP", "name": "Ellesmere Community Rx (demo)", "lat": 43.7765, "lon": -79.2430, "open": True, "kind": "pharmacy",
      "stock": {"INSULIN": 5, "INHALER": 6, "EPIPEN": 10, "HEART": 12, "SEIZURE": 2, "BP": 15, "ONEG": 0,
                "STRIPS": 6, "DRESS": 12, "NEB": 0}},
@@ -49,6 +52,7 @@ BASE_PRICES = {"INSULIN": 40.0, "INHALER": 30.0, "EPIPEN": 120.0, "HEART": 25.0,
                "STRIPS": 45.0, "DRESS": 8.0, "NEB": 90.0, "O2": 60.0, "CPAPPWR": 150.0}
 EMERGENCY_PRICES = {
     "MSP": {"INSULIN": 41.0, "INHALER": 31.0, "EPIPEN": 125.0, "HEART": 25.0, "SEIZURE": 36.0, "BP": 18.0, "STRIPS": 46.0, "DRESS": 8.5, "NEB": 92.0},
+    "FBP": {"INSULIN": 42.0, "INHALER": 30.0, "EPIPEN": 122.0, "HEART": 25.0, "SEIZURE": 35.0, "BP": 18.0, "STRIPS": 47.0, "DRESS": 8.0},
     "ECP": {"INSULIN": 64.0, "INHALER": 29.0, "EPIPEN": 199.0, "HEART": 26.0, "SEIZURE": 35.0, "BP": 19.0, "STRIPS": 70.0, "DRESS": 8.0},
     "MVR": {"INSULIN": 40.0, "INHALER": 30.0, "EPIPEN": 120.0, "HEART": 25.0, "SEIZURE": 35.0, "BP": 18.0, "STRIPS": 45.0, "DRESS": 8.0, "NEB": 90.0},
     "SHO": {"O2": 63.0, "CPAPPWR": 240.0, "NEB": 95.0},

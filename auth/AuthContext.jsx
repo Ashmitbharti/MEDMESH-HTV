@@ -20,9 +20,10 @@ export function AuthProvider({ children }) {
     return a;
   }, []);
   const demo = useCallback(async (which) => { const a = await auth.demoSignIn(which); await seedDemo(a); await setDemoPosition(true); setAccount(a); return a; }, []);
+  const enterCode = useCallback(async (role, code) => { const a = await auth.codeSignIn(role, code); await setDemoPosition(true); setAccount(a); return a; }, []);
   const signOut = useCallback(async () => { await auth.signOut(); await setDemoPosition(false); setAccount(null); }, []);
 
-  const value = useMemo(() => ({ account, ready, signIn, signUp, demo, signOut }), [account, ready, signIn, signUp, demo, signOut]);
+  const value = useMemo(() => ({ account, ready, signIn, signUp, demo, enterCode, signOut }), [account, ready, signIn, signUp, demo, enterCode, signOut]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

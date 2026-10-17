@@ -38,6 +38,7 @@ export async function registerPharmacy(p) {
 // automatically by the command centre, so most of the time nothing needs typing.
 const DEMO_STOCK = {
   MSP: { INSULIN: 12, INHALER: 20, EPIPEN: 4, HEART: 30, SEIZURE: 8, BP: 40, STRIPS: 15, DRESS: 30, NEB: 2 },
+  FBP: { INSULIN: 6, INHALER: 10, EPIPEN: 3, HEART: 15, SEIZURE: 4, BP: 20, STRIPS: 8, DRESS: 30, NEB: 0 },
   ECP: { INSULIN: 5, INHALER: 6, EPIPEN: 10, HEART: 12, SEIZURE: 2, BP: 15, STRIPS: 6, DRESS: 12, NEB: 0 },
   MVR: { INSULIN: 20, INHALER: 15, EPIPEN: 6, HEART: 25, SEIZURE: 10, BP: 30, STRIPS: 10, DRESS: 20, NEB: 1 },
   SHO: { O2: 4, CPAPPWR: 3, NEB: 3 },

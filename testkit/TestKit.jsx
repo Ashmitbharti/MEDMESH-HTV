@@ -30,8 +30,8 @@ const SCENARIOS = [
   {
     id: 'meds', icon: Pill, tint: '#34d399', title: '5 people ask for medicine near Care IDA (Ellesmere Rd)',
     watch: 'Pharmacy (Care IDA) → Requests & Nearby · Government',
-    msgs: () => [['FIELD', `M|${rid()}|INSULIN|N|1|43.7880,-79.2040|`], ['FIELD', `M|${rid()}|INHALER|D|0|43.8000,-79.2050|`],
-      ['FIELD', `M|${rid()}|EPIPEN|3|1|43.7900,-79.1900|`], ['FIELD', `M|${rid()}|HEART|D|1|43.7750,-79.2250|`], ['FIELD', `M|${rid()}|INSULIN|D|1|43.8200,-79.2000|`]],
+    msgs: () => [['FIELD', `M|${rid()}|INSULIN|N|1|43.7880,-79.1760|`], ['FIELD', `M|${rid()}|INHALER|D|0|43.7930,-79.1700|`],
+      ['FIELD', `M|${rid()}|EPIPEN|3|1|43.7840,-79.1860|`], ['FIELD', `M|${rid()}|HEART|D|1|43.7800,-79.1650|`], ['FIELD', `M|${rid()}|INSULIN|D|1|43.7960,-79.1800|`]],
   },
   {
     id: 'oxygen', icon: Wind, tint: '#38bdf8', title: 'Someone runs out of home oxygen',
@@ -40,7 +40,7 @@ const SCENARIOS = [
   },
   {
     id: 'order', icon: Building2, tint: '#fca5a5', title: 'Centenary orders 10 wound dressings',
-    watch: 'Pharmacy → Requests → Hospital orders (or order from the Hospital → Supplies tab)',
+    watch: 'Pharmacy (nearest with stock: Food Basics) → Requests → Hospital orders',
     msgs: () => [['RESP', 'J|H|CEN|Centenary (test kit)'], ['RESP', `S|${rid()}|CEN|DRESS|10`]],
   },
   {

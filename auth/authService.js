@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getSupabase } from '../lib/supabase';
+import { siteByCode } from '../dashboard/sites';
 
 // Three account types. The role lives in Supabase user_metadata.role and decides which dashboard opens.
 export const ROLES = {
@@ -86,4 +87,13 @@ export function demoSignIn(which) {
 export async function signOut() {
   await AsyncStorage.removeItem(KEY);
   if (supabaseReady()) await getSupabase().auth.signOut().catch(() => {});
+}
+
+// Ashmit's six-digit entry codes (HosID 100001-100003, PharmID 200001-200003). A code picks the facility; it is a
+// demo shortcut, not staff authentication.
+export function codeSignIn(role, code) {
+  const site = siteByCode(code);
+  const ok = site && (role === 'hospital' ? site.kind === 'hospital' : site.kind === 'pharmacy');
+  if (!ok) throw new Error(role === 'hospital' ? 'No hospital found for this HosID.' : 'No pharmacy found for this PharmID.');
+  return remember({ mode: 'demo', email: `${site.code}@medmesh.demo`, role, name: site.name, demoId: `code-${site.code}` });
 }
