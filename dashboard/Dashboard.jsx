@@ -140,7 +140,7 @@ export default function Dashboard() {
     safe: ["You're marked", 'safe.'],
   }[status];
   const subline = {
-    calm: 'Your MedMesh ID is ready. If anything happens, hold a button below. It works without internet.',
+    calm: profile?.medmeshId ? 'Your MedMesh ID is ready. If anything happens, hold a button below. It works without internet.' : 'Set up your MedMesh ID in My ID so responders know your needs. SOS still works without it.',
     help: helpText || (request?.phase === 'sent' ? 'Sent. Waiting for the command centre to reply. Keep the app open.' : 'Finish the report so help can be sent. Keep the app open.'),
     safe: contact ? `${contact.first} will be told as soon as the message gets through.` : 'Your check-in is queued for the command centre.',
   }[status];
