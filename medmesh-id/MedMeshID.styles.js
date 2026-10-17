@@ -82,6 +82,31 @@ const styles = StyleSheet.create({
   textButtonText: { color: c.muted, fontSize: 14, fontWeight: '600' },
   pressed: { opacity: 0.75, transform: [{ scale: 0.98 }] },
 
+  // tag input
+  tagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 12 },
+  tag: {
+    flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 8, paddingLeft: 12, paddingRight: 10, borderRadius: 999,
+    backgroundColor: 'rgba(56,189,248,0.16)', borderWidth: 1, borderColor: 'rgba(56,189,248,0.5)',
+  },
+  tagText: { color: '#e0f2fe', fontSize: 14, fontWeight: '700' },
+  tagInputRow: { flexDirection: 'row', gap: 10, alignItems: 'center' },
+  tagAdd: { width: 54, height: 54, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: c.blue6 },
+  tagHint: { color: c.dim, fontFamily: mono, fontSize: 10, letterSpacing: 1.6, fontWeight: '700', marginTop: 16, marginBottom: 10 },
+  suggestChip: {
+    flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 999,
+    borderWidth: 1, borderColor: c.line2, backgroundColor: c.panel2,
+  },
+  suggestText: { color: '#d1d5db', fontSize: 13.5, fontWeight: '600' },
+
+  // saved-profile actions
+  actions: { flexDirection: 'row', gap: 10, marginTop: 14 },
+  actionBtn: {
+    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 48, borderRadius: 14,
+    borderWidth: 1, borderColor: c.line2, backgroundColor: c.panel,
+  },
+  actionText: { color: c.ink, fontSize: 14, fontWeight: '700' },
+  updatedNote: { color: c.dim, fontSize: 12, marginTop: 8 },
+
   // review
   reviewTitle: { color: c.ink, fontSize: 22, fontWeight: '800', marginBottom: 6 },
   reviewGroup: { marginTop: 18, gap: 8 },

@@ -6,7 +6,7 @@ const key = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 export async function readReport(asset) {
   if (!url || !key) {
-    throw new Error('PDF autofill needs Supabase setup first. You can still fill in the form manually.');
+    throw new Error('Reading reports needs Supabase setup first. You can still fill in the form manually.');
   }
 
   const session = await getSession();
@@ -15,7 +15,7 @@ export async function readReport(asset) {
   body.append('report', Platform.OS === 'web' ? asset.file : {
     uri: asset.uri,
     name: asset.name,
-    type: 'application/pdf',
+    type: asset.mimeType || 'application/pdf',
   });
 
   const controller = new AbortController();
@@ -32,13 +32,14 @@ export async function readReport(asset) {
     const result = await response.json().catch(() => null);
 
     if (!response.ok || !result?.details) {
-      throw new Error(result?.error || 'Could not read this report. Check that the PDF autofill function is deployed.');
+      throw new Error(result?.error || 'Could not read this report. Check that the pdf-autofill function is deployed.');
     }
 
-    return result.details;
+    // { source: 'gemini' | 'text-rules', model, details, extracted }
+    return result;
   } catch (error) {
     if (error.name === 'AbortError') {
-      throw new Error('Reading the PDF took too long. Please try again.');
+      throw new Error('Reading the report took too long. Please try again.');
     }
 
     throw error;
