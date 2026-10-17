@@ -1,0 +1,23 @@
+{
+  "02HC033": {
+    "model": "logreg",
+    "decision_cutoff": 0.5720536562293099,
+    "level_threshold_m": 5.882499933242798,
+    "label_percentile": 97,
+    "beats_persistence_on_test_f2": true
+  },
+  "02HC030": {
+    "model": "logreg",
+    "decision_cutoff": 0.6110546912261102,
+    "level_threshold_m": 3.910950016975402,
+    "label_percentile": 97,
+    "beats_persistence_on_test_f2": true
+  },
+  "02HC032": {
+    "model": "logreg",
+    "decision_cutoff": 0.05073468911041389,
+    "level_threshold_m": 1.7359999418258667,
+    "label_percentile": 97,
+    "beats_persistence_on_test_f2": true
+  }
+}

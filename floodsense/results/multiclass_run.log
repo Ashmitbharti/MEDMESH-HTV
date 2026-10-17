@@ -1,0 +1,263 @@
+
+=== STEP 1: clean ===
+  02HC033_daily.csv: STATION_NAME = 'MIMICO CREEK AT ISLINGTON' (expected to contain 'MIMICO') -> OK
+  02HC033 MIMICO CREEK AT ISLINGTON: 2000-01-01 -> 2024-12-31, 9132 calendar days, 0 duplicate dates dropped
+    % missing LEVEL: 9.9%
+    % missing DISCHARGE: 3.9%
+    LEVEL_SYMBOL_EN: <blank>=9087, Partial Day=45
+    DISCHARGE_SYMBOL_EN: <blank>=7663, Ice Conditions=1288, Estimated=172, Partial Day=9
+    top-3% LEVEL days (all years, n=247) carrying ice/estimated symbols: DISCHARGE_SYMBOL_EN='Ice Conditions': 25, DISCHARGE_SYMBOL_EN='Estimated': 4
+    LEVEL: interpolated 5 days (gaps <= 2 days)
+    DISCHARGE: interpolated 0 days (gaps <= 2 days)
+    1192 days still missing LEVEL or DISCHARGE (kept as NaN on the calendar so lags stay aligned; rows that need them are dropped later)
+    rain: 99.7% of station days have Pearson precipitation; 26 days in gaps <= 2 filled with 0; 0 days left NaN (longer gaps)
+    SNOW_ON_GROUND coverage: 65.0% of station days
+  02HC033_realtime.csv: STATION_NAME = 'MIMICO CREEK AT ISLINGTON' (expected to contain 'MIMICO') -> OK
+  02HC033 realtime: 2026-09-17 19:00:00 -> 2026-10-16 23:50:00 LST, 8411 rows, 29 complete days
+    LEVEL: realtime daily mean [5.564, 5.825] | daily file [5.170, 6.723], median 5.605
+    DISCHARGE: realtime daily mean [0.079, 4.640] | daily file [0.031, 40.900], median 0.300
+    units/range check passed for 02HC033
+  02HC030_daily.csv: STATION_NAME = 'ETOBICOKE CREEK BELOW QUEEN ELIZABETH HIGHWAY' (expected to contain 'ETOBICOKE') -> OK
+  02HC030 ETOBICOKE CREEK BELOW QUEEN ELIZABETH HIGHWAY: 2000-01-01 -> 2023-12-31, 8766 calendar days, 0 duplicate dates dropped
+    % missing LEVEL: 9.7%
+    % missing DISCHARGE: 0.0%
+    LEVEL_SYMBOL_EN: <blank>=8675, Partial Day=91
+    DISCHARGE_SYMBOL_EN: <blank>=7275, Ice Conditions=1227, Estimated=250, Partial Day=14
+    top-3% LEVEL days (all years, n=241) carrying ice/estimated symbols: DISCHARGE_SYMBOL_EN='Ice Conditions': 13, DISCHARGE_SYMBOL_EN='Estimated': 7
+    LEVEL: interpolated 8 days (gaps <= 2 days)
+    DISCHARGE: interpolated 0 days (gaps <= 2 days)
+    846 days still missing LEVEL or DISCHARGE (kept as NaN on the calendar so lags stay aligned; rows that need them are dropped later)
+    rain: 99.7% of station days have Pearson precipitation; 26 days in gaps <= 2 filled with 0; 0 days left NaN (longer gaps)
+    SNOW_ON_GROUND coverage: 67.1% of station days
+  02HC030_realtime.csv: STATION_NAME = 'ETOBICOKE CREEK BELOW QUEEN ELIZABETH HIGHWAY' (expected to contain 'ETOBICOKE') -> OK
+  02HC030 realtime: 2026-09-17 19:00:00 -> 2026-10-17 00:15:00 LST, 8413 rows, 29 complete days
+    LEVEL: realtime daily mean [3.449, 3.795] | daily file [3.419, 4.688], median 3.546
+    DISCHARGE: realtime daily mean [0.282, 9.985] | daily file [0.120, 110.000], median 1.100
+    units/range check passed for 02HC030
+  02HC032_daily.csv: STATION_NAME = 'EAST HUMBER RIVER AT KING CREEK' (expected to contain 'EAST HUMBER') -> OK
+  02HC032 EAST HUMBER RIVER AT KING CREEK: 2002-10-01 -> 2024-12-31, 8128 calendar days, 0 duplicate dates dropped
+    % missing LEVEL: 8.3%
+    % missing DISCHARGE: 7.4%
+    LEVEL_SYMBOL_EN: <blank>=8019, Partial Day=109
+    DISCHARGE_SYMBOL_EN: <blank>=6365, Ice Conditions=1364, Estimated=377, Partial Day=22
+    top-3% LEVEL days (all years, n=224) carrying ice/estimated symbols: DISCHARGE_SYMBOL_EN='Ice Conditions': 50, DISCHARGE_SYMBOL_EN='Estimated': 4
+    LEVEL: interpolated 27 days (gaps <= 2 days)
+    DISCHARGE: interpolated 0 days (gaps <= 2 days)
+    877 days still missing LEVEL or DISCHARGE (kept as NaN on the calendar so lags stay aligned; rows that need them are dropped later)
+    rain: 99.7% of station days have Pearson precipitation; 26 days in gaps <= 2 filled with 0; 0 days left NaN (longer gaps)
+    SNOW_ON_GROUND coverage: 60.7% of station days
+  02HC032_realtime.csv: STATION_NAME = 'EAST HUMBER RIVER AT KING CREEK' (expected to contain 'EAST HUMBER') -> OK
+  02HC032 realtime: 2026-09-17 19:00:00 -> 2026-10-17 00:15:00 LST, 8416 rows, 29 complete days
+    LEVEL: realtime daily mean [1.271, 1.306] | daily file [1.248, 3.045], median 1.356
+    DISCHARGE: realtime daily mean [0.097, 0.188] | daily file [0.053, 20.700], median 0.366
+    units/range check passed for 02HC032
+Step 1 summary: 3 stations cleaned to C:\Users\Shiven\hackathon\MEDMESH-HTV\floodsense\data\clean; days with LEVEL and DISCHARGE: {'02HC033': 7940, '02HC030': 7920, '02HC032': 7251}; rain used.
+
+=== MULTICLASS (NEXT-DAY): NORMAL <= p90 < ELEVATED <= p95 < HIGH ===
+
+################ multiclass 02HC033 ################
+  [02HC033] cut-offs (train): p90 LEVEL = 5.738 m, p95 = 5.826 m above gauge datum
+  LEAN features (14): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos']
+    train 2002-01-01 -> 2018-06-25  n= 5552  NORMAL=5005  ELEVATED=278  HIGH=269
+    val   2018-06-26 -> 2021-09-27  n= 1190  NORMAL=1085  ELEVATED=54  HIGH=51
+    test  2021-09-28 -> 2024-12-30  n= 1190  NORMAL=1072  ELEVATED=59  HIGH=59
+    logreg: direct CV macro-F1 0.477 +/- 0.010 | ordinal CV macro-F1 0.428 +/- 0.019
+    rf: direct CV macro-F1 0.501 +/- 0.024 | ordinal CV macro-F1 0.481 +/- 0.021
+    lgbm: direct CV macro-F1 0.497 +/- 0.032 | ordinal CV macro-F1 0.470 +/- 0.019
+    xgb: direct CV macro-F1 0.498 +/- 0.036 | ordinal CV macro-F1 0.469 +/- 0.020
+    best candidate on VALIDATION macro-F1 (ties within 0.01 -> simpler): direct-lgbm; time 117s
+
+  ===== 02HC033 multiclass, VAL (per-class: 1 = ELEVATED, 2 = HIGH) =====
+     candidate   rule  macro_f1  weighted_f1  kappa_quadratic  prec_1  rec_1  prec_2  rec_2  miss_true2_pred0  miss_true0_pred2                                    confusion            cv
+ direct-logreg argmax     0.449        0.842            0.324   0.098  0.204   0.233  0.471                20                62   [[929, 94, 62], [26, 11, 17], [20, 7, 24]]  0.477+/-0.01
+ direct-logreg safety     0.418        0.826            0.271   0.096  0.093   0.171  0.667                16               140   [[899, 46, 140], [24, 5, 25], [16, 1, 34]]  0.477+/-0.01
+ordinal-logreg argmax     0.387        0.841            0.270   0.000  0.000   0.158  0.608                20               138    [[947, 0, 138], [27, 0, 27], [20, 0, 31]] 0.428+/-0.019
+ordinal-logreg safety     0.423        0.802            0.328   0.057  0.204   0.224  0.549                11                73 [[842, 170, 73], [19, 11, 24], [11, 12, 28]] 0.428+/-0.019
+     direct-rf argmax     0.462        0.874            0.347   0.140  0.130   0.281  0.353                26                36   [[1013, 36, 36], [37, 7, 10], [26, 7, 18]] 0.501+/-0.024
+     direct-rf safety     0.436        0.810            0.317   0.081  0.241   0.217  0.608                11                91  [[855, 139, 91], [20, 13, 21], [11, 9, 31]] 0.501+/-0.024
+    ordinal-rf argmax     0.453        0.866            0.354   0.105  0.111   0.256  0.431                24                48    [[991, 46, 48], [32, 6, 16], [24, 5, 22]] 0.481+/-0.021
+    ordinal-rf safety     0.444        0.808            0.323   0.090  0.296   0.228  0.608                11                85  [[847, 153, 85], [18, 16, 20], [11, 9, 31]] 0.481+/-0.021
+   direct-lgbm argmax     0.483        0.877            0.383   0.158  0.167   0.304  0.412                23                37   [[1007, 41, 37], [34, 9, 11], [23, 7, 21]] 0.497+/-0.032
+   direct-lgbm safety     0.460        0.846            0.347   0.118  0.259   0.235  0.471                15                63  [[929, 93, 63], [25, 14, 15], [15, 12, 24]] 0.497+/-0.032
+  ordinal-lgbm argmax     0.393        0.848            0.292   0.000  0.000   0.169  0.588                20               121    [[960, 4, 121], [27, 0, 27], [20, 1, 30]]  0.47+/-0.019
+  ordinal-lgbm safety     0.435        0.827            0.305   0.102  0.167   0.186  0.647                14               118   [[892, 75, 118], [19, 9, 26], [14, 4, 33]]  0.47+/-0.019
+    direct-xgb argmax     0.480        0.869            0.333   0.185  0.222   0.253  0.392                23                50    [[990, 45, 50], [33, 12, 9], [23, 8, 20]] 0.498+/-0.036
+    direct-xgb safety     0.423        0.827            0.292   0.093  0.130   0.174  0.627                12               128   [[896, 61, 128], [23, 7, 24], [12, 7, 32]] 0.498+/-0.036
+   ordinal-xgb argmax     0.426        0.861            0.318   0.154  0.037   0.197  0.549                21                93     [[983, 9, 93], [31, 2, 21], [21, 2, 28]]  0.469+/-0.02
+   ordinal-xgb safety     0.457        0.851            0.347   0.123  0.167   0.217  0.588                15                87    [[940, 58, 87], [24, 9, 21], [15, 6, 30]]  0.469+/-0.02
+   persistence      -     0.428        0.868            0.310   0.074  0.074   0.275  0.275                30                27   [[1015, 43, 27], [40, 4, 10], [30, 7, 14]] 0.419+/-0.023
+      always_0      -     0.318        0.870            0.000   0.000  0.000   0.000  0.000                51                 0       [[1085, 0, 0], [54, 0, 0], [51, 0, 0]] 0.316+/-0.003
+
+  ===== 02HC033 multiclass, TEST (per-class: 1 = ELEVATED, 2 = HIGH) =====
+     candidate   rule  macro_f1  weighted_f1  kappa_quadratic  prec_1  rec_1  prec_2  rec_2  miss_true2_pred0  miss_true0_pred2                                    confusion            cv
+ direct-logreg argmax     0.480        0.846            0.421   0.112  0.186   0.286  0.610                16                65   [[927, 80, 65], [23, 11, 25], [16, 7, 36]]  0.477+/-0.01
+ direct-logreg safety     0.444        0.826            0.334   0.123  0.119   0.206  0.712                15               131   [[893, 48, 131], [21, 7, 31], [15, 2, 42]]  0.477+/-0.01
+ordinal-logreg argmax     0.413        0.842            0.354   0.000  0.000   0.208  0.712                17               127    [[945, 0, 127], [26, 0, 33], [17, 0, 42]] 0.428+/-0.019
+ordinal-logreg safety     0.454        0.806            0.374   0.092  0.305   0.262  0.542                11                67 [[843, 162, 67], [18, 18, 23], [11, 16, 32]] 0.428+/-0.019
+     direct-rf argmax     0.524        0.885            0.490   0.229  0.186   0.386  0.458                26                25  [[1016, 31, 25], [30, 11, 18], [26, 6, 27]] 0.501+/-0.024
+     direct-rf safety     0.450        0.810            0.382   0.085  0.237   0.245  0.627                11                83 [[849, 140, 83], [14, 14, 31], [11, 11, 37]] 0.501+/-0.024
+    ordinal-rf argmax     0.508        0.878            0.516   0.156  0.169   0.348  0.525                17                35  [[994, 43, 35], [26, 10, 23], [17, 11, 31]] 0.481+/-0.021
+    ordinal-rf safety     0.453        0.804            0.400   0.071  0.220   0.270  0.678                10                75  [[835, 162, 75], [13, 13, 33], [10, 9, 40]] 0.481+/-0.021
+   direct-lgbm argmax     0.523        0.883            0.494   0.228  0.220   0.351  0.458                23                30  [[1007, 35, 30], [26, 13, 20], [23, 9, 27]] 0.497+/-0.032
+   direct-lgbm safety     0.480        0.851            0.453   0.109  0.203   0.296  0.542                14                51  [[936, 85, 51], [22, 12, 25], [14, 13, 32]] 0.497+/-0.032
+  ordinal-lgbm argmax     0.430        0.855            0.413   0.000  0.000   0.239  0.746                15               105    [[964, 3, 105], [24, 0, 35], [15, 0, 44]]  0.47+/-0.019
+  ordinal-lgbm safety     0.448        0.827            0.380   0.084  0.119   0.232  0.746                10               113   [[888, 71, 113], [19, 7, 33], [10, 5, 44]]  0.47+/-0.019
+    direct-xgb argmax     0.495        0.875            0.499   0.133  0.136   0.341  0.508                20                34    [[995, 43, 34], [27, 8, 24], [20, 9, 30]] 0.498+/-0.036
+    direct-xgb safety     0.466        0.839            0.358   0.164  0.169   0.218  0.661                14               113  [[914, 45, 113], [22, 10, 27], [14, 6, 39]] 0.498+/-0.036
+   ordinal-xgb argmax     0.467        0.871            0.463   0.400  0.034   0.275  0.712                17                78     [[991, 3, 78], [24, 2, 33], [17, 0, 42]]  0.469+/-0.02
+   ordinal-xgb safety     0.475        0.855            0.458   0.091  0.102   0.287  0.695                13                71    [[946, 55, 71], [22, 6, 31], [13, 5, 41]]  0.469+/-0.02
+   persistence      -     0.405        0.849            0.218   0.153  0.153   0.136  0.136                42                38     [[993, 41, 38], [37, 9, 13], [42, 9, 8]] 0.419+/-0.023
+      always_0      -     0.316        0.854            0.000   0.000  0.000   0.000  0.000                59                 0       [[1072, 0, 0], [59, 0, 0], [59, 0, 0]] 0.316+/-0.003
+  NOTE: few ELEVATED/HIGH days in val/test; differences of a few hundredths are within noise (compare with the CV std).
+    top-14 importances, best direct tree model on validation (direct-lgbm): rain_today=0.152, level_z30=0.083, level_accel=0.082, rain_sum_7d=0.079, level_max_7d=0.079, rain_sum_3d=0.072, level_chg_3d=0.071, disch_chg_1d=0.071, disch=0.066, level=0.062, level_chg_1d=0.058, level_max_3d=0.058, month_cos=0.034, month_sin=0.033
+
+  Collapse check 02HC033 (TEST): does multiclass lose anything on the binary task?
+threshold                                           model  precision  recall  alerts  events  events_caught  fired_day_before
+      p95                       direct-lgbm [argmax] HIGH      0.351   0.458      77      45             25                19
+      p90              direct-lgbm [argmax] ELEVATED+HIGH      0.515   0.585     134      69             54                35
+      p95                       direct-lgbm [safety] HIGH      0.296   0.542     108      45             28                21
+      p90              direct-lgbm [safety] ELEVATED+HIGH      0.376   0.695     218      69             59                43
+      p95                  binary v2 logreg (shipped p95)      0.197   0.729     218      45             39                31
+      p90 binary p90 lgbm (ordinal sub-model, F2 cut-off)      0.326   0.754     273      69             61                48
+      p95                                     persistence      0.136   0.136      59      45             13                 0
+      p90                                     persistence      0.331   0.331     118      69             30                 0
+  saved models/multiclass/best_02HC033.joblib (direct-lgbm; safety t1=0.3079, t2=0.2817)
+
+################ multiclass 02HC030 ################
+  [02HC030] cut-offs (train): p90 LEVEL = 3.743 m, p95 = 3.838 m above gauge datum
+  LEAN features (14): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos']
+    train 2002-01-01 -> 2017-05-26  n= 5536  NORMAL=4984  ELEVATED=275  HIGH=277
+    val   2017-05-27 -> 2020-08-29  n= 1186  NORMAL=1068  ELEVATED=64  HIGH=54
+    test  2020-08-30 -> 2023-12-30  n= 1186  NORMAL=1101  ELEVATED=44  HIGH=41
+    logreg: direct CV macro-F1 0.493 +/- 0.019 | ordinal CV macro-F1 0.418 +/- 0.008
+    rf: direct CV macro-F1 0.555 +/- 0.034 | ordinal CV macro-F1 0.529 +/- 0.038
+    lgbm: direct CV macro-F1 0.543 +/- 0.044 | ordinal CV macro-F1 0.490 +/- 0.013
+    xgb: direct CV macro-F1 0.546 +/- 0.031 | ordinal CV macro-F1 0.495 +/- 0.024
+    best candidate on VALIDATION macro-F1 (ties within 0.01 -> simpler): direct-xgb; time 132s
+
+  ===== 02HC030 multiclass, VAL (per-class: 1 = ELEVATED, 2 = HIGH) =====
+     candidate   rule  macro_f1  weighted_f1  kappa_quadratic  prec_1  rec_1  prec_2  rec_2  miss_true2_pred0  miss_true0_pred2                                    confusion            cv
+ direct-logreg argmax     0.471        0.835            0.356   0.155  0.359   0.239  0.389                16                53 [[907, 108, 53], [27, 23, 14], [16, 17, 21]] 0.493+/-0.019
+ direct-logreg safety     0.440        0.833            0.323   0.167  0.109   0.183  0.648                15               125   [[912, 31, 125], [26, 7, 31], [15, 4, 35]] 0.493+/-0.019
+ordinal-logreg argmax     0.401        0.837            0.333   0.000  0.000   0.183  0.685                17               129    [[939, 0, 129], [28, 0, 36], [17, 0, 37]] 0.418+/-0.008
+ordinal-logreg safety     0.462        0.817            0.404   0.095  0.250   0.264  0.611                 9                64  [[863, 141, 64], [20, 16, 28], [9, 12, 33]] 0.418+/-0.008
+     direct-rf argmax     0.515        0.887            0.458   0.368  0.109   0.418  0.426                28                20    [[1039, 9, 20], [45, 7, 12], [28, 3, 23]] 0.555+/-0.034
+     direct-rf safety     0.508        0.875            0.476   0.227  0.156   0.295  0.611                15                54   [[986, 28, 54], [29, 10, 25], [15, 6, 33]] 0.555+/-0.034
+    ordinal-rf argmax     0.484        0.885            0.518   0.182  0.031   0.397  0.500                24                21    [[1041, 6, 21], [42, 2, 20], [24, 3, 27]] 0.529+/-0.038
+    ordinal-rf safety     0.466        0.856            0.417   0.208  0.078   0.234  0.759                11               100   [[951, 17, 100], [25, 5, 34], [11, 2, 41]] 0.529+/-0.038
+   direct-lgbm argmax     0.516        0.876            0.447   0.262  0.250   0.284  0.463                17                46  [[989, 33, 46], [31, 16, 17], [17, 12, 25]] 0.543+/-0.044
+   direct-lgbm safety     0.510        0.860            0.438   0.207  0.281   0.267  0.593                12                65  [[944, 59, 65], [23, 18, 23], [12, 10, 32]] 0.543+/-0.044
+  ordinal-lgbm argmax     0.435        0.855            0.399   0.167  0.016   0.229  0.704                16                95     [[968, 5, 95], [30, 1, 33], [16, 0, 38]]  0.49+/-0.013
+  ordinal-lgbm safety     0.487        0.842            0.430   0.133  0.234   0.273  0.667                 9                70    [[909, 89, 70], [23, 15, 26], [9, 9, 36]]  0.49+/-0.013
+    direct-xgb argmax     0.527        0.875            0.439   0.292  0.297   0.270  0.500                14                57  [[978, 33, 57], [29, 19, 16], [14, 13, 27]] 0.546+/-0.031
+    direct-xgb safety     0.541        0.870            0.468   0.237  0.359   0.323  0.556                12                48  [[958, 62, 48], [26, 23, 15], [12, 12, 30]] 0.546+/-0.031
+   ordinal-xgb argmax     0.463        0.866            0.425   0.429  0.047   0.252  0.667                17                78     [[987, 3, 78], [32, 3, 29], [17, 1, 36]] 0.495+/-0.024
+   ordinal-xgb safety     0.482        0.844            0.391   0.194  0.188   0.227  0.759                 8               110   [[913, 45, 110], [22, 12, 30], [8, 5, 41]] 0.495+/-0.024
+   persistence      -     0.471        0.868            0.424   0.141  0.141   0.333  0.333                27                19   [[1003, 46, 19], [38, 9, 17], [27, 9, 18]] 0.461+/-0.027
+      always_0      -     0.316        0.853            0.000   0.000  0.000   0.000  0.000                54                 0       [[1068, 0, 0], [64, 0, 0], [54, 0, 0]] 0.315+/-0.002
+
+  ===== 02HC030 multiclass, TEST (per-class: 1 = ELEVATED, 2 = HIGH) =====
+     candidate   rule  macro_f1  weighted_f1  kappa_quadratic  prec_1  rec_1  prec_2  rec_2  miss_true2_pred0  miss_true0_pred2                                    confusion            cv
+ direct-logreg argmax     0.491        0.873            0.406   0.141  0.409   0.253  0.537                 9                49  [[952, 100, 49], [10, 18, 16], [9, 10, 22]] 0.493+/-0.019
+ direct-logreg safety     0.428        0.870            0.366   0.057  0.045   0.192  0.805                 8               108    [[960, 33, 108], [11, 2, 31], [8, 0, 33]] 0.493+/-0.019
+ordinal-logreg argmax     0.409        0.878            0.363   0.000  0.000   0.179  0.780                 9               115     [[986, 0, 115], [12, 0, 32], [9, 0, 32]] 0.418+/-0.008
+ordinal-logreg safety     0.433        0.841            0.359   0.070  0.273   0.208  0.512                 8                57   [[897, 147, 57], [9, 12, 23], [8, 12, 21]] 0.418+/-0.008
+     direct-rf argmax     0.575        0.923            0.431   0.469  0.341   0.389  0.341                24                16   [[1071, 14, 16], [23, 15, 6], [24, 3, 14]] 0.555+/-0.034
+     direct-rf safety     0.506        0.900            0.449   0.189  0.227   0.264  0.585                12                48  [[1015, 38, 48], [15, 10, 19], [12, 5, 24]] 0.555+/-0.034
+    ordinal-rf argmax     0.526        0.915            0.447   0.412  0.159   0.317  0.488                21                29   [[1062, 10, 29], [23, 7, 14], [21, 0, 20]] 0.529+/-0.038
+    ordinal-rf safety     0.426        0.880            0.379   0.069  0.045   0.184  0.683                 7                96     [[984, 21, 96], [14, 2, 28], [7, 6, 28]] 0.529+/-0.038
+   direct-lgbm argmax     0.541        0.896            0.424   0.235  0.455   0.286  0.537                11                46    [[998, 57, 46], [15, 20, 9], [11, 8, 22]] 0.543+/-0.044
+   direct-lgbm safety     0.482        0.872            0.382   0.140  0.318   0.227  0.610                 9                67    [[955, 79, 67], [12, 14, 18], [9, 7, 25]] 0.543+/-0.044
+  ordinal-lgbm argmax     0.465        0.889            0.389   0.222  0.091   0.208  0.732                10                89    [[999, 13, 89], [15, 4, 25], [10, 1, 30]]  0.49+/-0.013
+  ordinal-lgbm safety     0.460        0.861            0.381   0.104  0.295   0.216  0.585                 8                65    [[933, 103, 65], [9, 13, 22], [8, 9, 24]]  0.49+/-0.013
+    direct-xgb argmax     0.538        0.901            0.467   0.218  0.432   0.300  0.512                10                37 [[1006, 58, 37], [13, 19, 12], [10, 10, 21]] 0.546+/-0.031
+    direct-xgb safety     0.519        0.885            0.442   0.169  0.477   0.300  0.512                 8                38   [[972, 91, 38], [12, 21, 11], [8, 12, 21]] 0.546+/-0.031
+   ordinal-xgb argmax     0.480        0.899            0.423   0.286  0.091   0.234  0.707                11                72    [[1020, 9, 72], [17, 4, 23], [11, 1, 29]] 0.495+/-0.024
+   ordinal-xgb safety     0.432        0.859            0.350   0.079  0.136   0.180  0.707                 6               104    [[933, 64, 104], [10, 6, 28], [6, 6, 29]] 0.495+/-0.024
+   persistence      -     0.435        0.899            0.306   0.205  0.205   0.146  0.146                28                22    [[1051, 28, 22], [22, 9, 13], [28, 7, 6]] 0.461+/-0.027
+      always_0      -     0.321        0.894            0.000   0.000  0.000   0.000  0.000                41                 0       [[1101, 0, 0], [44, 0, 0], [41, 0, 0]] 0.315+/-0.002
+  NOTE: few ELEVATED/HIGH days in val/test; differences of a few hundredths are within noise (compare with the CV std).
+    top-14 importances, best direct tree model on validation (direct-xgb): rain_today=0.138, disch=0.115, level=0.076, disch_chg_1d=0.073, level_accel=0.065, rain_sum_3d=0.065, level_max_3d=0.064, level_chg_1d=0.062, level_z30=0.061, level_max_7d=0.058, rain_sum_7d=0.058, level_chg_3d=0.057, month_sin=0.057, month_cos=0.050
+
+  Collapse check 02HC030 (TEST): does multiclass lose anything on the binary task?
+threshold                                          model  precision  recall  alerts  events  events_caught  fired_day_before
+      p95                       direct-xgb [argmax] HIGH      0.300   0.512      70      32             20                15
+      p90              direct-xgb [argmax] ELEVATED+HIGH      0.395   0.729     157      44             37                24
+      p95                       direct-xgb [safety] HIGH      0.300   0.512      70      32             19                14
+      p90              direct-xgb [safety] ELEVATED+HIGH      0.335   0.765     194      44             37                26
+      p95                   binary v2 lgbm (shipped p95)      0.231   0.659     117      32             24                19
+      p90 binary p90 xgb (ordinal sub-model, F2 cut-off)      0.291   0.812     237      44             39                30
+      p95                                    persistence      0.146   0.146      41      32              8                 0
+      p90                                    persistence      0.412   0.412      85      44             22                 0
+  saved models/multiclass/best_02HC030.joblib (direct-xgb; safety t1=0.5598, t2=0.4050)
+
+################ multiclass 02HC032 ################
+  [02HC032] cut-offs (train): p90 LEVEL = 1.527 m, p95 = 1.647 m above gauge datum
+  LEAN features (14): ['level', 'disch', 'level_chg_1d', 'level_chg_3d', 'disch_chg_1d', 'level_accel', 'level_max_3d', 'level_max_7d', 'level_z30', 'rain_today', 'rain_sum_3d', 'rain_sum_7d', 'month_sin', 'month_cos']
+    train 2003-05-23 -> 2019-01-24  n= 5058  NORMAL=4564  ELEVATED=245  HIGH=249
+    val   2019-01-25 -> 2022-01-11  n= 1083  NORMAL=1008  ELEVATED=45  HIGH=30
+    test  2022-01-12 -> 2024-12-30  n= 1084  NORMAL=999  ELEVATED=40  HIGH=45
+    logreg: direct CV macro-F1 0.641 +/- 0.048 | ordinal CV macro-F1 0.528 +/- 0.041
+    rf: direct CV macro-F1 0.699 +/- 0.056 | ordinal CV macro-F1 0.640 +/- 0.044
+    lgbm: direct CV macro-F1 0.707 +/- 0.048 | ordinal CV macro-F1 0.702 +/- 0.057
+    xgb: direct CV macro-F1 0.703 +/- 0.047 | ordinal CV macro-F1 0.688 +/- 0.048
+    best candidate on VALIDATION macro-F1 (ties within 0.01 -> simpler): ordinal-lgbm; time 88s
+
+  ===== 02HC032 multiclass, VAL (per-class: 1 = ELEVATED, 2 = HIGH) =====
+     candidate   rule  macro_f1  weighted_f1  kappa_quadratic  prec_1  rec_1  prec_2  rec_2  miss_true2_pred0  miss_true0_pred2                                 confusion            cv
+ direct-logreg argmax     0.651        0.920            0.651   0.257  0.622   0.606  0.667                 4                 4    [[929, 75, 4], [8, 28, 9], [4, 6, 20]] 0.641+/-0.048
+ direct-logreg safety     0.723        0.950            0.752   0.450  0.600   0.690  0.667                 5                 2   [[978, 28, 2], [11, 27, 7], [5, 5, 20]] 0.641+/-0.048
+ordinal-logreg argmax     0.461        0.917            0.597   0.000  0.000   0.272  0.833                 5                33   [[970, 5, 33], [11, 0, 34], [5, 0, 25]] 0.528+/-0.041
+ordinal-logreg safety     0.675        0.944            0.740   0.400  0.444   0.550  0.733                 5                 4  [[977, 27, 4], [11, 20, 14], [5, 3, 22]] 0.528+/-0.041
+     direct-rf argmax     0.599        0.943            0.728   0.433  0.289   0.467  0.467                 6                 2  [[999, 7, 2], [18, 13, 14], [6, 10, 14]] 0.699+/-0.056
+     direct-rf safety     0.599        0.932            0.668   0.317  0.289   0.387  0.800                 3                17 [[966, 25, 17], [11, 13, 21], [3, 3, 24]] 0.699+/-0.056
+    ordinal-rf argmax     0.610        0.941            0.726   0.571  0.178   0.488  0.700                 7                 5    [[999, 4, 5], [20, 8, 17], [7, 2, 21]]  0.64+/-0.044
+    ordinal-rf safety     0.610        0.939            0.710   0.435  0.222   0.429  0.800                 4                12 [[985, 11, 12], [15, 10, 20], [4, 2, 24]]  0.64+/-0.044
+   direct-lgbm argmax     0.640        0.946            0.719   0.472  0.378   0.536  0.500                 5                 4   [[995, 9, 4], [19, 17, 9], [5, 10, 15]] 0.707+/-0.048
+   direct-lgbm safety     0.605        0.935            0.647   0.419  0.289   0.371  0.767                 5                19 [[973, 16, 19], [12, 13, 20], [5, 2, 23]] 0.707+/-0.048
+  ordinal-lgbm argmax     0.687        0.950            0.740   0.500  0.467   0.630  0.567                 5                 3   [[992, 13, 3], [17, 21, 7], [5, 8, 17]] 0.702+/-0.057
+  ordinal-lgbm safety     0.579        0.933            0.631   0.500  0.200   0.338  0.800                 4                25   [[976, 7, 25], [14, 9, 22], [4, 2, 24]] 0.702+/-0.057
+    direct-xgb argmax     0.643        0.946            0.734   0.471  0.356   0.552  0.533                 5                 3   [[996, 9, 3], [19, 16, 10], [5, 9, 16]] 0.703+/-0.047
+    direct-xgb safety     0.601        0.921            0.609   0.277  0.400   0.381  0.800                 4                21  [[942, 45, 21], [9, 18, 18], [4, 2, 24]] 0.703+/-0.047
+   ordinal-xgb argmax     0.647        0.946            0.720   0.486  0.400   0.462  0.600                 4                 8  [[989, 11, 8], [14, 18, 13], [4, 8, 18]] 0.688+/-0.048
+   ordinal-xgb safety     0.597        0.936            0.666   0.476  0.222   0.375  0.800                 4                19  [[980, 9, 19], [14, 10, 21], [4, 2, 24]] 0.688+/-0.048
+   persistence      -     0.607        0.937            0.722   0.311  0.311   0.533  0.533                 6                 0  [[985, 23, 0], [17, 14, 14], [6, 8, 16]]   0.64+/-0.05
+      always_0      -     0.321        0.897            0.000   0.000  0.000   0.000  0.000                30                 0    [[1008, 0, 0], [45, 0, 0], [30, 0, 0]] 0.317+/-0.003
+
+  ===== 02HC032 multiclass, TEST (per-class: 1 = ELEVATED, 2 = HIGH) =====
+     candidate   rule  macro_f1  weighted_f1  kappa_quadratic  prec_1  rec_1  prec_2  rec_2  miss_true2_pred0  miss_true0_pred2                                confusion            cv
+ direct-logreg argmax     0.620        0.911            0.681   0.184  0.525   0.596  0.689                 4                 7 [[909, 83, 7], [5, 21, 14], [4, 10, 31]] 0.641+/-0.048
+ direct-logreg safety     0.691        0.940            0.777   0.310  0.550   0.721  0.689                 6                 1  [[957, 41, 1], [7, 22, 11], [6, 8, 31]] 0.641+/-0.048
+ordinal-logreg argmax     0.488        0.912            0.618   0.000  0.000   0.342  0.911                 4                46   [[945, 8, 46], [7, 0, 33], [4, 0, 41]] 0.528+/-0.041
+ordinal-logreg safety     0.633        0.932            0.750   0.242  0.375   0.571  0.711                 5                 6  [[954, 39, 6], [7, 15, 18], [5, 8, 32]] 0.528+/-0.041
+     direct-rf argmax     0.693        0.947            0.772   0.425  0.425   0.707  0.644                 9                 2 [[981, 16, 2], [13, 17, 10], [9, 7, 29]] 0.699+/-0.056
+     direct-rf safety     0.584        0.919            0.680   0.176  0.225   0.448  0.867                 4                23  [[936, 40, 23], [6, 9, 25], [4, 2, 39]] 0.699+/-0.056
+    ordinal-rf argmax     0.617        0.940            0.760   0.429  0.150   0.567  0.756                10                 6  [[986, 7, 6], [14, 6, 20], [10, 1, 34]]  0.64+/-0.044
+    ordinal-rf safety     0.569        0.929            0.736   0.154  0.100   0.487  0.822                 7                12  [[966, 21, 12], [9, 4, 27], [7, 1, 37]]  0.64+/-0.044
+   direct-lgbm argmax     0.687        0.947            0.750   0.447  0.525   0.619  0.578                 8                 6 [[978, 15, 6], [9, 21, 10], [8, 11, 26]] 0.707+/-0.048
+   direct-lgbm safety     0.623        0.929            0.682   0.310  0.325   0.451  0.822                 4                25 [[949, 25, 25], [7, 13, 20], [4, 4, 37]] 0.707+/-0.048
+  ordinal-lgbm argmax     0.725        0.952            0.785   0.471  0.600   0.750  0.600                 8                 2  [[980, 17, 2], [9, 24, 7], [8, 10, 27]] 0.702+/-0.057
+  ordinal-lgbm safety     0.575        0.924            0.631   0.389  0.175   0.369  0.844                 5                39   [[951, 9, 39], [7, 7, 26], [5, 2, 38]] 0.702+/-0.057
+    direct-xgb argmax     0.722        0.950            0.750   0.500  0.575   0.683  0.622                 9                 6  [[978, 15, 6], [10, 23, 7], [9, 8, 28]] 0.703+/-0.047
+    direct-xgb safety     0.549        0.904            0.615   0.134  0.225   0.389  0.822                 4                32  [[913, 54, 32], [5, 9, 26], [4, 4, 37]] 0.703+/-0.047
+   ordinal-xgb argmax     0.677        0.943            0.754   0.380  0.475   0.617  0.644                 7                 6  [[971, 22, 6], [9, 19, 12], [7, 9, 29]] 0.688+/-0.048
+   ordinal-xgb safety     0.593        0.931            0.697   0.318  0.175   0.446  0.822                 6                22  [[964, 13, 22], [9, 7, 24], [6, 2, 37]] 0.688+/-0.048
+   persistence      -     0.551        0.921            0.674   0.128  0.125   0.556  0.556                14                 2 [[969, 28, 2], [17, 5, 18], [14, 6, 25]]   0.64+/-0.05
+      always_0      -     0.320        0.884            0.000   0.000  0.000   0.000  0.000                45                 0    [[999, 0, 0], [40, 0, 0], [45, 0, 0]] 0.317+/-0.003
+  NOTE: few ELEVATED/HIGH days in val/test; differences of a few hundredths are within noise (compare with the CV std).
+    top-14 importances, best direct tree model on validation (direct-xgb): level=0.329, rain_today=0.114, disch=0.090, disch_chg_1d=0.057, month_sin=0.054, level_max_7d=0.047, level_chg_3d=0.045, level_accel=0.043, level_max_3d=0.042, month_cos=0.041, level_chg_1d=0.038, rain_sum_3d=0.037, rain_sum_7d=0.033, level_z30=0.032
+
+  Collapse check 02HC032 (TEST): does multiclass lose anything on the binary task?
+threshold                                           model  precision  recall  alerts  events  events_caught  fired_day_before
+      p95                      ordinal-lgbm [argmax] HIGH      0.750   0.600      36      17             12                 5
+      p90             ordinal-lgbm [argmax] ELEVATED+HIGH      0.782   0.800      87      26             25                15
+      p95                      ordinal-lgbm [safety] HIGH      0.369   0.844     103      17             15                11
+      p90             ordinal-lgbm [safety] ELEVATED+HIGH      0.603   0.859     121      26             25                15
+      p95                  binary v2 logreg (shipped p95)      0.604   0.711      53      17             15                 9
+      p90 binary p90 lgbm (ordinal sub-model, F2 cut-off)      0.778   0.824      90      26             25                15
+      p95                                     persistence      0.556   0.556      45      17             10                 0
+      p90                                     persistence      0.643   0.635      84      26             18                 0
+  saved models/multiclass/best_02HC032.joblib (ordinal-lgbm; safety t1=0.4430, t2=0.0000)
+
+Small-class warnings: {'02HC033': [], '02HC030': [], '02HC032': []}
+multiclass done in 342s -> results/multiclass_comparison.csv, results/multiclass_collapse_check.csv, results/multiclass/, models/multiclass/
