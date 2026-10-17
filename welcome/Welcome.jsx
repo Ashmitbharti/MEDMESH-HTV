@@ -34,7 +34,8 @@ export default function Welcome() {
   const [error, setError] = useState('');
   const [note, setNote] = useState('');
 
-  const go = (a) => router.replace(ROLES[a.role].home);
+  // the new demo citizen goes straight to MedMesh ID setup, to show how an ID is made
+  const go = (a) => router.replace(a.demoId === 'citizen-new' ? '/profile' : ROLES[a.role].home);
 
   async function submit() {
     setError(''); setNote('');

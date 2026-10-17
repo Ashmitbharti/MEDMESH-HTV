@@ -14,7 +14,16 @@ const MARGARET = {
   userId: 'demo-margaret', medmeshId: 'ZP5W1K', status: 'synced', commandCentre: 'pending',
 };
 
+// Every demo citizen sign-in starts clean: no open emergency, no old messages, so the demo always begins with
+// "Hold SOS for 3 seconds -> questionnaire -> help assigned" instead of an old "help is on the way".
+async function freshStart() {
+  const keys = (await AsyncStorage.getAllKeys()).filter((k) => k === 'medmesh-scene' || k === 'medmesh-outbox' || k.startsWith('medmesh-inbox'));
+  await AsyncStorage.multiRemove(keys);
+  await AsyncStorage.setItem('medmesh-inbox-since', String(Date.now() / 1000));   // ignore anything sent before this sign-in
+}
+
 export async function seedDemo(account) {
+  if (account?.role === 'citizen') await freshStart();
   if (account?.demoId === 'citizen-new') {
     const keys = (await AsyncStorage.getAllKeys()).filter((k) => k.startsWith('medmesh-profile:'));
     await AsyncStorage.multiRemove(keys);
