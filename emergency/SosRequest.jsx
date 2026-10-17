@@ -5,6 +5,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { answerRequest, expireRequest, questions, startQuestions } from './questions';
 import QrIdentification from './QrIdentification';
 import { loadRequest, updateRequest } from './requestService';
+import { getPosition } from '../dashboard/hazardService';
 import styles from './SosRequest.styles';
 
 export default function SosRequest() {
@@ -17,6 +18,7 @@ export default function SosRequest() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const changing = useRef(false);
+  const [locating, setLocating] = useState(false);
   const question = request ? questions[request.questionIndex] : null;
   const missed = question && request.missedQuestions.includes(question.key);
 
@@ -98,13 +100,21 @@ export default function SosRequest() {
     ]);
   }
 
+  async function fillFromGps() {
+    setLocating(true);
+    const pos = await getPosition();
+    setLocating(false);
+    if (!pos) { setError('Could not get GPS. Type a landmark instead.'); return; }
+    answer(`GPS ${pos.lat.toFixed(5)},${pos.lon.toFixed(5)}`);
+  }
+
   return (
     <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>{request?.mode === 'other' ? 'Help someone else' : 'Emergency request'}</Text>
-        <View style={styles.statusCard}>
-          <Text style={styles.statusTitle}>Not sent</Text>
-          <Text style={styles.description}>No mesh connection. No responder has been dispatched.</Text>
+        <View style={styles.pendingCard}>
+          <Text style={styles.pendingTitle}>Saved · waiting for a mesh node</Text>
+          <Text style={styles.description}>It sends automatically when your phone reaches a MedMesh node. No responder has been dispatched yet.</Text>
         </View>
 
         {loading ? <Text style={styles.description}>Loading your local request…</Text> : null}
@@ -148,6 +158,11 @@ export default function SosRequest() {
 
                 {question.input ? (
                   <>
+                    <Pressable accessibilityRole="button" disabled={busy || locating} style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}
+                      onPress={fillFromGps}>
+                      <Text style={styles.buttonText}>{locating ? 'Finding your location…' : 'Use my GPS location'}</Text>
+                    </Pressable>
+                    <Text style={styles.hint}>GPS works without internet. Or type a landmark:</Text>
                     <TextInput
                       style={styles.input}
                       accessibilityLabel="Address or landmark where help is needed"
@@ -158,9 +173,9 @@ export default function SosRequest() {
                       maxLength={300}
                       editable={!busy}
                     />
-                    <Pressable accessibilityRole="button" disabled={busy} style={styles.primaryButton}
+                    <Pressable accessibilityRole="button" disabled={busy || !location.trim()} style={styles.answerButton}
                       onPress={() => answer(location)}>
-                      <Text style={styles.buttonText}>Use this location</Text>
+                      <Text style={styles.buttonText}>Use this landmark</Text>
                     </Pressable>
                   </>
                 ) : null}

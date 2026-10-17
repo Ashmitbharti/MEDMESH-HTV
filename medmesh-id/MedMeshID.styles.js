@@ -9,7 +9,7 @@ const shadow = (color, radius, opacity, y = 10) => Platform.select({
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: c.bg },
   topGlow: { position: 'absolute', top: 0, left: 0, right: 0, height: 320 },
-  content: { padding: 20, paddingBottom: 56 },
+  content: { padding: 20, paddingBottom: 130 },
 
   // hero
   hero: { marginTop: 8, marginBottom: 4 },
