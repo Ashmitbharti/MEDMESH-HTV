@@ -51,3 +51,11 @@ export const NODES = [
 export function nearestNode(pos) {
   return NODES.map((n) => ({ ...n, km: distanceKm(pos, n), dir: compass(bearing(pos, n)) })).sort((a, b) => a.km - b.km)[0];
 }
+
+// Starting values for a hospital's dashboard (same as the command centre's demo data; the hospital edits them)
+export const HOSPITAL_DATA = {
+  SGH: { total: 24, free: 4, icuTotal: 4, icu: 1, caps: 'CTD', wait: 95, erSpaces: 10 },
+  CEN: { total: 20, free: 6, icuTotal: 4, icu: 2, caps: 'CTOPD', wait: 70, erSpaces: 8 },
+  BIR: { total: 16, free: 3, icuTotal: 2, icu: 0, caps: 'T', wait: 60, erSpaces: 6 },
+  UFC: { total: 10, free: 8, icuTotal: 0, icu: 0, caps: '', wait: 15, erSpaces: 4 },
+};

@@ -14,9 +14,18 @@ import { loadOutbox, saveOutbox } from '../dashboard/outbox';
 // Every message is first saved in the outbox, so nothing is lost when there is no link; flush() sends what is queued.
 
 const BASE = (process.env.EXPO_PUBLIC_COMMAND_CENTRE_URL || '').replace(/\/$/, '');
-const NODE = process.env.EXPO_PUBLIC_MESH_NODE || 'FIELD';
-const INBOX = 'medmesh-inbox';
-const SINCE = 'medmesh-inbox-since';
+// Which simulated node this device is (citizens: FIELD; a hospital signs in as HOSP). Inbox is kept per node.
+const HOME_NODE = process.env.EXPO_PUBLIC_MESH_NODE || 'FIELD';
+let NODE = HOME_NODE;
+let INBOX = 'medmesh-inbox';
+let SINCE = 'medmesh-inbox-since';
+export function setMeshNode(node = HOME_NODE) {
+  if (node === NODE) return;
+  NODE = node;
+  INBOX = node === HOME_NODE ? 'medmesh-inbox' : `medmesh-inbox:${node}`;
+  SINCE = node === HOME_NODE ? 'medmesh-inbox-since' : `medmesh-inbox-since:${node}`;
+  emit();
+}
 
 let state = { kind: BASE ? 'wifi-sim' : 'none', connected: false, lastSeen: 0, error: '' };
 const listeners = new Set();
