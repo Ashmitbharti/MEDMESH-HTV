@@ -336,7 +336,7 @@ export default function SosRequest() {
         ) : null}
 
         {error ? <Text style={styles.error} accessibilityRole="alert">{error}</Text> : null}
-        <Pressable accessibilityRole="button" style={styles.answerButton} onPress={() => router.replace('/')}>
+        <Pressable accessibilityRole="button" style={styles.answerButton} onPress={() => router.replace('/home')}>
           <Text style={styles.buttonText}>Back to Home</Text>
         </Pressable>
       </ScrollView>

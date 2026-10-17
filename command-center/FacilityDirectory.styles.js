@@ -1,0 +1,146 @@
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: '#070b14',
+  },
+  content: {
+    padding: 20,
+    paddingBottom: 32,
+    width: '100%',
+    maxWidth: 680,
+    alignSelf: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+    gap: 12,
+  },
+  eyebrow: {
+    color: '#c5a3ff',
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+  },
+  title: {
+    color: '#f5f6fa',
+    fontSize: 30,
+    fontWeight: '700',
+    marginBottom: 20,
+  },
+  locationCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: '#181627',
+    padding: 16,
+    borderRadius: 16,
+    marginBottom: 16,
+  },
+  flex: {
+    flex: 1,
+  },
+  locationTitle: {
+    color: '#f5f6fa',
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  description: {
+    color: '#aeb3bd',
+    fontSize: 15,
+    lineHeight: 23,
+    marginBottom: 10,
+  },
+  notice: {
+    color: '#b1a3cc',
+    fontSize: 13,
+    lineHeight: 20,
+    marginBottom: 20,
+  },
+  card: {
+    backgroundColor: '#10141e',
+    borderColor: '#303541',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 16,
+  },
+  organization: {
+    color: '#969ba6',
+    fontSize: 12,
+    marginBottom: 6,
+  },
+  cardTitle: {
+    color: '#f5f6fa',
+    fontSize: 21,
+    fontWeight: '700',
+    marginBottom: 10,
+  },
+  body: {
+    color: '#c8ccd5',
+    fontSize: 14,
+    lineHeight: 22,
+    marginBottom: 6,
+  },
+  muted: {
+    color: '#969ba6',
+    fontSize: 13,
+    lineHeight: 21,
+  },
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginVertical: 12,
+  },
+  tag: {
+    backgroundColor: '#192332',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
+  },
+  tagText: {
+    color: '#7dcfff',
+    fontSize: 12,
+  },
+  availability: {
+    backgroundColor: '#0a0e17',
+    borderRadius: 12,
+    padding: 14,
+    gap: 6,
+  },
+  availabilityTitle: {
+    color: '#d6bb83',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  detailsButton: {
+    minHeight: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 10,
+    marginTop: 10,
+  },
+  link: {
+    color: '#c5a3ff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  details: {
+    borderTopWidth: 1,
+    borderTopColor: '#303541',
+    paddingTop: 14,
+    gap: 10,
+  },
+  source: {
+    color: '#7dcfff',
+    fontSize: 14,
+    lineHeight: 22,
+    paddingVertical: 6,
+  },
+});

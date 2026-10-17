@@ -102,6 +102,9 @@ export default function Home() {
     <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Home</Text>
+        <Pressable accessibilityRole="button" onPress={() => router.replace('/')}>
+          <Text style={styles.resumeText}>Switch role</Text>
+        </Pressable>
         <Text style={styles.description}>Who needs help?</Text>
 
         <Pressable

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { addConditionUpdate, applyReceipt, attachCoordinates, cancelRequest, reviseRequest, updateLandmark } from './requestLifecycle.js';

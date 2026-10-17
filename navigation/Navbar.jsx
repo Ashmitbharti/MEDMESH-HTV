@@ -12,7 +12,7 @@ export default function Navbar() {
     <View style={styles.screen}>
       <StatusBar style="light" />
       <Tabs
-        initialRouteName="index"
+        initialRouteName="home"
         backBehavior="history"
         screenOptions={{
           headerShown: false,
@@ -27,7 +27,7 @@ export default function Navbar() {
       >
         <Tabs.Screen name="sos" options={{ href: null }} />
         <Tabs.Screen
-          name="index"
+          name="home"
           options={{
             title: 'Home',
             tabBarIcon: ({ color, size, focused }) => (
