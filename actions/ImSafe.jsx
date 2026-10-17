@@ -9,9 +9,12 @@ import { c } from '../medmesh-id/theme';
 import { loadProfile } from '../medmesh-id/profileService';
 import { getPosition, ago } from '../dashboard/hazardService';
 import { latest, newId, queue } from '../dashboard/outbox';
+import LinkBanner from '../components/LinkBanner';
+import { useMesh } from '../link/meshLink';
 
 // Community check-in: O|id|SAFE or NEED|name|lat,lon  (handled by the command centre's h_checkin)
 export default function ImSafe() {
+  const { link, outbox } = useMesh();
   const [profile, setProfile] = useState(null);
   const [last, setLast] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -44,6 +47,7 @@ export default function ImSafe() {
         <Pressable accessibilityRole="button" onPress={() => router.back()} style={s.back}>
           <ChevronLeft size={18} color={c.muted} /><Text style={s.backText}>Home</Text>
         </Pressable>
+        <LinkBanner link={link} ids={last ? [last.id] : []} outbox={outbox} />
         <Text style={s.eyebrow}>CHECK IN</Text>
         <Text style={s.title}>{"Let your people\nknow you're okay."}</Text>
         <Text style={s.sub}>One tap sends a tiny message over the mesh to the command centre, which tells your emergency contact.</Text>

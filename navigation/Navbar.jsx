@@ -43,6 +43,10 @@ export default function Navbar() {
         <Tabs.Screen name="profile" options={{ title: 'My ID', tabBarIcon: ({ color }) => <IdCard size={22} color={color} strokeWidth={2.2} /> }} />
         <Tabs.Screen name="sos" options={{ href: null }} />
         <Tabs.Screen name="safe" options={{ href: null }} />
+        <Tabs.Screen name="guides" options={{ href: null }} />
+        <Tabs.Screen name="guide" options={{ href: null }} />
+        <Tabs.Screen name="road" options={{ href: null }} />
+        <Tabs.Screen name="cpr" options={{ href: null, tabBarStyle: { display: 'none' } }} />
       </Tabs>
     </View>
   );

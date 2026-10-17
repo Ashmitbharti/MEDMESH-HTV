@@ -13,6 +13,9 @@ import TagInput from './TagInput';
 import { DEMO_REPORT } from './demoReport';
 import MedMeshIDCard from './MedMeshIDCard';
 import { loadProfile, saveProfile } from './profileService';
+import PackCard from '../firstaid/PackCard';
+import { LANGUAGES } from '../firstaid/content';
+import { loadPack } from '../firstaid/pack';
 
 // `multi` fields store a comma-separated string so the existing validation and Supabase mapping keep working.
 const fields = [
@@ -20,6 +23,11 @@ const fields = [
   { key: 'age', section: 'About you', label: 'Age', placeholder: 'Your age', keyboardType: 'number-pad' },
   { key: 'gender', section: 'About you', label: 'Gender', options: ['Female', 'Male', 'Non-binary', 'Enter my own gender'] },
   { key: 'blood', section: 'About you', label: 'Blood group', options: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] },
+  {
+    key: 'language', section: 'About you', label: 'Language for emergency guides', optional: true,
+    options: LANGUAGES.map(([l]) => l),
+    help: 'First-aid guides and the CPR voice will be prepared in this language and saved on your phone.',
+  },
   {
     key: 'allergies', section: 'Medical', label: 'Any allergies?', tags: true,
     placeholder: 'Type one and press +',
@@ -96,6 +104,8 @@ export default function MedMeshID() {
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [pack, setPack] = useState(null);
+  useEffect(() => { loadPack().then(setPack); }, []);
   const savingRef = useRef(false);
   const field = fields[step];
 
@@ -144,6 +154,7 @@ export default function MedMeshID() {
 
   function validateAnswer(item) {
     const value = displayValue(item);
+    if (item.optional && (!value || !value.trim())) return '';
     if (!value || !value.trim()) {
       if (item.tags) return `Add at least one, or tap "${item.noneLabel || 'None'}".`;
       return item.options ? 'Please choose an option.' : `Please enter your ${item.label.toLowerCase()}.`;
@@ -283,6 +294,7 @@ export default function MedMeshID() {
               </Pressable>
             </View>
             {details.lastReport ? <Text style={styles.updatedNote}>Last updated from: {details.lastReport}</Text> : null}
+            <PackCard details={details} pack={pack} onBuilt={setPack} />
           </>
         ) : null}
 

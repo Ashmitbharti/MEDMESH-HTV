@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, useFocusEffect } from 'expo-router';
 import {
-  Activity, ChevronRight, CircleCheck, CloudLightning, CloudRain, Flame, HeartHandshake, LogOut, Phone, Pill, Radio,
+  Activity, ChevronRight, CircleCheck, CloudLightning, CloudRain, Construction, Flame, HeartHandshake, HeartPulse, LogOut, Phone, Pill, Radio,
   Server, ShieldCheck, Siren, Smartphone, Snowflake, Sun, Users, Waves,
 } from 'lucide-react-native';
 import WeatherBackdrop from './WeatherBackdrop';
@@ -255,7 +255,19 @@ export default function Dashboard() {
               <Text style={s.tileSub}>{status === 'safe' ? `Checked in ${ago(checkin.at)}` : 'Tell my people'}</Text>
             </Pressable>
           </View>
-          {error ? <Text style={s.error} accessibilityRole="alert">{error}</Text> : null}
+          <View style={[s.tiles, { marginTop: 10 }]}>
+            <Pressable accessibilityRole="button" onPress={() => router.push('/guides')} style={({ pressed }) => [s.tile, pressed && s.pressed]}>
+              <View style={[s.tileIcon, { backgroundColor: 'rgba(244,63,94,0.14)' }]}><HeartPulse size={20} color={c.redl} /></View>
+              <Text style={s.tileTitle}>First aid</Text>
+              <Text style={s.tileSub}>CPR coach, guides in your language</Text>
+            </Pressable>
+            <Pressable accessibilityRole="button" onPress={() => router.push('/road')} style={({ pressed }) => [s.tile, pressed && s.pressed]}>
+              <View style={[s.tileIcon, { backgroundColor: 'rgba(56,189,248,0.14)' }]}><Construction size={20} color={c.sky} /></View>
+              <Text style={s.tileTitle}>Report a road</Text>
+              <Text style={s.tileSub}>Blocked, flooded, debris</Text>
+            </Pressable>
+          </View>
+          {error ?<Text style={s.error} accessibilityRole="alert">{error}</Text> : null}
 
           {/* contact */}
           <Pressable accessibilityRole="button" onPress={() => router.push('/profile')} style={({ pressed }) => [s.contact, pressed && s.pressed]}>

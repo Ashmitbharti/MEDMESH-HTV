@@ -9,6 +9,10 @@
 | `/sos` | Emergency report | Own words in any language (Gemini fills the form) or tap answers · GPS · how many people · one card per person (START questions, injury, age, note, optional QR) · scene alert first · live status per person |
 | `/medicine` | Medicine & supplies | Medicines + oxygen/equipment, suggestions from the MedMesh ID, oxygen "how much is left" (< 2 h → SOS), pickup/delivery, live tracker with pickup code |
 | `/safe` | I'm safe | Builds `O|id|SAFE or NEED|name|lat,lon` |
+| `/status` | Status | Hospital on top, ambulance ETA, live offline map, contact texting, timeline, messages |
+| `/guides`, `/guide?id=` | First aid | 3D guides, recommended by hazard + MedMesh ID, read aloud in the pack language |
+| `/cpr` | CPR coach | 110/min beat (sound + vibration), 3D chest target, voice coaching, ambulance ETA, keeps screen awake |
+| `/road` | Report a road | Blocked / flooded / debris / fire, tap the tilted offline map, nearest road name, confirmation status |
 | `/profile` | My ID | MedMesh ID |
 | `/hospital`, `/pharmacy` | Placeholders | The next dashboards to build |
 
@@ -54,6 +58,28 @@ EXPO_PUBLIC_COMMAND_CENTRE_URL=http://<laptop-ip>:8765
 
 `link/meshLink.js` sends the outbox. With `EXPO_PUBLIC_COMMAND_CENTRE_URL` set and the command centre started with `--sim`, it uses the command centre's simulated mesh over Wi-Fi (`/api/sim/send` and `/api/sim/inbox`), so replies such as acks, ambulance assignments and pharmacy answers come back to the phone.
 
+## Personal emergency pack (Gemini)
+
+At MedMesh ID setup (online) the person picks a language. The app sends **our checked English first-aid lines**
+(chosen and personalised by fixed rules from the ID: blood thinners, diabetes, home oxygen...) to the command centre
+`/api/pack` (or the `emergency-pack` Supabase function). Gemini **translates** them, **back-translates** each line
+(numbers are checked in any script; a failing line stays in English) and **voices** the life-saving lines. Text and
+WAV clips are saved on the phone and play offline. Gemini never writes medical advice. Content in
+`firstaid/content.js` must be reviewed by a clinician before a real release.
+
+## Bluetooth
+
+The banner above every form points to the nearest MedMesh node (GPS, offline) and connects over Bluetooth with the
+official Meshtastic library (Web Bluetooth: Chrome on Android/laptop, Bluefy on iPhone, https only). The installed
+app needs a development build with a native Bluetooth transport for the same library.
+
+## Testing without a Gemini key
+
+`python3 base/tests/mock_gemini.py 8790`, then start the command centre with
+`GEMINI_API_KEY=test GEMINI_API_BASE=http://127.0.0.1:8790/v1beta`. Every Gemini path (SOS form, pack + voice,
+review findings) then runs end to end. Build the web app with `npx expo export --platform web --clear` when you
+change `EXPO_PUBLIC_*` values (the bundler caches them otherwise).
+
 ## Not wired yet
 
-Bluetooth to a real Meshtastic node, behind the same `send()`/`subscribe()` interface as the Wi-Fi test mesh. This needs a development build.
+Native (non-browser) Bluetooth transport for the installed app. Hospital and pharmacy dashboards.

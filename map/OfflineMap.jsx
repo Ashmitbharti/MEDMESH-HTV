@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Svg, { Circle, G, Line, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
 import { useClock } from '../ui3d/project';
 import { c } from '../medmesh-id/theme';
@@ -10,27 +10,29 @@ import { c } from '../medmesh-id/theme';
 const SANS = 'Inter, -apple-system, Segoe UI, Roboto, sans-serif';
 const ROAD = { motorway: [5, '#6d5f86'], trunk: [4.5, '#5b5884'], primary: [3.6, '#40527a'], secondary: [3, '#36456a'], tertiary: [2.4, '#303d5c'], residential: [1.6, '#273149'], service: [1.1, '#202838'] };
 
-export default function OfflineMap({ geo, you, amb, hosp, phase = 'P', width, height = 260 }) {
+export default function OfflineMap({ geo, you, amb, hosp, phase = 'P', width, height = 260, pin, onPick, frame }) {
   const { t } = useClock(true, 20);
   const pts = [you, amb, hosp].filter((p) => p && p.lat != null);
-  const key = pts.map((p) => `${p.lat.toFixed(5)},${p.lon.toFixed(5)}`).join('|');
+  const key = frame ? `f${frame.lat},${frame.lon},${frame.span}` : pts.map((p) => `${p.lat.toFixed(5)},${p.lon.toFixed(5)}`).join('|');
 
   const view = useMemo(() => {
-    const lat0 = pts.length ? pts.reduce((a, p) => a + p.lat, 0) / pts.length : 43.78;
-    const lon0 = pts.length ? pts.reduce((a, p) => a + p.lon, 0) / pts.length : -79.2;
+    const lat0 = frame ? frame.lat : pts.length ? pts.reduce((a, p) => a + p.lat, 0) / pts.length : 43.78;
+    const lon0 = frame ? frame.lon : pts.length ? pts.reduce((a, p) => a + p.lon, 0) / pts.length : -79.2;
     const kx = 111320 * Math.cos((lat0 * Math.PI) / 180);
     const ky = 110540;
-    const xs = pts.map((p) => (p.lon - lon0) * kx);
-    const ys = pts.map((p) => -(p.lat - lat0) * ky);
-    const span = Math.max(1200, Math.max(...xs, 0) - Math.min(...xs, 0), (Math.max(...ys, 0) - Math.min(...ys, 0)) * (width / height)) * 1.35;
+    const xs = frame ? [0] : pts.map((p) => (p.lon - lon0) * kx);
+    const ys = frame ? [0] : pts.map((p) => -(p.lat - lat0) * ky);
+    const span = frame ? frame.span : Math.max(1200, Math.max(...xs, 0) - Math.min(...xs, 0), (Math.max(...ys, 0) - Math.min(...ys, 0)) * (width / height)) * 1.35;
     const s = width / span;
     const cx = ((Math.max(...xs, 0) + Math.min(...xs, 0)) / 2);
     const cy = ((Math.max(...ys, 0) + Math.min(...ys, 0)) / 2);
     const P = (lat, lon) => [width / 2 + ((lon - lon0) * kx - cx) * s, height / 2 + (-(lat - lat0) * ky - cy) * s];
-    return { P, s };
+    const inv = (x, y) => ({ lon: ((x - width / 2) / s + cx) / kx + lon0, lat: -(((y - height / 2) / s) + cy) / ky + lat0 });
+    return { P, s, inv };
   }, [key, width, height]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const { P, s } = view;
+  const { P, s, inv } = view;
+  const PIN = pin && pin.lat != null ? P(pin.lat, pin.lon) : null;
   const roads = useMemo(() => (geo?.roads || []).map((r) => ({
     cls: r.cls, name: r.name, d: r.g.map(([la, lo], i) => { const [x, y] = P(la, lo); return `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`; }).join(''),
     mid: P(...r.g[Math.floor(r.g.length / 2)]),
@@ -48,9 +50,14 @@ export default function OfflineMap({ geo, you, amb, hosp, phase = 'P', width, he
   const pulse = (t % 1.6) / 1.6;
   const dash = -((t * 30) % 20);
 
+  const Wrap = onPick ? Pressable : View;
+  const wrapProps = onPick ? {
+    accessibilityRole: 'button', accessibilityLabel: 'Map. Tap to place the pin.',
+    onPress: (e) => onPick(inv(e.nativeEvent.locationX, e.nativeEvent.locationY)),
+  } : {};
   return (
-    <View style={{ width, height, borderRadius: 20, overflow: 'hidden', backgroundColor: '#0a0f1c' }}>
-      <Svg width={width} height={height}>
+    <Wrap {...wrapProps} style={{ width, height, borderRadius: 20, overflow: 'hidden', backgroundColor: '#0a0f1c' }}>
+      <Svg width={width} height={height} pointerEvents="none">
         <Rect x={0} y={0} width={width} height={height} fill="#0a0f1c" />
         {water.map((p, i) => <Polygon key={i} points={p} fill="#0c2742" stroke="#14406b" strokeWidth={1} />)}
         {roads.map((r, i) => {
@@ -84,7 +91,14 @@ export default function OfflineMap({ geo, you, amb, hosp, phase = 'P', width, he
             <SvgText x={A[0]} y={A[1] + 4} fill="#111827" fontSize={9} fontWeight="900" textAnchor="middle" fontFamily={SANS}>EMS</SvgText>
           </G>
         ) : null}
+        {PIN ? (
+          <G>
+            <Circle cx={PIN[0]} cy={PIN[1]} r={10 + pulse * 18} fill={c.redl} fillOpacity={(1 - pulse) * 0.3} />
+            <Path d={`M${PIN[0]},${PIN[1]} l-11,-20 a12,12 0 1 1 22,0 z`} fill="#f43f5e" stroke="#fff" strokeWidth={2} />
+            <Circle cx={PIN[0]} cy={PIN[1] - 25} r={4.5} fill="#fff" />
+          </G>
+        ) : null}
       </Svg>
-    </View>
+    </Wrap>
   );
 }

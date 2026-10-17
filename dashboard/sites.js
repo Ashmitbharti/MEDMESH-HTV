@@ -39,3 +39,15 @@ export function nearest(pos, kind) {
     .map((s) => ({ ...s, km: distanceKm(pos, s), bearing: bearing(pos, s) }))
     .sort((a, b) => a.km - b.km)[0] || null;
 }
+
+// MedMesh radio nodes (same layout as the command centre's NODE_LAYOUT), so the app can point to the nearest one offline
+export const NODES = [
+  { id: 'FIELD', name: 'Field node', lat: 43.768, lon: -79.19 },
+  { id: 'RELAY', name: 'Relay node', lat: 43.795, lon: -79.215 },
+  { id: 'RESP', name: 'Responder node', lat: 43.754, lon: -79.225 },
+  { id: 'BASE', name: 'Command centre', lat: 43.785, lon: -79.262 },
+];
+
+export function nearestNode(pos) {
+  return NODES.map((n) => ({ ...n, km: distanceKm(pos, n), dir: compass(bearing(pos, n)) })).sort((a, b) => a.km - b.km)[0];
+}
