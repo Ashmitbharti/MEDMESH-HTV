@@ -16,6 +16,7 @@ import { blankPerson, CAUSES, HAZARDS, reportWire, sceneWire, triageOf, voiceWir
 import { getPosition } from '../dashboard/hazardService';
 import { newId, queue } from '../dashboard/outbox';
 import { mirrorSos } from '../cloud/cloudSync';
+import { useSpeech } from './useSpeech';
 import { forId, useMesh } from '../link/meshLink';
 
 const AUTO_SEND_S = 30; // "I'm in trouble": if the person stops responding, send what we have
@@ -41,6 +42,7 @@ function Btn({ onPress, disabled, colors, icon: Icon, children }) {
 export default function Report() {
   const [scene, setScene] = useState(null);
   const [text, setText] = useState('');
+  const speech = useSpeech(setText);
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
   const [open, setOpen] = useState(0);
@@ -195,7 +197,17 @@ export default function Report() {
               <TextInput style={s.big} multiline value={text} onChangeText={setText} accessibilityLabel="Describe what is happening"
                 placeholder={self ? 'e.g. I fell down the stairs, my leg is broken and I am alone' : 'e.g. car crash, 3 people hurt, one not responding'}
                 placeholderTextColor={c.dim} />
-              <View style={s.mic}><Mic size={13} color={c.dim} /><Text style={s.micText}>Tap the microphone on your keyboard to speak instead of typing.</Text></View>
+              {speech.supported ? (
+                <Pressable accessibilityRole="button" accessibilityLabel={speech.listening ? 'Stop listening' : 'Speak instead of typing'}
+                  onPress={() => (speech.listening ? speech.stop() : speech.start(text))}
+                  style={({ pressed }) => [s.speak, speech.listening && s.speakOn, pressed && s.pressed]}>
+                  <Mic size={20} color={speech.listening ? '#fff' : c.ink} />
+                  <Text style={s.speakText}>{speech.listening ? 'Listening… tap to stop' : 'Tap and speak'}</Text>
+                </Pressable>
+              ) : (
+                <View style={s.mic}><Mic size={13} color={c.dim} /><Text style={s.micText}>Tap the microphone on your keyboard to speak instead of typing.</Text></View>
+              )}
+              {speech.error ? <Text style={s.micText}>{speech.error}</Text> : null}
               <Btn onPress={fillFromWords} disabled={!!busy || !text.trim()} colors={['#8b5cf6', '#2563eb']} icon={busy ? null : Sparkles}>
                 {busy || 'Fill the form for me'}
               </Btn>
