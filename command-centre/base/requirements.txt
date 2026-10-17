@@ -1,0 +1,8 @@
+meshtastic>=2.7
+fastapi
+uvicorn[standard]
+networkx
+# optional: real road map download (prepare_map.py)
+# osmnx
+numpy
+scipy

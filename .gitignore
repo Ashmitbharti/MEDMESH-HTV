@@ -40,3 +40,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# command centre runtime files
+command-centre/base/medmesh.db
+command-centre/base/audit.jsonl
+__pycache__/
