@@ -227,7 +227,7 @@ export default function Dashboard() {
 
           {/* actions */}
           <Text style={s.sectionLabel}>WHAT DO YOU NEED?</Text>
-          <SosOrb size={Math.min(240, width * 0.62)} disabled={!!request} onComplete={() => startSos('self')} />
+          <SosOrb size={Math.min(240, width * 0.62)} disabled={!!request} onBlocked={() => router.push('/sos')} onComplete={() => startSos('self')} />
           <View style={{ height: 14 }} />
           <HoldCard
             title="Someone else needs help"
