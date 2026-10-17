@@ -1,0 +1,22 @@
+{
+  "name": "medmesh",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@meshtastic/core": "^2.6.7",
+    "@meshtastic/transport-web-bluetooth": "^0.1.5",
+    "@meshtastic/transport-web-serial": "^0.2.5",
+    "esbuild": "^0.28.2",
+    "jsqr": "^1.4.0",
+    "lucide": "^0.460.0",
+    "qrcode": "^1.5.4",
+    "three": "^0.158.0"
+  }
+}
