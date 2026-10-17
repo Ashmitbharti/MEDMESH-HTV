@@ -4,7 +4,8 @@ import styles from './MedMeshID.styles';
 import PdfAutofill from './PdfAutofill';
 import MedMeshIDCard from './MedMeshIDCard';
 import { loadProfile, saveProfile } from './profileService';
-import { Keyboard, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
+import { Keyboard, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const fields = [
   { key: 'name', label: 'Full name', placeholder: 'Your name' },
@@ -102,7 +103,7 @@ export default function MedMeshID() {
   }
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
       <StatusBar style="light" />
 
       <ScrollView
