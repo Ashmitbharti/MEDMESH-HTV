@@ -139,8 +139,8 @@ export const ITEMS = {
 export const PLACES = Object.fromEntries(SITES.filter((s) => s.kind === 'pharmacy' || s.kind === 'supplier').map((s) => [s.id, s.short]));
 
 // Bundled copy of the command centre's demo prices (data.py), used until /api/prices has been fetched once.
-const DEMO_BASE = { INSULIN: 40, INHALER: 30, EPIPEN: 120, HEART: 25, SEIZURE: 35, BP: 18, STRIPS: 45, DRESS: 8, NEB: 90, O2: 60, CPAPPWR: 150 };
-const DEMO_OFFERS = {
+export const DEMO_BASE = { INSULIN: 40, INHALER: 30, EPIPEN: 120, HEART: 25, SEIZURE: 35, BP: 18, STRIPS: 45, DRESS: 8, NEB: 90, O2: 60, CPAPPWR: 150 };
+export const DEMO_OFFERS = {
   MSP: { INSULIN: 41, INHALER: 31, EPIPEN: 125, HEART: 25, SEIZURE: 36, BP: 18, STRIPS: 46, DRESS: 8.5, NEB: 92 },
   ECP: { INSULIN: 64, INHALER: 29, EPIPEN: 199, HEART: 26, SEIZURE: 35, BP: 19, STRIPS: 70, DRESS: 8 },
   MVR: { INSULIN: 40, INHALER: 30, EPIPEN: 120, HEART: 25, SEIZURE: 35, BP: 18, STRIPS: 45, DRESS: 8, NEB: 90 },
@@ -194,5 +194,13 @@ export function supplyResult(inbox, id) {
   });
   const kv = Object.fromEntries(m.f.slice(2).map((s) => [s.slice(0, s.indexOf(':')), s.slice(s.indexOf(':') + 1)]));
   const over = (kv.over || '').split(',').filter(Boolean).map((s) => { const [p, pr] = s.split('@'); return { pharm: p, price: num(pr) }; });
-  return { lines, short: num(kv.short), cost: num(kv.cost), over, at: m.at };
+  // SU|id|pharm|READY/RUNNER/PART:n/OUT   each pharmacy's own reply about this order
+  const replies = Object.fromEntries(inbox.filter((x) => x.code === 'SU' && x.f[0] === id).map((x) => [x.f[1], x.f[2]]));
+  return { lines, short: num(kv.short), cost: num(kv.cost), over, replies, at: m.at };
+}
+
+export function replyText(code) {
+  if (!code) return '';
+  if (code.startsWith('PART:')) return `Only ${code.slice(5)} available`;
+  return { READY: 'Ready for pickup', RUNNER: 'Sending a runner', OUT: 'Can’t supply it', DONE: 'Handed over' }[code] || code;
 }

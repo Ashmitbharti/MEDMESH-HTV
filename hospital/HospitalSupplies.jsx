@@ -10,7 +10,7 @@ import LinkBanner from '../components/LinkBanner';
 import CapTowers from './CapTowers';
 import { useHospital } from './HospitalContext';
 import { ago, Card, Chip, Label, Stepper } from './controls';
-import { ITEMS, loadPrices, PLACES, requestSupply, supplyResult } from './hospitalService';
+import { ITEMS, loadPrices, PLACES, replyText, requestSupply, supplyResult } from './hospitalService';
 
 const OK = '#34d399';
 const BAD = '#f43f5e';
@@ -61,7 +61,14 @@ function Result({ req, res, item, base, onAllow }) {
       {res.lines.map((l) => (
         <View key={l.pharm} style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 7, borderBottomWidth: 1, borderColor: c.line }}>
           <CircleCheck size={15} color={OK} />
-          <Text style={{ color: c.ink, fontSize: 14, fontWeight: '700', flex: 1 }}>{PLACES[l.pharm] || l.pharm}</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: c.ink, fontSize: 14, fontWeight: '700' }}>{PLACES[l.pharm] || l.pharm}</Text>
+            {res.replies[l.pharm] ? (
+              <Text style={{ color: res.replies[l.pharm] === 'OUT' || res.replies[l.pharm].startsWith('PART') ? '#fde68a' : '#a7f3d0', fontSize: 12, fontWeight: '700', marginTop: 1 }}>
+                {replyText(res.replies[l.pharm])}
+              </Text>
+            ) : <Text style={{ color: c.dim, fontSize: 12, marginTop: 1 }}>No reply from the pharmacy yet</Text>}
+          </View>
           <Text style={{ color: c.muted, fontSize: 13 }}>{l.qty} × {money(l.price)}</Text>
         </View>
       ))}

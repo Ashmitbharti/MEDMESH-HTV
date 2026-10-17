@@ -98,3 +98,20 @@ Sign in with the hospital demo account (Centenary Hospital). The device joins th
 - **Supplies**: fair-price requests to every pharmacy and supplier at once (`S|…`). The cap is normal price + 10%;
   sellers above it are skipped and logged in the hash-chained audit log, unless the hospital knowingly allows them
   for a critical shortage (`|ALLOW`, also logged). Prices are demo values.
+
+## Pharmacy login (3 tabs)
+
+Sign in with the pharmacy demo account (Morningside Pharmacy). The device joins as `PHARM_<id>` (`J|X|MSP|…`).
+
+- **Requests**: the 3D Beacon (a turning pharmacy cross; ripples = requests waiting). People nearby (`MR`, asked of up to
+  3 places at once, with distance and whether the item matches their MedMesh ID, never who they are): answer "We have it,
+  ready in 10/20/30/60 min" or "Don't have it" (`PA`). If chosen (`MK`) the pickup code shows, then "Handed over" or
+  "Can't after all" (`PR|id|DONE/OUT`; OUT re-asks other places). Hospital orders (`SR`) get quick replies
+  Ready / Runner / Only part / Can't (`PR`), which reach the hospital's Supplies tab as `SU`.
+- **Stock**: the 3D Shelf (glass bottles, liquid level = stock; green/amber/red; red price tag = above the cap). Edit
+  count (Out / Low / Full shortcuts) and price, with the fair-price cap shown live. Only changed items go out (`P|…`).
+  Stock the command centre already took off (requests won, hospital orders) is mirrored automatically.
+- **Nearby**: the 3D Demand Rose (8 directions, near and far columns) and items asked within 5 km in the last 6 h
+  (`ND`, counts only), with restock hints.
+
+The command centre now asks fair-priced places first; an over-cap place is asked only when no fair one has stock.
