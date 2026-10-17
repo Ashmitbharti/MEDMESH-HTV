@@ -67,6 +67,7 @@ export default StyleSheet.create({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   chip: { paddingHorizontal: 12, paddingVertical: 10, borderRadius: 12, backgroundColor: c.panel2, borderWidth: 1, borderColor: c.line2 },
   chipOn: { backgroundColor: 'rgba(56,189,248,0.16)', borderColor: c.sky4 },
+  chipDanger: { backgroundColor: 'rgba(244,63,94,0.16)', borderColor: '#f43f5e' },
   chipText: { color: '#d1d5db', fontSize: 13.5, fontWeight: '600' },
   noteInput: { minHeight: 46, paddingHorizontal: 12, borderRadius: 12, color: c.ink, fontSize: 15, backgroundColor: c.panel2, borderWidth: 1, borderColor: c.line2 },
   scanBtn: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 14, padding: 12, borderRadius: 13, borderWidth: 1, borderColor: 'rgba(125,211,252,0.3)', borderStyle: 'dashed' },

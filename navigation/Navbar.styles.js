@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderRadius: 26,
     height: 74,
-    marginHorizontal: 28,
+    marginHorizontal: 16,
     paddingTop: 8,
     paddingBottom: 12,
     elevation: 0,

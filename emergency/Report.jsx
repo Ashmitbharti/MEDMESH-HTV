@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useFocusEffect } from 'expo-router';
 import {
-  ChevronLeft, ChevronRight, HeartPulse, Languages, MapPin, Mic, Minus, Plus, Send, Siren, Sparkles, Users,
+  Check, ChevronLeft, ChevronRight, HeartPulse, TriangleAlert, Languages, MapPin, Mic, Minus, Plus, Send, Siren, Sparkles, Users,
 } from 'lucide-react-native';
 import s from './Report.styles';
 import { c } from '../medmesh-id/theme';
@@ -12,7 +12,7 @@ import PersonCard from './PersonCard';
 import LinkBanner from '../components/LinkBanner';
 import { loadScene, saveScene } from './sceneService';
 import { interpret } from './interpret';
-import { blankPerson, reportWire, sceneWire, triageOf, voiceWire } from './sosLogic';
+import { blankPerson, CAUSES, HAZARDS, reportWire, sceneWire, triageOf, voiceWire } from './sosLogic';
 import { getPosition } from '../dashboard/hazardService';
 import { newId, queue } from '../dashboard/outbox';
 import { forId, useMesh } from '../link/meshLink';
@@ -69,20 +69,25 @@ export default function Report() {
     getPosition().then((p) => p && update((cur) => (cur.loc ? cur : { ...cur, loc: { ...p, text: '' } })));
   }, [scene, update]);
 
-  const sendAll = useCallback(async () => {
+  const sendAll = useCallback(async ({ stoppedAnswering = false } = {}) => {
     if (sending.current || !scene) return;
     sending.current = true;
-    const sc = { ...scene, sent: { ...scene.sent } };
+    const sc = { ...scene, sent: { ...scene.sent }, people: [...scene.people] };
+    if (stoppedAnswering && sc.mode === 'self') {
+      // they stopped answering: we can no longer assume they are responsive
+      const me = sc.people[0];
+      sc.people[0] = { ...me, responds: 'unknown', note: [me.note, 'stopped answering the app'].filter(Boolean).join('; ') };
+    }
     const count = Math.max(sc.count, sc.people.length);
     if (count > 1 && !sc.sceneId) {
       sc.sceneId = newId();
-      await queue('scene', sceneWire(sc.sceneId, count, sc.loc, sc.cause), { scene: sc.id });
+      await queue('scene', sceneWire(sc.sceneId, count, sc.loc, sc.cause, sc.hazards, sc.vehicles), { scene: sc.id });
     }
     for (const p of sc.people) {
       if (sc.sent[p.key]) continue;
       const id = newId();
       sc.sent[p.key] = id;
-      await queue('report', reportWire(id, p, { count, loc: sc.loc, sceneId: sc.sceneId, ai: p.fromAi ? (sc.ai?.source === 'gemini' ? 'g' : 'o') : '' }), { scene: sc.id });
+      await queue('report', reportWire(id, p, { count, loc: sc.loc, sceneId: sc.sceneId, hazards: sc.hazards || [], cause: sc.cause, ai: p.fromAi ? (sc.ai?.source === 'gemini' ? 'g' : 'o') : '' }), { scene: sc.id });
     }
     sc.phase = 'sent';
     await saveScene(sc);
@@ -98,7 +103,7 @@ export default function Report() {
     return () => clearInterval(t);
   }, [auto]);
   useEffect(() => {
-    if (auto && idle >= AUTO_SEND_S) sendAll();
+    if (auto && idle >= AUTO_SEND_S) sendAll({ stoppedAnswering: true });
   }, [auto, idle, sendAll]);
 
   if (!scene) return <SafeAreaView style={s.screen} />;
@@ -231,7 +236,59 @@ export default function Report() {
             )}
             <TextInput style={s.input} placeholder="Landmark (optional), e.g. Tim Hortons on Military Trail" placeholderTextColor={c.dim}
               value={scene.loc?.text || ''} onChangeText={(v) => update({ loc: { ...(scene.loc || {}), text: v } })} accessibilityLabel="Landmark" />
-            <Btn onPress={() => update({ phase: 'count' })} colors={['#38bdf8', '#2563eb']} icon={ChevronRight}>Next</Btn>
+            <Btn onPress={() => update({ phase: 'what' })} colors={['#38bdf8', '#2563eb']} icon={ChevronRight}>Next</Btn>
+          </>
+        ) : null}
+
+        {/* 2b. what happened + dangers */}
+        {scene.phase === 'what' ? (
+          <>
+            <Text style={s.title}>What happened?</Text>
+            <View style={[s.countRow, { gap: 8 }]}>
+              {Object.entries(CAUSES).map(([k, v]) => (
+                <Pressable key={k} accessibilityRole="radio" accessibilityState={{ checked: scene.cause === k }} onPress={() => update({ cause: k })}
+                  style={({ pressed }) => [s.chip, scene.cause === k && s.chipOn, pressed && s.pressed]}>
+                  <Text style={[s.chipText, scene.cause === k && s.segTextOn]}>{v}</Text>
+                </Pressable>
+              ))}
+            </View>
+            {scene.cause === 'crash' ? (
+              <>
+                <Text style={[s.qLabel, { marginTop: 18 }]}>How many vehicles?</Text>
+                <View style={s.segRow}>
+                  {['1', '2', '3+'].map((v) => (
+                    <Pressable key={v} accessibilityRole="radio" accessibilityState={{ checked: scene.vehicles === v }} onPress={() => update({ vehicles: v })}
+                      style={[s.seg, scene.vehicles === v && s.segOn]}><Text style={[s.segText, scene.vehicles === v && s.segTextOn]}>{v}</Text></Pressable>
+                  ))}
+                </View>
+              </>
+            ) : null}
+            <Text style={[s.qLabel, { marginTop: 18 }]}>Any danger at the scene?</Text>
+            <Text style={[s.sub, { marginTop: -4, marginBottom: 8 }]}>Responders need to know before they arrive. Tap all that apply.</Text>
+            <View style={s.chips}>
+              {Object.entries(HAZARDS).map(([k, v]) => {
+                const on = (scene.hazards || []).includes(k);
+                return (
+                  <Pressable key={k} accessibilityRole="checkbox" accessibilityState={{ checked: on }}
+                    onPress={() => update((cur) => {
+                      const hz = cur.hazards || [];
+                      const next = k === 'none' ? (on ? [] : ['none']) : on ? hz.filter((x) => x !== k) : [...hz.filter((x) => x !== 'none'), k];
+                      return { ...cur, hazards: next };
+                    })}
+                    style={({ pressed }) => [s.chip, on && (k === 'none' ? s.chipOn : s.chipDanger), pressed && s.pressed, { flexDirection: 'row', alignItems: 'center', gap: 6 }]}>
+                    {on ? <Check size={13} color={k === 'none' ? c.sky : '#fda4af'} strokeWidth={3} /> : null}
+                    <Text style={[s.chipText, on && s.segTextOn]}>{v}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+            {(scene.hazards || []).some((h) => h !== 'none') ? (
+              <View style={s.sceneSent}>
+                <TriangleAlert size={16} color="#fda4af" />
+                <Text style={s.sceneSentText}>{"Stay back if it isn't safe. Sending this report is the most helpful thing you can do."}</Text>
+              </View>
+            ) : null}
+            <Btn onPress={() => update({ phase: 'count' })} colors={['#38bdf8', '#2563eb']} icon={ChevronRight}>{scene.cause ? 'Next' : 'Skip'}</Btn>
           </>
         ) : null}
 
@@ -261,7 +318,7 @@ export default function Report() {
             <Btn onPress={async () => {
               if (scene.count > 1 && !scene.sceneId) {
                 const zid = newId();
-                await queue('scene', sceneWire(zid, scene.count, scene.loc, scene.cause), { scene: scene.id });
+                await queue('scene', sceneWire(zid, scene.count, scene.loc, scene.cause, scene.hazards, scene.vehicles), { scene: scene.id });
                 await update((cur) => ({ ...cur, sceneId: zid, phase: 'people', people: padPeople(cur.people, cur.count) }));
               } else update((cur) => ({ ...cur, phase: 'people', people: padPeople(cur.people, cur.count) }));
             }} colors={['#38bdf8', '#2563eb']} icon={ChevronRight}>Next</Btn>
@@ -320,7 +377,7 @@ export default function Report() {
         ) : null}
       </ScrollView>
 
-      {scene.phase === 'people' || (auto && scene.phase !== 'describe') ? (
+      {scene.phase === 'people' || (auto && idle > 8 && scene.phase !== 'describe') ? (
         <View style={s.sticky} pointerEvents="box-none">
           {auto ? (
             <View style={s.autoBar}>
@@ -331,7 +388,7 @@ export default function Report() {
             </View>
           ) : null}
           {scene.phase === 'people' ? (
-            <Btn onPress={sendAll} colors={['#e11d48', '#9f1239']} icon={HeartPulse}>
+            <Btn onPress={() => sendAll()} colors={['#e11d48', '#9f1239']} icon={HeartPulse}>
               {`Send ${scene.people.filter((p) => !scene.sent[p.key]).length > 1 ? `${scene.people.filter((p) => !scene.sent[p.key]).length} reports` : 'emergency report'}`}
               {scene.people.some((p) => triageOf(p) === 1) ? ' · urgent' : ''}
             </Btn>

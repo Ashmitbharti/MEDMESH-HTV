@@ -8,6 +8,16 @@ export const COMPLAINTS = {
 };
 export const INCIDENTS = ['crash', 'fall', 'fire', 'flood', 'collapse', 'violence', 'medical', 'other', 'unknown'];
 
+// Accident questions: what happened, and dangers responders must know about before they arrive
+export const CAUSES = {
+  crash: 'Road crash', fall: 'Fall', fire: 'Fire / smoke', flood: 'Flood / water', collapse: 'Building collapse',
+  shock: 'Electric shock', violence: 'Violence', medical: 'Sudden illness', other: 'Something else',
+};
+export const HAZARDS = {
+  fire: 'Fire or smoke', fuel: 'Fuel or gas smell', wires: 'Live wires', traffic: 'Moving traffic',
+  water: 'Rising water', building: 'Unstable building', none: 'None I can see',
+};
+
 export const blankPerson = (i = 0) => ({
   key: `p${i}-${Math.random().toString(36).slice(2, 6)}`, label: '', age_group: 'unknown', walk: 'unknown', breathing: 'unknown',
   responds: 'unknown', bleeding: 'unknown', complaint: 'OT', trapped: false, note: '', evidence: '', mid: '', fromAi: false,
@@ -104,14 +114,16 @@ const safe = (s) => String(s || '').replace(/[|;]/g, ' ').replace(/\s+/g, ' ').t
 const where = (loc) => (loc?.lat != null ? `${loc.lat.toFixed(4)},${loc.lon.toFixed(4)}` : '');
 
 // R|id|triage|complaint|age|count|flags|lat,lon|medmeshID|extras
-export function reportWire(id, p, { count, loc, sceneId, ai }) {
+export function reportWire(id, p, { count, loc, sceneId, ai, hazards = [], cause = '' }) {
   const age = { child: 'C', senior: 'S' }[p.age_group] || 'A';
   const note = [p.trapped ? 'trapped' : '', p.note, !loc?.lat && loc?.text ? `at ${loc.text}` : ''].filter(Boolean).join('; ');
-  const extras = [sceneId ? `INC:${sceneId}` : '', note ? `NT:${safe(note).slice(0, 60)}` : '', ai ? `AI:${ai}` : ''].filter(Boolean).join(';');
+  const hz = hazards.filter((h) => h !== 'none');
+  const extras = [sceneId ? `INC:${sceneId}` : '', note ? `NT:${safe(note).slice(0, 60)}` : '', !sceneId && hz.length ? `HZ:${hz.join(',')}` : '', !sceneId && cause ? `CS:${safe(cause)}` : '',
+    ai ? `AI:${ai}` : ''].filter(Boolean).join(';');
   return `R|${id}|${triageOf(p)}|${p.complaint}|${age}|${count}|${flagsOf(p)}|${where(loc)}|${safe(p.mid).toUpperCase()}|${extras}`;
 }
 
-export const sceneWire = (id, count, loc, cause) => `Z|${id}|${count}|${where(loc)}|${safe(cause)}`;
+export const sceneWire = (id, count, loc, cause, hazards = [], vehicles = '') => `Z|${id}|${count}|${where(loc)}|${safe(cause)}|${hazards.filter((h) => h !== 'none').join(',')}|${safe(vehicles)}`;
 export const voiceWire = (id, loc, lang, text) => `V|${id}|${where(loc)}|${safe(lang).slice(0, 8)}|${String(text || '').replace(/\|/g, ' ')}`;
 
 // One-line summary of a person for cards
