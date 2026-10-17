@@ -12,7 +12,7 @@ import Shield, { STATUS_COLOR } from './Shield';
 import HoldCard from './HoldCard';
 import s from './Dashboard.styles';
 import { ago, DEMO_ORDER, getHazard, HAZARDS, setDemoHazard } from './hazardService';
-import { DEFAULT_POS, nearest } from './sites';
+import { around, DEFAULT_POS } from './sites';
 import { latest } from './outbox';
 import { c } from '../medmesh-id/theme';
 import { useAuth } from '../auth/AuthContext';
@@ -80,16 +80,20 @@ export default function Dashboard() {
   const name = (d.name || account?.name || '').split(' ')[0];
   const contact = parseContact(d.contact);
   const pos = hazard.pos || DEFAULT_POS;
-  const hosp = nearest(pos, 'hospital');
-  const pharm = nearest(pos, 'pharmacy');
+  const oxygen = /oxygen|cpap|bipap|ventilat/i.test(`${d.devices || ''} ${d.conditions || ''}`);
+  const near = around(pos, { oxygen });
+  const km = (x) => (x.km < 1 ? `${Math.round(x.km * 1000)} m` : `${x.km.toFixed(1)} km`);
 
   const status = request ? 'help' : checkin ? 'safe' : 'calm';
   const col = STATUS_COLOR[status];
 
+  // Everything that can help this person, placed around the Shield by real compass direction and distance
   const places = useMemo(() => [
-    hosp && { label: hosp.short, sub: `${hosp.km.toFixed(1)} km`, glyph: '+', color: c.redl, bearing: hosp.bearing },
-    pharm && { label: pharm.short, sub: `${pharm.km.toFixed(1)} km`, glyph: 'Rx', color: c.amber, bearing: pharm.bearing },
-  ].filter(Boolean), [hosp, pharm]);
+    ...near.care.map((x) => ({ label: x.short, sub: km(x), glyph: x.kind === 'clinic' ? 'FC' : '+', color: c.redl, bearing: x.bearing, km: x.km })),
+    ...near.rx.map((x) => ({ label: x.short, sub: km(x), glyph: 'Rx', color: c.amber, bearing: x.bearing, km: x.km })),
+    ...near.o2.map((x) => ({ label: 'Oxygen supplier', sub: km(x), glyph: 'O2', color: c.sky4, bearing: x.bearing, km: x.km })),
+    near.node && { label: near.node.name, sub: km(near.node), glyph: 'M', color: c.violet, bearing: near.node.bearing, km: near.node.km },
+  ].filter(Boolean), [near]);
 
   const contacts = contact ? [{ name: contact.name, initials: initials(contact.name), told: status === 'safe' && checkin?.status === 'acked' }] : [];
 

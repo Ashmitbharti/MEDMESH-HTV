@@ -126,7 +126,7 @@ export default function Supplies() {
   const breathing = BREATHING_KIT.includes(item);
   const urgency = breathing ? (left === 'lt2' || left === '2to12' ? 'N' : left ? 'D' : null) : urg;
   const ready = item && urgency && travel !== null && left !== 'lt2';
-  const places = SITES.filter((x) => x.kind !== 'hospital').map((x) => ({ ...x, km: distanceKm(pos, x) })).sort((a, b) => a.km - b.km);
+  const places = SITES.filter((x) => x.kind === 'pharmacy' || x.kind === 'supplier').map((x) => ({ ...x, km: distanceKm(pos, x) })).sort((a, b) => a.km - b.km);
 
   async function send() {
     const id = newId();
@@ -228,7 +228,8 @@ export default function Supplies() {
 
             <Pressable accessibilityRole="button" disabled={!ready} onPress={send} style={({ pressed }) => [s.btn, !ready && { opacity: 0.45 }, pressed && s.pressed]}>
               <LinearGradient colors={['#f59e0b', '#b45309']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={s.btnFill}>
-                <Send size={18} color="#fff" /><Text style={s.btnText}>Ask nearby places</Text>
+                <Send size={18} color="#fff" />
+                <Text style={s.btnText}>{ready ? 'Ask nearby places' : !item ? 'Pick what you need above' : !urgency ? (breathing ? 'Say how much is left' : 'Say how urgent it is') : travel === null ? 'Pickup or delivery?' : 'Send an SOS instead'}</Text>
               </LinearGradient>
             </Pressable>
           </>

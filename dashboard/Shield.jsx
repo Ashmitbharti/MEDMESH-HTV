@@ -110,10 +110,15 @@ export default function Shield({
   const placeAt = (bearing, r, y = 0) => [Math.sin(bearing) * r, y, -Math.cos(bearing) * r];
 
   // draw places far-to-near
-  const items = places.map((p, i) => ({ ...p, g: P(...placeAt(p.bearing, 1.8)), top: P(...placeAt(p.bearing, 1.8, 0.5 + i * 0.42)) }))
+  // nearer places sit closer to the dome; poles take three heights so labels have room
+  const ringOf = (p) => (p.km != null ? 1.45 + Math.min(1, p.km / 6) * 0.75 : 1.8);
+  // only the nearest few carry a text label (the rest show their symbol), so a crowded side stays readable
+  const byKm = [...places].sort((a, b) => (a.km ?? 0) - (b.km ?? 0)).map((p) => p.label);
+  const items = places.map((p, i) => ({ ...p, quiet: byKm.indexOf(p.label) >= 3,
+    g: P(...placeAt(p.bearing, ringOf(p))), top: P(...placeAt(p.bearing, ringOf(p), 0.42 + (i % 3) * 0.36)) }))
     .sort((a, b) => b.g.z - a.g.z);
   // keep labels from overlapping when two places lie in the same direction
-  [...items].sort((a, b) => b.top.y - a.top.y).forEach((it, i, arr) => {
+  [...items].filter((x) => !x.quiet).sort((a, b) => b.top.y - a.top.y).forEach((it, i, arr) => {
     it.ly = it.top.y - 17 * it.top.k;
     if (i && it.ly > arr[i - 1].ly - 14 && Math.abs(it.top.x - arr[i - 1].top.x) < 120) it.ly = arr[i - 1].ly - 14; // move the higher one up
   });
@@ -225,7 +230,7 @@ function Place({ p, width }) {
       <Line x1={p.g.x} y1={p.g.y} x2={p.top.x} y2={p.top.y} stroke={p.color} strokeOpacity={0.7} strokeWidth={1.4} />
       <Circle cx={p.top.x} cy={p.top.y} r={12 * p.top.k} fill="#0b1020" fillOpacity={0.85} stroke={p.color} strokeWidth={1.4} />
       <SvgText x={p.top.x} y={p.top.y + 4 * p.top.k} fill={p.color} fontSize={(p.glyph.length > 1 ? 9 : 14) * p.top.k} fontWeight="900" textAnchor="middle" fontFamily={SANS}>{p.glyph}</SvgText>
-      <SvgText x={lx} y={p.ly} fill="#e5e7eb" fontSize={10} fontWeight="700" textAnchor="middle" fontFamily={SANS}>{text}</SvgText>
+      {p.quiet ? null : <SvgText x={lx} y={p.ly} fill="#e5e7eb" fontSize={10} fontWeight="700" textAnchor="middle" fontFamily={SANS}>{text}</SvgText>}
     </G>
   );
 }
