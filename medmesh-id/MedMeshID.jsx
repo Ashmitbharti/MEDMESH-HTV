@@ -1,13 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Keyboard, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
+import { Animated, Easing, Keyboard, Platform, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 import {
-  Accessibility, Check, ChevronLeft, ChevronRight, CircleAlert, HeartPulse, Lock, Pencil, Radio, WifiOff,
+  Accessibility, Check, ChevronLeft, ChevronRight, CircleAlert, FileUp, HeartPulse, Lock, Pencil, Radio, SquarePen, WifiOff, X,
 } from 'lucide-react-native';
 import styles from './MedMeshID.styles';
 import { c, grad } from './theme';
 import PdfAutofill from './PdfAutofill';
+import TagInput from './TagInput';
+import { DEMO_REPORT } from './demoReport';
 import MedMeshIDCard from './MedMeshIDCard';
 import { loadProfile, saveProfile } from './profileService';
 
@@ -17,9 +19,25 @@ const fields = [
   { key: 'age', section: 'About you', label: 'Age', placeholder: 'Your age', keyboardType: 'number-pad' },
   { key: 'gender', section: 'About you', label: 'Gender', options: ['Female', 'Male', 'Non-binary', 'Enter my own gender'] },
   { key: 'blood', section: 'About you', label: 'Blood group', options: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] },
-  { key: 'allergies', section: 'Medical', label: 'Allergies', placeholder: 'e.g. Penicillin, peanuts', multiline: true },
-  { key: 'conditions', section: 'Medical', label: 'Conditions', placeholder: 'e.g. Type 2 diabetes, asthma', multiline: true },
-  { key: 'medications', section: 'Medical', label: 'Medications', placeholder: 'e.g. Metformin, salbutamol inhaler', multiline: true },
+  {
+    key: 'allergies', section: 'Medical', label: 'Any allergies?', tags: true,
+    placeholder: 'Type one and press +',
+    help: 'Medicines, foods, latex, insect stings. Add the reaction if you know it, e.g. "Penicillin (hives)".',
+    suggestions: ['Penicillin', 'Sulfa drugs', 'Aspirin / NSAIDs', 'Codeine / opioids', 'Contrast dye', 'Latex', 'Peanuts', 'Shellfish', 'Bee stings'],
+    noneLabel: 'No known allergies',
+  },
+  {
+    key: 'conditions', section: 'Medical', label: 'Ongoing health conditions', tags: true,
+    placeholder: 'Type one and press +',
+    help: 'Anything a doctor is treating you for. These change which hospital is best for you.',
+    suggestions: ['Diabetes', 'Asthma', 'COPD', 'Heart condition', 'High blood pressure', 'Epilepsy', 'Kidney disease', 'Pregnant', 'Dementia', 'Past stroke'],
+  },
+  {
+    key: 'medications', section: 'Medical', label: 'Medicines you take regularly', tags: true,
+    placeholder: 'e.g. Metformin 500 mg twice a day',
+    help: 'Include the dose if you know it. Blood thinners matter most: they change how responders treat injuries.',
+    suggestions: ['Insulin', 'Metformin', 'Blood thinner (warfarin, apixaban…)', 'Aspirin', 'Salbutamol inhaler', 'Blood pressure pills', 'Levothyroxine', 'Epilepsy medicine'],
+  },
   {
     key: 'devices', section: 'In an outage', label: 'Do you rely on any of these?', multi: true,
     options: ['Home oxygen', 'CPAP / BiPAP', 'Insulin', 'Dialysis', 'Wheelchair or walker', 'None'],
@@ -31,6 +49,11 @@ const fields = [
     key: 'home_hospital', section: 'In an outage', label: 'Your usual hospital',
     options: ['Scarborough General', 'Centenary Hospital', 'Birchmount Hospital', 'Other / not sure'],
     help: 'Your records and specialists are there. The command centre gives it a small preference.',
+  },
+  {
+    key: 'communication', section: 'In an outage', label: 'Anything responders should know to communicate with you?', multi: true,
+    options: ['Hard of hearing', 'Low vision', 'Speech difficulty', 'Limited English', 'Memory or confusion', 'Service animal', 'None'],
+    help: 'Shared with the receiving team so they are ready when you arrive.',
   },
   { key: 'contact', section: 'Contact', label: 'Emergency contact', placeholder: 'Name and phone number', multiline: true },
 ];
@@ -71,13 +94,14 @@ export default function MedMeshID() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const savingRef = useRef(false);
   const field = fields[step];
 
-  const pulse = useRef(new Animated.Value(0)).current;
-  const enter = useRef(new Animated.Value(1)).current;
-  const dir = useRef(1);
-  const progress = useRef(new Animated.Value(0)).current;
+  const [pulse] = useState(() => new Animated.Value(0));
+  const [enter] = useState(() => new Animated.Value(1));
+  const [dir, setDir] = useState(1);
+  const [progress] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     let active = true;
@@ -120,6 +144,7 @@ export default function MedMeshID() {
   function validateAnswer(item) {
     const value = displayValue(item);
     if (!value || !value.trim()) {
+      if (item.tags) return `Add at least one, or tap "${item.noneLabel || 'None'}".`;
       return item.options ? 'Please choose an option.' : `Please enter your ${item.label.toLowerCase()}.`;
     }
     if (item.key === 'age' && (!/^\d+$/.test(value.trim()) || Number(value) > 130)) {
@@ -162,7 +187,7 @@ export default function MedMeshID() {
         return;
       }
     }
-    dir.current = nextStep > step ? 1 : -1;
+    setDir(nextStep > step ? 1 : -1);
     setError('');
     Keyboard.dismiss();
     setStep(nextStep);
@@ -187,12 +212,22 @@ export default function MedMeshID() {
 
   const slide = {
     opacity: enter,
-    transform: [{ translateX: enter.interpolate({ inputRange: [0, 1], outputRange: [24 * dir.current, 0] }) }],
+    transform: [{ translateX: enter.interpolate({ inputRange: [0, 1], outputRange: [24 * dir, 0] }) }],
   };
   const heartScale = pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.12] });
   const ringOpacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.45, 0] });
   const ringScale = pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 1.6] });
   const sections = [...new Set(fields.map((f) => f.section))];
+  const demo = Platform.OS === 'web' && typeof window !== 'undefined' && /[?&]demo=report/.test(window.location.search) ? DEMO_REPORT : null;
+  const labs = (details.labs || '').split(',').map((x) => x.trim()).filter(Boolean);
+
+  function applyReport(next, meta) {
+    setDetails({ ...next, lastReport: [meta.docType, meta.date].filter(Boolean).join(' · ') || 'Medical report' });
+    if (meta.count) setDirty(true);
+    setError('');
+    setUpdating(false);
+    if (profile) { setDir(1); setStep(fields.length); }
+  }
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -230,16 +265,33 @@ export default function MedMeshID() {
 
         {profile ? <MedMeshIDCard profile={profile} dirty={dirty} /> : null}
 
-        {field ? (
-          <PdfAutofill
-            fields={fields}
-            details={details}
-            onApply={(answers) => {
-              setDetails((current) => ({ ...current, ...answers }));
-              setDirty(true);
-              setError('');
-            }}
-          />
+        {profile && !field && !updating && !demo ? (
+          <>
+            <View style={styles.actions}>
+              <Pressable accessibilityRole="button" style={({ pressed }) => [styles.actionBtn, pressed && styles.pressed]} onPress={() => setUpdating(true)}>
+                <FileUp size={16} color={c.sky} />
+                <Text style={styles.actionText}>Update from report</Text>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                style={({ pressed }) => [styles.actionBtn, pressed && styles.pressed]}
+                onPress={() => { setDir(-1); setStep(0); }}
+              >
+                <SquarePen size={16} color={c.sky} />
+                <Text style={styles.actionText}>Edit step by step</Text>
+              </Pressable>
+            </View>
+            {details.lastReport ? <Text style={styles.updatedNote}>Last updated from: {details.lastReport}</Text> : null}
+          </>
+        ) : null}
+
+        {!loading && ((field && !profile) || updating || demo) ? (
+          <PdfAutofill details={details} mode={profile ? 'update' : 'create'} onApply={applyReport} preview={demo} />
+        ) : null}
+        {updating ? (
+          <Pressable accessibilityRole="button" style={styles.textButton} onPress={() => setUpdating(false)}>
+            <Text style={styles.textButtonText}>Cancel</Text>
+          </Pressable>
         ) : null}
 
         <View style={styles.form}>
@@ -262,7 +314,17 @@ export default function MedMeshID() {
                 <Text style={styles.label}>{field.label}</Text>
                 {field.help ? <Text style={styles.help}>{field.help}</Text> : null}
 
-                {field.options ? (
+                {field.tags ? (
+                  <TagInput
+                    key={field.key}
+                    value={details[field.key]}
+                    onChange={updateDetail}
+                    suggestions={field.suggestions}
+                    placeholder={field.placeholder}
+                    noneLabel={field.noneLabel}
+                    accessibilityLabel={field.label}
+                  />
+                ) : field.options ? (
                   <View style={styles.options}>
                     {field.options.map((option) => {
                       const selected = field.multi
@@ -314,9 +376,6 @@ export default function MedMeshID() {
                   />
                 ) : null}
 
-                {['allergies', 'conditions', 'medications'].includes(field.key) ? (
-                  <Text style={styles.hint}>Enter None if this does not apply.</Text>
-                ) : null}
               </Animated.View>
 
               {error ? (
@@ -359,7 +418,7 @@ export default function MedMeshID() {
                       accessibilityRole="button"
                       accessibilityLabel={`Edit ${item.label}`}
                       style={({ pressed }) => [styles.reviewRow, pressed && styles.pressed]}
-                      onPress={() => { dir.current = -1; setStep(index); }}
+                      onPress={() => { setDir(-1); setStep(index); }}
                     >
                       <View style={{ flex: 1 }}>
                         <Text style={styles.reviewLabel}>{item.label}</Text>
@@ -368,6 +427,22 @@ export default function MedMeshID() {
                       <Pencil size={15} color={c.dim} />
                     </Pressable>
                   )))}
+                  {sec === 'Medical' && labs.length ? (
+                    <View style={styles.reviewRow}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.reviewLabel}>Flagged results from your report</Text>
+                        <Text style={styles.reviewValue}>{labs.join('\n')}</Text>
+                      </View>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel="Remove flagged results"
+                        hitSlop={10}
+                        onPress={() => { setDirty(true); setDetails((cur) => ({ ...cur, labs: '' })); }}
+                      >
+                        <X size={15} color={c.dim} />
+                      </Pressable>
+                    </View>
+                  ) : null}
                 </View>
               ))}
               <View style={styles.noteRow}>

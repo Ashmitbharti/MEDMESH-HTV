@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { Cloud, HeartPulse, QrCode, RotateCw, Server, Smartphone } from 'lucide-react-native';
@@ -21,9 +21,9 @@ export default function MedMeshIDCard({ profile, dirty }) {
   const hasRegisteredId = typeof id === 'string' && /^[A-Z0-9]{6}$/.test(id);
   const d = profile.details || {};
   const [flipped, setFlipped] = useState(false);
-  const flip = useRef(new Animated.Value(0)).current;
-  const sheen = useRef(new Animated.Value(0)).current;
-  const appear = useRef(new Animated.Value(0)).current;
+  const [flip] = useState(() => new Animated.Value(0));
+  const [sheen] = useState(() => new Animated.Value(0));
+  const [appear] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     Animated.spring(appear, { toValue: 1, friction: 7, tension: 50, useNativeDriver: true }).start();

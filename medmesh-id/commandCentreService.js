@@ -24,6 +24,8 @@ export function toCommandCentre(profile) {
     conditions: list(d.conditions),
     meds: list(d.medications),
     devices: list(d.devices),
+    communication: list(d.communication),
+    labs: list(d.labs),
     contact: (d.contact || '').trim(),
     home_hospital: HOSPITAL_CODES[d.home_hospital] || null,
     lives_alone: d.lives_alone === 'Yes',
