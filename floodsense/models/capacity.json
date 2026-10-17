@@ -1,0 +1,629 @@
+{
+  "02HC033": {
+    "rate_var": "max_1h_rain",
+    "capacity": null,
+    "status": "no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.19 on 47 days)",
+    "median_train_antecedent_7d": 11.399999999999972,
+    "bins": [
+      {
+        "lower": 0.2,
+        "upper": 1.3,
+        "days": 980,
+        "positives": 41,
+        "rate_next_day_high": 0.0418
+      },
+      {
+        "lower": 1.4,
+        "upper": 2.4,
+        "days": 346,
+        "positives": 36,
+        "rate_next_day_high": 0.104
+      },
+      {
+        "lower": 2.5,
+        "upper": 3.3,
+        "days": 181,
+        "positives": 30,
+        "rate_next_day_high": 0.1657
+      },
+      {
+        "lower": 3.4,
+        "upper": 5.6,
+        "days": 185,
+        "positives": 39,
+        "rate_next_day_high": 0.2108
+      },
+      {
+        "lower": 5.7,
+        "upper": 8.3,
+        "days": 89,
+        "positives": 22,
+        "rate_next_day_high": 0.2472
+      },
+      {
+        "lower": 8.4,
+        "upper": 12.7,
+        "days": 47,
+        "positives": 8,
+        "rate_next_day_high": 0.1702
+      },
+      {
+        "lower": 13.0,
+        "upper": 268.4,
+        "days": 47,
+        "positives": 9,
+        "rate_next_day_high": 0.1915
+      }
+    ]
+  },
+  "02HC030": {
+    "rate_var": "max_1h_rain",
+    "capacity": null,
+    "status": "no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.10 on 48 days)",
+    "median_train_antecedent_7d": 11.199999999999973,
+    "bins": [
+      {
+        "lower": 0.2,
+        "upper": 1.2,
+        "days": 946,
+        "positives": 43,
+        "rate_next_day_high": 0.0455
+      },
+      {
+        "lower": 1.3,
+        "upper": 2.4,
+        "days": 396,
+        "positives": 40,
+        "rate_next_day_high": 0.101
+      },
+      {
+        "lower": 2.5,
+        "upper": 3.3,
+        "days": 171,
+        "positives": 28,
+        "rate_next_day_high": 0.1637
+      },
+      {
+        "lower": 3.4,
+        "upper": 5.5,
+        "days": 188,
+        "positives": 48,
+        "rate_next_day_high": 0.2553
+      },
+      {
+        "lower": 5.6,
+        "upper": 8.1,
+        "days": 92,
+        "positives": 25,
+        "rate_next_day_high": 0.2717
+      },
+      {
+        "lower": 8.2,
+        "upper": 11.9,
+        "days": 45,
+        "positives": 9,
+        "rate_next_day_high": 0.2
+      },
+      {
+        "lower": 12.4,
+        "upper": 268.4,
+        "days": 48,
+        "positives": 5,
+        "rate_next_day_high": 0.1042
+      }
+    ]
+  },
+  "02HC032": {
+    "rate_var": "rain_today",
+    "capacity": 30.4,
+    "status": "ok",
+    "median_train_antecedent_7d": 13.39999999999997,
+    "bins": [
+      {
+        "lower": 0.2,
+        "upper": 2.6,
+        "days": 1104,
+        "positives": 41,
+        "rate_next_day_high": 0.0371
+      },
+      {
+        "lower": 2.8,
+        "upper": 6.0,
+        "days": 430,
+        "positives": 29,
+        "rate_next_day_high": 0.0674
+      },
+      {
+        "lower": 6.1,
+        "upper": 9.4,
+        "days": 213,
+        "positives": 18,
+        "rate_next_day_high": 0.0845
+      },
+      {
+        "lower": 9.6,
+        "upper": 16.2,
+        "days": 222,
+        "positives": 35,
+        "rate_next_day_high": 0.1577
+      },
+      {
+        "lower": 16.4,
+        "upper": 22.8,
+        "days": 105,
+        "positives": 16,
+        "rate_next_day_high": 0.1524
+      },
+      {
+        "lower": 23.0,
+        "upper": 30.0,
+        "days": 57,
+        "positives": 17,
+        "rate_next_day_high": 0.2982
+      },
+      {
+        "lower": 30.4,
+        "upper": 140.6,
+        "days": 53,
+        "positives": 16,
+        "rate_next_day_high": 0.3019
+      }
+    ]
+  },
+  "02HC027": {
+    "rate_var": "max_1h_rain",
+    "capacity": null,
+    "status": "no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.24 on 50 days)",
+    "median_train_antecedent_7d": 10.599999999999971,
+    "bins": [
+      {
+        "lower": 0.2,
+        "upper": 1.2,
+        "days": 1019,
+        "positives": 42,
+        "rate_next_day_high": 0.0412
+      },
+      {
+        "lower": 1.3,
+        "upper": 2.3,
+        "days": 392,
+        "positives": 39,
+        "rate_next_day_high": 0.0995
+      },
+      {
+        "lower": 2.4,
+        "upper": 3.3,
+        "days": 208,
+        "positives": 34,
+        "rate_next_day_high": 0.1635
+      },
+      {
+        "lower": 3.4,
+        "upper": 5.5,
+        "days": 195,
+        "positives": 45,
+        "rate_next_day_high": 0.2308
+      },
+      {
+        "lower": 5.6,
+        "upper": 8.1,
+        "days": 97,
+        "positives": 25,
+        "rate_next_day_high": 0.2577
+      },
+      {
+        "lower": 8.2,
+        "upper": 12.4,
+        "days": 49,
+        "positives": 11,
+        "rate_next_day_high": 0.2245
+      },
+      {
+        "lower": 12.6,
+        "upper": 268.4,
+        "days": 50,
+        "positives": 12,
+        "rate_next_day_high": 0.24
+      }
+    ]
+  },
+  "02HC005": {
+    "rate_var": "max_1h_rain",
+    "capacity": 13.0,
+    "status": "ok",
+    "median_train_antecedent_7d": 12.800000000000027,
+    "bins": [
+      {
+        "lower": 0.2,
+        "upper": 1.2,
+        "days": 993,
+        "positives": 57,
+        "rate_next_day_high": 0.0574
+      },
+      {
+        "lower": 1.3,
+        "upper": 2.2,
+        "days": 330,
+        "positives": 22,
+        "rate_next_day_high": 0.0667
+      },
+      {
+        "lower": 2.3,
+        "upper": 3.2,
+        "days": 203,
+        "positives": 19,
+        "rate_next_day_high": 0.0936
+      },
+      {
+        "lower": 3.3,
+        "upper": 5.5,
+        "days": 180,
+        "positives": 24,
+        "rate_next_day_high": 0.1333
+      },
+      {
+        "lower": 5.6,
+        "upper": 8.1,
+        "days": 89,
+        "positives": 13,
+        "rate_next_day_high": 0.1461
+      },
+      {
+        "lower": 8.2,
+        "upper": 12.7,
+        "days": 47,
+        "positives": 6,
+        "rate_next_day_high": 0.1277
+      },
+      {
+        "lower": 13.0,
+        "upper": 268.4,
+        "days": 48,
+        "positives": 15,
+        "rate_next_day_high": 0.3125
+      }
+    ]
+  },
+  "02HC024": {
+    "rate_var": "max_1h_rain",
+    "capacity": null,
+    "status": "no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.25 on 48 days)",
+    "median_train_antecedent_7d": 10.799999999999985,
+    "bins": [
+      {
+        "lower": 0.2,
+        "upper": 1.2,
+        "days": 952,
+        "positives": 40,
+        "rate_next_day_high": 0.042
+      },
+      {
+        "lower": 1.3,
+        "upper": 2.4,
+        "days": 398,
+        "positives": 38,
+        "rate_next_day_high": 0.0955
+      },
+      {
+        "lower": 2.5,
+        "upper": 3.3,
+        "days": 173,
+        "positives": 27,
+        "rate_next_day_high": 0.1561
+      },
+      {
+        "lower": 3.4,
+        "upper": 5.5,
+        "days": 187,
+        "positives": 41,
+        "rate_next_day_high": 0.2193
+      },
+      {
+        "lower": 5.6,
+        "upper": 8.2,
+        "days": 92,
+        "positives": 22,
+        "rate_next_day_high": 0.2391
+      },
+      {
+        "lower": 8.3,
+        "upper": 12.4,
+        "days": 47,
+        "positives": 9,
+        "rate_next_day_high": 0.1915
+      },
+      {
+        "lower": 12.6,
+        "upper": 268.4,
+        "days": 48,
+        "positives": 12,
+        "rate_next_day_high": 0.25
+      }
+    ]
+  },
+  "02HC013": {
+    "rate_var": "max_1h_rain",
+    "capacity": null,
+    "status": "no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.07 on 45 days)",
+    "median_train_antecedent_7d": 10.799999999999999,
+    "bins": [
+      {
+        "lower": 0.2,
+        "upper": 1.2,
+        "days": 907,
+        "positives": 41,
+        "rate_next_day_high": 0.0452
+      },
+      {
+        "lower": 1.3,
+        "upper": 2.3,
+        "days": 342,
+        "positives": 28,
+        "rate_next_day_high": 0.0819
+      },
+      {
+        "lower": 2.4,
+        "upper": 3.3,
+        "days": 177,
+        "positives": 26,
+        "rate_next_day_high": 0.1469
+      },
+      {
+        "lower": 3.4,
+        "upper": 5.7,
+        "days": 180,
+        "positives": 36,
+        "rate_next_day_high": 0.2
+      },
+      {
+        "lower": 5.8,
+        "upper": 8.2,
+        "days": 86,
+        "positives": 13,
+        "rate_next_day_high": 0.1512
+      },
+      {
+        "lower": 8.3,
+        "upper": 13.0,
+        "days": 45,
+        "positives": 5,
+        "rate_next_day_high": 0.1111
+      },
+      {
+        "lower": 13.3,
+        "upper": 268.4,
+        "days": 45,
+        "positives": 3,
+        "rate_next_day_high": 0.0667
+      }
+    ]
+  },
+  "02HC058": {
+    "rate_var": "max_1h_rain",
+    "capacity": null,
+    "status": "no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.07 on 43 days)",
+    "median_train_antecedent_7d": 10.59999999999999,
+    "bins": [
+      {
+        "lower": 0.2,
+        "upper": 1.2,
+        "days": 900,
+        "positives": 39,
+        "rate_next_day_high": 0.0433
+      },
+      {
+        "lower": 1.3,
+        "upper": 2.3,
+        "days": 323,
+        "positives": 27,
+        "rate_next_day_high": 0.0836
+      },
+      {
+        "lower": 2.4,
+        "upper": 3.3,
+        "days": 169,
+        "positives": 28,
+        "rate_next_day_high": 0.1657
+      },
+      {
+        "lower": 3.4,
+        "upper": 5.8,
+        "days": 170,
+        "positives": 32,
+        "rate_next_day_high": 0.1882
+      },
+      {
+        "lower": 5.9,
+        "upper": 8.5,
+        "days": 82,
+        "positives": 14,
+        "rate_next_day_high": 0.1707
+      },
+      {
+        "lower": 8.6,
+        "upper": 13.5,
+        "days": 44,
+        "positives": 5,
+        "rate_next_day_high": 0.1136
+      },
+      {
+        "lower": 13.6,
+        "upper": 190.2,
+        "days": 43,
+        "positives": 3,
+        "rate_next_day_high": 0.0698
+      }
+    ]
+  },
+  "02HC022": {
+    "rate_var": "rain_today",
+    "capacity": 16.0,
+    "status": "ok",
+    "median_train_antecedent_7d": 12.799999999999997,
+    "bins": [
+      {
+        "lower": 0.2,
+        "upper": 2.5,
+        "days": 1226,
+        "positives": 33,
+        "rate_next_day_high": 0.0269
+      },
+      {
+        "lower": 2.6,
+        "upper": 5.8,
+        "days": 490,
+        "positives": 29,
+        "rate_next_day_high": 0.0592
+      },
+      {
+        "lower": 5.9,
+        "upper": 9.2,
+        "days": 248,
+        "positives": 20,
+        "rate_next_day_high": 0.0806
+      },
+      {
+        "lower": 9.3,
+        "upper": 15.8,
+        "days": 246,
+        "positives": 55,
+        "rate_next_day_high": 0.2236
+      },
+      {
+        "lower": 16.0,
+        "upper": 22.8,
+        "days": 119,
+        "positives": 40,
+        "rate_next_day_high": 0.3361
+      },
+      {
+        "lower": 23.0,
+        "upper": 29.6,
+        "days": 61,
+        "positives": 30,
+        "rate_next_day_high": 0.4918
+      },
+      {
+        "lower": 30.0,
+        "upper": 140.6,
+        "days": 62,
+        "positives": 37,
+        "rate_next_day_high": 0.5968
+      }
+    ]
+  },
+  "02HB030": {
+    "rate_var": "max_1h_rain",
+    "capacity": null,
+    "status": "no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.11 on 27 days)",
+    "median_train_antecedent_7d": 11.799999999999983,
+    "bins": [
+      {
+        "lower": 0.3,
+        "upper": 1.3,
+        "days": 547,
+        "positives": 22,
+        "rate_next_day_high": 0.0402
+      },
+      {
+        "lower": 1.4,
+        "upper": 2.4,
+        "days": 199,
+        "positives": 19,
+        "rate_next_day_high": 0.0955
+      },
+      {
+        "lower": 2.5,
+        "upper": 3.3,
+        "days": 101,
+        "positives": 15,
+        "rate_next_day_high": 0.1485
+      },
+      {
+        "lower": 3.4,
+        "upper": 5.6,
+        "days": 100,
+        "positives": 21,
+        "rate_next_day_high": 0.21
+      },
+      {
+        "lower": 5.7,
+        "upper": 7.9,
+        "days": 52,
+        "positives": 5,
+        "rate_next_day_high": 0.0962
+      },
+      {
+        "lower": 8.0,
+        "upper": 11.3,
+        "days": 26,
+        "positives": 2,
+        "rate_next_day_high": 0.0769
+      },
+      {
+        "lower": 11.9,
+        "upper": 190.2,
+        "days": 27,
+        "positives": 3,
+        "rate_next_day_high": 0.1111
+      }
+    ]
+  },
+  "02HC003": {
+    "rate_var": "max_1h_rain",
+    "capacity": null,
+    "status": "no bin reached a next-day high-water rate > 0.3 with >= 15 days and >= 5 events (top bin: 0.10 on 50 days)",
+    "median_train_antecedent_7d": 11.19999999999997,
+    "bins": [
+      {
+        "lower": 0.2,
+        "upper": 1.2,
+        "days": 1002,
+        "positives": 60,
+        "rate_next_day_high": 0.0599
+      },
+      {
+        "lower": 1.3,
+        "upper": 2.3,
+        "days": 388,
+        "positives": 34,
+        "rate_next_day_high": 0.0876
+      },
+      {
+        "lower": 2.4,
+        "upper": 3.3,
+        "days": 204,
+        "positives": 30,
+        "rate_next_day_high": 0.1471
+      },
+      {
+        "lower": 3.4,
+        "upper": 5.5,
+        "days": 189,
+        "positives": 41,
+        "rate_next_day_high": 0.2169
+      },
+      {
+        "lower": 5.6,
+        "upper": 8.1,
+        "days": 96,
+        "positives": 16,
+        "rate_next_day_high": 0.1667
+      },
+      {
+        "lower": 8.2,
+        "upper": 12.4,
+        "days": 48,
+        "positives": 6,
+        "rate_next_day_high": 0.125
+      },
+      {
+        "lower": 12.6,
+        "upper": 268.4,
+        "days": 50,
+        "positives": 5,
+        "rate_next_day_high": 0.1
+      }
+    ]
+  }
+}

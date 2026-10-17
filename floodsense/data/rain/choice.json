@@ -1,0 +1,90 @@
+{
+  "02HC033": {
+    "climate_id": "6158731",
+    "climate_name": "TORONTO PEARSON (6158733 to 2013-06 + 6158731 after)",
+    "km": 9.5,
+    "coverage": 0.9969,
+    "first": "2002-01-01",
+    "last": "2024-12-31"
+  },
+  "02HC030": {
+    "climate_id": "6158731",
+    "climate_name": "TORONTO PEARSON (6158733 to 2013-06 + 6158731 after)",
+    "km": 10.3,
+    "coverage": 0.9968,
+    "first": "2002-01-01",
+    "last": "2023-12-31"
+  },
+  "02HC032": {
+    "climate_id": "615S001",
+    "climate_name": "TORONTO NORTH YORK",
+    "km": 18.0,
+    "coverage": 0.9708,
+    "first": "2002-10-08",
+    "last": "2024-12-31"
+  },
+  "02HC027": {
+    "climate_id": "6158355",
+    "climate_name": "TORONTO CITY",
+    "km": 8.4,
+    "coverage": 0.9606,
+    "first": "2002-01-01",
+    "last": "2024-12-31"
+  },
+  "02HC005": {
+    "climate_id": "615S001",
+    "climate_name": "TORONTO NORTH YORK",
+    "km": 6.8,
+    "coverage": 0.973,
+    "first": "2000-01-01",
+    "last": "2025-12-31"
+  },
+  "02HC024": {
+    "climate_id": "6158355",
+    "climate_name": "TORONTO CITY",
+    "km": 3.7,
+    "coverage": 0.9592,
+    "first": "2002-01-01",
+    "last": "2023-12-31"
+  },
+  "02HC013": {
+    "climate_id": "6158355",
+    "climate_name": "TORONTO CITY",
+    "km": 20.9,
+    "coverage": 0.9778,
+    "first": "2005-08-30",
+    "last": "2023-12-31"
+  },
+  "02HC058": {
+    "climate_id": "6158355",
+    "climate_name": "TORONTO CITY",
+    "km": 16.4,
+    "coverage": 0.9775,
+    "first": "2005-10-31",
+    "last": "2023-12-31"
+  },
+  "02HC022": {
+    "climate_id": "615S001",
+    "climate_name": "TORONTO NORTH YORK",
+    "km": 20.7,
+    "coverage": 0.9718,
+    "first": "2002-01-01",
+    "last": "2024-12-31"
+  },
+  "02HB030": {
+    "climate_id": "6158731",
+    "climate_name": "TORONTO PEARSON (6158733 to 2013-06 + 6158731 after)",
+    "km": 9.5,
+    "coverage": 0.9963,
+    "first": "2005-09-19",
+    "last": "2024-12-31"
+  },
+  "02HC003": {
+    "climate_id": "6158731",
+    "climate_name": "TORONTO PEARSON (6158733 to 2013-06 + 6158731 after)",
+    "km": 9.2,
+    "coverage": 0.9969,
+    "first": "2002-01-01",
+    "last": "2024-12-31"
+  }
+}

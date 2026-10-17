@@ -1,9 +1,12 @@
 """FloodSense: one entry point.
 
-python run_all.py            # v2: rain, LEVEL_ONLY/LEAN/BIG feature sets, NEXT-DAY + SAME-DAY targets, p95 + p97
-python run_all.py --fast     # v2 with n_iter=10 for the four models
-python run_all.py --v1       # v1 raw-features baseline (LEVEL, DISCHARGE[, rain] only)
-python run_all.py --multiclass  # NORMAL / ELEVATED / HIGH next-day variant (needs the v2 models for the collapse check)
+python run_all.py                       # Model B: 11 gauges, LEAN vs RATE per gauge, known floods, combiner LOO test
+python run_all.py --fast                # same with n_iter=10
+python run_all.py --stations 02HC013,02HC058,02HC022   # limit to some gauges
+python run_all.py --fleet-lean          # the earlier LEAN-only fleet (models/fleet_lean/)
+python run_all.py --v2                  # earlier 3-station study: feature sets, targets, p95/p97
+python run_all.py --v1                  # v1 raw-features baseline (3 stations)
+python run_all.py --multiclass          # NORMAL / ELEVATED / HIGH variant (3 stations)
 """
 import argparse
 import json
@@ -14,7 +17,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from src import clean, experiments, multiclass
+from src import clean, experiments, fleet, loo, modelb, multiclass
 from src.config import DEFAULT_PCT, MODELS_DIR, RANDOM_STATE, RESULTS_DIR, STATIONS
 from src.dataset import build, print_split
 from src.evaluate import evaluate_station, pick_winner, print_table
@@ -59,6 +62,9 @@ def main():
     ap.add_argument("--fast", action="store_true", help="n_iter=10 instead of 40")
     ap.add_argument("--v1", action="store_true", help="run the v1 raw-features baseline instead of v2")
     ap.add_argument("--multiclass", action="store_true", help="run the 3-class NORMAL/ELEVATED/HIGH variant")
+    ap.add_argument("--v2", action="store_true", help="run the earlier 3-station v2 study")
+    ap.add_argument("--stations", default=None, help="fleet / Model B: comma-separated station numbers")
+    ap.add_argument("--fleet-lean", action="store_true", help="run the earlier LEAN-only fleet")
     ap.add_argument("--pct", type=float, default=DEFAULT_PCT, help="v1 only: high-water percentile of train LEVEL")
     args = ap.parse_args()
     n_iter = 10 if args.fast else 40
@@ -66,6 +72,27 @@ def main():
     RESULTS_DIR.mkdir(exist_ok=True)
     MODELS_DIR.mkdir(exist_ok=True)
 
+    stations = args.stations.split(",") if args.stations else None
+    if args.fleet_lean:
+        t0 = time.time()
+        cleaned, preds, thresholds, _ = fleet.run(stations, n_iter)
+        fleet.known_floods(cleaned, preds, thresholds)
+        loo.run(preds, thresholds)
+        print()
+        print(f"LEAN fleet done in {time.time() - t0:.0f}s -> results/fleet_results.csv, results/fleet/, models/fleet_lean/")
+        return
+    if not (args.v1 or args.v2 or args.multiclass):
+        t0 = time.time()
+        cleaned, preds, thresholds, _ = modelb.run(stations, n_iter)
+        fleet.known_floods(cleaned, preds, thresholds, out=modelb.OUT)
+        loo.run(preds, thresholds, out=modelb.OUT)
+        if (RESULTS_DIR / "fleet" / "loo_results.csv").exists():
+            modelb.compare_loo(RESULTS_DIR / "fleet" / "loo_results.csv", modelb.OUT / "loo_results.csv")
+        from src import model_card
+        model_card.main()
+        print()
+        print(f"Model B done in {time.time() - t0:.0f}s -> results/modelb_results.csv, results/modelb/, models/")
+        return
     cleaned, has_rain = clean.run()
     if args.v1:
         run_v1(cleaned, has_rain, args, n_iter)

@@ -1,4 +1,6 @@
 """Leakage tests for v2 features (run: python -m pytest tests -q)."""
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -61,3 +63,21 @@ def test_next_day_label_alignment():
     y = label(df, "next", THR)
     i = 100
     assert y.iloc[i] == float(df["LEVEL"].iloc[i + 1] > THR)
+
+
+REAL = Path(__file__).resolve().parent.parent / "data" / "clean" / "02HC013.csv"
+
+
+@pytest.mark.skipif(not REAL.exists(), reason="run run_all.py first to create data/clean/02HC013.csv")
+@pytest.mark.parametrize("frac", [0.3, 0.7, 0.95])
+def test_real_gauge_features_ignore_later_data(frac):
+    """Real Highland Creek data (with its own rain): features at day t unchanged when everything after t changes."""
+    df = pd.read_csv(REAL, index_col="DATE", parse_dates=True)
+    df = df[["LEVEL", "DISCHARGE", "TOTAL_PRECIPITATION"]]
+    cols = sorted(set().union(*feature_sets("next", True, False).values()))
+    t = int(len(df) * frac)
+    base = build_frame(df, THR, use_snow=False)[cols]
+    altered = df.copy()
+    altered.iloc[t + 1:] = altered.iloc[t + 1:] * 3 + 7
+    after = build_frame(altered, THR, use_snow=False)[cols]
+    pd.testing.assert_frame_equal(base.iloc[: t + 1], after.iloc[: t + 1])

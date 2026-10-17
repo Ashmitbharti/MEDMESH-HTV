@@ -1,0 +1,34 @@
+station,date,level_m,high_that_day,issued_day_before,issued_on_day,split_of_day,status
+02HC033,2013-07-08,6.543,True,"WARNING (p=0.46, train)","WARNING (p=1.00, train)",train,TRAIN split - not evidence
+02HC033,2024-07-16,6.419,True,"WARNING (p=0.77, test)","WARNING (p=0.99, test)",test,
+02HC033,2024-08-17,6.221,True,"NONE (p=0.02, test)","WARNING (p=1.00, test)",test,
+02HC030,2013-07-08,3.911,True,"WARNING (p=0.33, train)","WARNING (p=0.72, train)",train,TRAIN split - not evidence
+02HC030,2024-07-16,,,,,,not covered (data 2000-01-01..2023-12-31)
+02HC030,2024-08-17,,,,,,not covered (data 2000-01-01..2023-12-31)
+02HC032,2013-07-08,2.491,True,no usable row,"WARNING (p=0.82, train)",train,TRAIN split - not evidence
+02HC032,2024-07-16,1.506,False,"NONE (p=0.03, test)","WARNING (p=0.35, test)",test,
+02HC032,2024-08-17,1.362,False,"NONE (p=0.00, test)","NONE (p=0.06, test)",test,
+02HC027,2013-07-08,1.426,True,"WARNING (p=0.57, train)","WARNING (p=0.61, train)",train,TRAIN split - not evidence
+02HC027,2024-07-16,1.369,True,"WARNING (p=0.53, test)","WARNING (p=0.69, test)",test,
+02HC027,2024-08-17,0.855,True,"NONE (p=0.02, test)","NONE (p=0.05, test)",test,
+02HC005,2013-07-08,1.044,True,"WATCH (p=0.17, train)","WARNING (p=0.95, train)",train,TRAIN split - not evidence
+02HC005,2024-07-16,1.192,True,"NONE (p=0.08, test)","WARNING (p=0.98, test)",test,
+02HC005,2024-08-17,0.973,True,"NONE (p=0.00, test)","WARNING (p=0.99, test)",test,
+02HC024,2013-07-08,13.026,True,"WATCH (p=0.31, train)","WARNING (p=0.58, train)",train,TRAIN split - not evidence
+02HC024,2024-07-16,,,,,,not covered (data 2000-01-01..2023-12-31)
+02HC024,2024-08-17,,,,,,not covered (data 2000-01-01..2023-12-31)
+02HC013,2013-07-08,6.228,False,"WATCH (p=0.20, train)","WATCH (p=0.24, train)",train,TRAIN split - not evidence
+02HC013,2024-07-16,,,,,,not covered (data 2005-08-01..2023-12-31)
+02HC013,2024-08-17,,,,,,not covered (data 2005-08-01..2023-12-31)
+02HC058,2013-07-08,2.603,False,"WATCH (p=0.24, train)","WATCH (p=0.25, train)",train,TRAIN split - not evidence
+02HC058,2024-07-16,,,,,,not covered (data 2005-10-01..2023-12-31)
+02HC058,2024-08-17,,,,,,not covered (data 2005-10-01..2023-12-31)
+02HC022,2013-07-08,3.447,False,"NONE (p=0.05, train)","WARNING (p=1.00, train)",train,TRAIN split - not evidence
+02HC022,2024-07-16,3.847,True,"NONE (p=0.27, test)","WARNING (p=1.00, test)",test,
+02HC022,2024-08-17,3.672,False,"NONE (p=0.02, test)","WARNING (p=1.00, test)",test,
+02HB030,2013-07-08,2.461,True,"WARNING (p=0.22, val)","WARNING (p=0.96, val)",val,
+02HB030,2024-07-16,2.588,True,"NONE (p=0.11, test)","WARNING (p=0.82, test)",test,
+02HB030,2024-08-17,2.426,True,"NONE (p=0.02, test)","WARNING (p=0.94, test)",test,
+02HC003,2013-07-08,2.935,True,"WATCH (p=0.17, train)","WARNING (p=0.83, train)",train,TRAIN split - not evidence
+02HC003,2024-07-16,2.99,True,"WARNING (p=0.70, test)","WARNING (p=0.83, test)",test,
+02HC003,2024-08-17,2.687,True,"NONE (p=0.00, test)","WARNING (p=0.54, test)",test,
