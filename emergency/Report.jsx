@@ -362,6 +362,16 @@ export default function Report() {
                 <Text style={s.firstTitle}>While you wait</Text>
                 {worst ? <Text style={s.firstText}>Not breathing: push hard and fast in the centre of the chest, about 2 pushes a second, until help arrives.</Text> : null}
                 {bleeding ? <Text style={s.firstText}>Heavy bleeding: press firmly on the wound with a cloth and keep pressing.</Text> : null}
+                {worst && scene.phase === 'sent' ? (
+                  <Pressable accessibilityRole="button" onPress={() => router.push('/cpr')} style={[s.ghost, { borderColor: 'rgba(244,63,94,0.6)' }]}>
+                    <HeartPulse size={16} color={c.redl} /><Text style={s.ghostText}>Open the CPR coach</Text>
+                  </Pressable>
+                ) : null}
+                {bleeding ? (
+                  <Pressable accessibilityRole="button" onPress={() => router.push('/guide?id=bleeding')} style={s.ghost}>
+                    <Text style={s.ghostText}>Bleeding guide, read aloud</Text>
+                  </Pressable>
+                ) : null}
               </View>
             ) : null}
 
@@ -387,7 +397,12 @@ export default function Report() {
               </Text>
             </View>
           ) : null}
-          {scene.phase === 'people' ? (
+          {scene.phase === 'people' && worst ? (
+            <Btn onPress={async () => { await sendAll(); router.push('/cpr'); }} colors={['#be123c', '#4c0519']} icon={HeartPulse}>
+              Send now & start CPR coach
+            </Btn>
+          ) : null}
+          {scene.phase === 'people' && !worst ? (
             <Btn onPress={() => sendAll()} colors={['#e11d48', '#9f1239']} icon={HeartPulse}>
               {`Send ${scene.people.filter((p) => !scene.sent[p.key]).length > 1 ? `${scene.people.filter((p) => !scene.sent[p.key]).length} reports` : 'emergency report'}`}
               {scene.people.some((p) => triageOf(p) === 1) ? ' · urgent' : ''}
