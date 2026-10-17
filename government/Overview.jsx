@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import WeatherBackdrop from '../dashboard/WeatherBackdrop';
+import { useHazard } from '../dashboard/hazardService';
 import { router } from 'expo-router';
 import { Eye, FlaskConical, Landmark, LogOut, ShieldCheck, WifiOff } from 'lucide-react-native';
 import { c, mono } from '../medmesh-id/theme';
@@ -61,6 +63,7 @@ function Tile({ label, value, sub, tint = c.ink, w }) {
 }
 
 export default function Overview() {
+  const hz = useHazard();
   const { width } = useWindowDimensions();
   const { account } = useAuth();
   const { now } = useClock(true, 1);
@@ -73,6 +76,7 @@ export default function Overview() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={['top', 'left', 'right']}>
+      <WeatherBackdrop kind={hz.kind} />
       <LinearGradient colors={['rgba(167,139,250,0.2)', 'rgba(5,7,15,0)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }} pointerEvents="none" />
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 130 }}>
         <GovHeader kicker="GOVERNMENT · OVERVIEW" title={'The whole response,\nat a glance.'} />

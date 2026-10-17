@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import WeatherBackdrop from '../dashboard/WeatherBackdrop';
+import { useHazard } from '../dashboard/hazardService';
 import { CircleCheck, EyeOff, Footprints, Sparkles, UserRoundSearch } from 'lucide-react-native';
 import { c, mono } from '../medmesh-id/theme';
 import { useAuth } from '../auth/AuthContext';
@@ -13,6 +15,7 @@ import { DataStatus, GovHeader } from './Overview';
 import { NEED_TINT, post, useGov } from './govService';
 
 export default function Watchlist() {
+  const hz = useHazard();
   const { width } = useWindowDimensions();
   const { account } = useAuth();
   const { now } = useClock(true, 1);
@@ -38,6 +41,7 @@ export default function Watchlist() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={['top', 'left', 'right']}>
+      <WeatherBackdrop kind={hz.kind} />
       <LinearGradient colors={['rgba(244,114,182,0.18)', 'rgba(5,7,15,0)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 340 }} pointerEvents="none" />
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 130 }}>
         <GovHeader kicker="GOVERNMENT · WATCHLIST" title={'Who becomes an\nemergency when the\nnetwork goes down.'} tint="#f472b6" />

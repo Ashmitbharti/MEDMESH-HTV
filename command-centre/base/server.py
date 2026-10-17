@@ -1639,6 +1639,11 @@ def main():
     a = ap.parse_args()
     if a.sim:
         BRIDGE = SimBridge(); S["mode"] = "sim"
+        # the demo starts in a disaster: a thunderstorm warning over Scarborough (MEDMESH_DEMO_HAZARD=NONE to start calm;
+        # the test kit can switch it to snow, flood, wildfire or all clear)
+        hz = os.environ.get("MEDMESH_DEMO_HAZARD", "STORM").upper()
+        if hz in HAZARD_TYPES and hz != "NONE":
+            S["hazard"] = {"type": hz, "severity": "WARN", "area": "Scarborough", "t": now_s(), "set_at": datetime.now().isoformat(timespec="seconds")}
     else:
         BRIDGE = SerialBridge(a.port); S["mode"] = "mesh"
     # ship the same offline area map with the phone app (deployed with app/, cached for offline use)
