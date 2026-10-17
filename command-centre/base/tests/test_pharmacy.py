@@ -40,9 +40,10 @@ def test_request_reaches_pharmacy_with_distance_and_demand():
 def test_over_cap_place_asked_only_when_no_fair_one():
     _reset()
     S.h_pharm(["MSP", "1", "INSULIN:5@70"], "PHARM_MSP", "PHARM_MSP", 0, None)   # MSP now over the $44 cap
-    S.pharm("MVR")["open"] = True                                           # MVR sells at normal price
-    assert [p["id"] for p in S.pick_pharmacies("INSULIN", (43.79, -79.205))] == ["MVR"]
-    S.pharm("MVR")["open"] = False                                          # no fair place left: over-cap ones are still asked
+    S.pharm("MVR")["open"] = True                                           # MVR and FBP sell within the cap
+    assert set(p["id"] for p in S.pick_pharmacies("INSULIN", (43.79, -79.205))) == {"MVR", "FBP"}
+    S.pharm("MVR")["open"] = False
+    S.pharm("FBP")["open"] = False                                          # no fair place left: over-cap ones are still asked
     assert set(p["id"] for p in S.pick_pharmacies("INSULIN", (43.79, -79.205))) == {"MSP", "ECP"}
 
 

@@ -11,6 +11,8 @@ import { useClock } from '../ui3d/project';
 import { ago, Card, Label, Stepper } from '../hospital/controls';
 import { DEMO_BASE } from '../hospital/hospitalService';
 import StockShelf, { levelOf } from './StockShelf';
+import CloudLine from '../components/CloudLine';
+import { mirrorPharmacy } from '../cloud/cloudSync';
 import { usePharmacy } from './PharmacyContext';
 import { capOf, changes, consumed, fullOf, ITEMS, loadStock, LOW, sendStock, stockAcked, stockWires } from './pharmacyService';
 
@@ -25,6 +27,7 @@ export default function Stock() {
   const [sel, setSel] = useState(null);
   const [bumpAt, setBumpAt] = useState(0);
   const [priceText, setPriceText] = useState('');
+  const [cloud, setCloud] = useState(null);
 
   useEffect(() => {
     if (!pharmacy) return;
@@ -54,6 +57,8 @@ export default function Stock() {
   const lv = levelOf(sel, it.qty);
 
   async function send() {
+    setCloud({ busy: true });
+    mirrorPharmacy(pharmacy, view.items, view.open).then(setCloud);
     const at = await sendStock(pharmacy.id, view, keys.length ? keys : Object.keys(view.items));
     const next = { ...view, sentAt: at };
     setSent(next);
@@ -139,6 +144,7 @@ export default function Stock() {
           <Text style={{ color: c.dim, fontSize: 11.5, fontFamily: mono, flex: 1 }} numberOfLines={1}>{wires[0]}</Text>
           <Text style={{ color: c.dim, fontSize: 11.5 }}>{wires.length > 1 ? `${wires.length} msgs` : `${new TextEncoder().encode(wires[0]).length}/200 B`}</Text>
         </View>
+        <CloudLine state={cloud} />
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 8 }}>
           {acked ? <CircleCheck size={14} color={c.green} /> : <Clock size={14} color={c.dim} />}
           <Text style={{ color: c.muted, fontSize: 12.5 }}>

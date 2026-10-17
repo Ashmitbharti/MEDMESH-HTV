@@ -142,11 +142,12 @@ export const PLACES = Object.fromEntries(SITES.filter((s) => s.kind === 'pharmac
 export const DEMO_BASE = { INSULIN: 40, INHALER: 30, EPIPEN: 120, HEART: 25, SEIZURE: 35, BP: 18, STRIPS: 45, DRESS: 8, NEB: 90, O2: 60, CPAPPWR: 150 };
 export const DEMO_OFFERS = {
   MSP: { INSULIN: 41, INHALER: 31, EPIPEN: 125, HEART: 25, SEIZURE: 36, BP: 18, STRIPS: 46, DRESS: 8.5, NEB: 92 },
+  FBP: { INSULIN: 42, INHALER: 30, EPIPEN: 122, HEART: 25, SEIZURE: 35, BP: 18, STRIPS: 47, DRESS: 8 },
   ECP: { INSULIN: 64, INHALER: 29, EPIPEN: 199, HEART: 26, SEIZURE: 35, BP: 19, STRIPS: 70, DRESS: 8 },
   MVR: { INSULIN: 40, INHALER: 30, EPIPEN: 120, HEART: 25, SEIZURE: 35, BP: 18, STRIPS: 45, DRESS: 8, NEB: 90 },
   SHO: { O2: 63, CPAPPWR: 240, NEB: 95 },
 };
-const OPEN = { MSP: true, ECP: true, MVR: false, SHO: true };
+const OPEN = { MSP: true, FBP: true, ECP: true, MVR: false, SHO: true };
 
 function demoPrices() {
   const capPct = 10;

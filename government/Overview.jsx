@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
+import { Linking, Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import WeatherBackdrop from '../dashboard/WeatherBackdrop';
@@ -12,6 +12,7 @@ import { useClock } from '../ui3d/project';
 import { ago, Card, Label } from '../hospital/controls';
 import CityTable from './CityTable';
 import { TRIAGE, useGov } from './govService';
+import { SHN_NETWORK } from '../dashboard/sites';
 
 export function GovHeader({ title, kicker, tint = c.violet }) {
   const { account, signOut } = useAuth();
@@ -126,6 +127,11 @@ export default function Overview() {
 
         <Card>
           <Label>HOSPITALS</Label>
+          <Pressable accessibilityRole="link" onPress={() => Linking.openURL(SHN_NETWORK.source.url)} style={{ marginBottom: 4 }}>
+            <Text style={{ color: c.dim, fontSize: 12, lineHeight: 17 }}>
+              {SHN_NETWORK.name}: {SHN_NETWORK.beds} beds network-wide ({SHN_NETWORK.period}, public) · <Text style={{ color: c.violet }}>{SHN_NETWORK.source.title} ↗</Text>
+            </Text>
+          </Pressable>
           {(d?.hospitals || []).map((h) => (
             <View key={h.id} style={{ marginTop: 10 }}>
               <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>

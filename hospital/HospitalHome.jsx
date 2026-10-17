@@ -11,6 +11,9 @@ import { useAuth } from '../auth/AuthContext';
 import { useMesh } from '../link/meshLink';
 import { useClock } from '../ui3d/project';
 import LinkBanner from '../components/LinkBanner';
+import PublicInfo from '../components/PublicInfo';
+import CloudLine from '../components/CloudLine';
+import { mirrorHospital } from '../cloud/cloudSync';
 import HospitalTower, { FLOORS } from './HospitalTower';
 import { useHospital } from './HospitalContext';
 import { ago, Card, Chip, Dropdown, Label, Stepper } from './controls';
@@ -43,6 +46,7 @@ export default function HospitalHome() {
   const [fig, setFig] = useState(null);
   const [focus, setFocus] = useState('ward');
   const [pulseAt, setPulseAt] = useState(0);
+  const [cloud, setCloud] = useState(null);
 
   useEffect(() => {
     if (!hospital) return;
@@ -58,6 +62,8 @@ export default function HospitalHome() {
   const toggleCap = (k) => set('caps', fig.caps.includes(k) ? fig.caps.replace(k, '') : CAPS.map((x) => x.k).filter((x) => x === k || fig.caps.includes(x)).join(''));
 
   async function send() {
+    setCloud({ busy: true });
+    mirrorHospital(hospital, fig).then(setCloud);
     const at = await sendFigures(hospital.id, fig);
     setSent({ ...fig, sentAt: at });
     setFig((f) => ({ ...f, sentAt: at }));
@@ -103,11 +109,7 @@ export default function HospitalHome() {
         {!hospital ? <Picker choose={choose} /> : !fig ? null : (
           <>
             <Text style={{ color: c.ink, fontSize: 27, lineHeight: 32, fontWeight: '800', letterSpacing: -0.6, marginTop: 16 }}>Your hospital, as the{'\n'}command centre sees it.</Text>
-            {hospital?.beds ? (
-              <Text style={{ color: c.dim, fontSize: 12, lineHeight: 17, marginTop: 8 }}>
-                Public data: {hospital.beds} beds in total{hospital.bedsSimulated ? ' (demo assumption)' : ''}{hospital.source ? ` · ${hospital.source.title}` : ''}. Free beds, ICU and waits below are what this hospital reports during the emergency (simulated in the demo).
-              </Text>
-            ) : null}
+            <PublicInfo site={hospital} tint={c.redl} />
             <LinkBanner link={link} />
 
             <View style={{ marginTop: 10, marginHorizontal: -10 }}>
@@ -195,6 +197,7 @@ export default function HospitalHome() {
               <Text style={{ color: c.dim, fontSize: 11.5, fontFamily: mono, flex: 1 }} numberOfLines={1}>{wire}</Text>
               <Text style={{ color: c.dim, fontSize: 11.5 }}>{new TextEncoder().encode(wire).length}/200 B</Text>
             </View>
+            <CloudLine state={cloud} />
             <Text style={{ color: c.dim, fontSize: 12, lineHeight: 17, marginTop: 8 }}>
               One small radio message. Send one whenever beds change, or at least every 30 minutes: the command centre trusts fresh numbers more and sends patients where there is room.
             </Text>
