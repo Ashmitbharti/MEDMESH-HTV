@@ -4,14 +4,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
-import { Building2, ChevronRight, CircleAlert, HeartPulse, Pill, Radio, User, WifiOff } from 'lucide-react-native';
+import { Building2, ChevronRight, CircleAlert, FlaskConical, HeartPulse, Landmark, Pill, Radio, User, WifiOff } from 'lucide-react-native';
 import MeshRadar from './MeshRadar';
 import s from './Welcome.styles';
 import { c, grad } from '../medmesh-id/theme';
 import { useAuth } from '../auth/AuthContext';
-import { DEMO, ROLES } from '../auth/authService';
+import { DEMO_ACCOUNTS, ROLES } from '../auth/authService';
 
-const ROLE_ICON = { citizen: User, hospital: Building2, pharmacy: Pill };
+const ROLE_ICON = { citizen: User, hospital: Building2, pharmacy: Pill, government: Landmark };
+const ROLE_TINT = { citizen: c.sky, hospital: c.redl, pharmacy: c.green, government: c.violet };
 
 export default function Welcome() {
   const { width } = useWindowDimensions();
@@ -82,13 +83,13 @@ export default function Welcome() {
 
           <View style={s.card}>
             <Text style={s.cardLabel}>I AM SIGNING IN AS</Text>
-            <View style={s.seg}>
+            <View style={[s.seg, { flexWrap: 'wrap' }]}>
               {Object.entries(ROLES).map(([k, v]) => {
                 const I = ROLE_ICON[k];
                 const on = role === k;
                 return (
                   <Pressable key={k} accessibilityRole="radio" accessibilityState={{ checked: on }} onPress={() => setRole(k)}
-                    style={[s.segBtn, on && s.segOn]}>
+                    style={[s.segBtn, { flexBasis: '47%' }, on && s.segOn]}>
                     <I size={15} color={on ? '#e0f2fe' : c.muted} strokeWidth={2.2} />
                     <Text style={[s.segText, on && s.segTextOn]}>{v.label}</Text>
                   </Pressable>
@@ -123,21 +124,36 @@ export default function Welcome() {
           </View>
 
           <Text style={s.demoLabel}>OR TRY A DEMO ACCOUNT · NO INTERNET NEEDED</Text>
-          {Object.entries(DEMO).map(([k, v]) => {
-            const I = ROLE_ICON[k];
-            const tint = k === 'citizen' ? c.sky : k === 'hospital' ? c.redl : c.amber;
-            return (
-              <Pressable key={k} accessibilityRole="button" accessibilityLabel={`Demo ${ROLES[k].label}`} onPress={() => tryDemo(k)}
-                style={({ pressed }) => [s.demo, pressed && s.pressed]}>
-                <View style={[s.demoIcon, { backgroundColor: tint + '1f' }]}><I size={17} color={tint} strokeWidth={2.2} /></View>
-                <View style={{ flex: 1 }}>
-                  <Text style={s.demoTitle}>{ROLES[k].label}</Text>
-                  <Text style={s.demoSub}>{v.email}</Text>
-                </View>
-                <ChevronRight size={18} color={c.dim} />
-              </Pressable>
-            );
-          })}
+          {Object.keys(ROLES).map((r) => (
+            <View key={r} style={{ marginBottom: 6 }}>
+              <Text style={[s.demoLabel, { marginTop: 6, marginBottom: 6, color: ROLE_TINT[r] }]}>{ROLES[r].label.toUpperCase()}</Text>
+              {DEMO_ACCOUNTS.filter((a) => a.role === r).map((a) => {
+                const I = ROLE_ICON[r];
+                const tint = ROLE_TINT[r];
+                return (
+                  <Pressable key={a.id} accessibilityRole="button" accessibilityLabel={`Demo ${a.name || 'new citizen'}`} onPress={() => tryDemo(a.id)}
+                    style={({ pressed }) => [s.demo, pressed && s.pressed]}>
+                    <View style={[s.demoIcon, { backgroundColor: tint + '1f' }]}><I size={17} color={tint} strokeWidth={2.2} /></View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={s.demoTitle}>{a.name || 'New citizen'}</Text>
+                      <Text style={s.demoSub}>{a.sub}</Text>
+                    </View>
+                    <ChevronRight size={18} color={c.dim} />
+                  </Pressable>
+                );
+              })}
+            </View>
+          ))}
+
+          <Pressable accessibilityRole="button" accessibilityLabel="Open the test kit" onPress={() => router.push('/testkit')}
+            style={({ pressed }) => [s.demo, { borderStyle: 'dashed', marginTop: 8 }, pressed && s.pressed]}>
+            <View style={[s.demoIcon, { backgroundColor: 'rgba(251,191,36,0.14)' }]}><FlaskConical size={17} color={c.amber} strokeWidth={2.2} /></View>
+            <View style={{ flex: 1 }}>
+              <Text style={s.demoTitle}>Test kit</Text>
+              <Text style={s.demoSub}>Fire a crash, medicine requests, a flood or a dead node at the command centre, then watch each screen react</Text>
+            </View>
+            <ChevronRight size={18} color={c.dim} />
+          </Pressable>
 
           <View style={s.footer}>
             <Radio size={12} color={c.dim} />

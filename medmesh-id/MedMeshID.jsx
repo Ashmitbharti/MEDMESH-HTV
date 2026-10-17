@@ -64,6 +64,11 @@ const fields = [
     options: ['Hard of hearing', 'Low vision', 'Speech difficulty', 'Limited English', 'Memory or confusion', 'Service animal', 'None'],
     help: 'Shared with the receiving team so they are ready when you arrive.',
   },
+  {
+    key: 'watch', section: 'In an outage', label: 'If the phone network fails, may planners count you and check on you if you go quiet?',
+    options: ['Yes', 'No'],
+    help: 'Planners only see how many people in your area need oxygen, power or dialysis. Only responders get your home location, and only if you stop checking in.',
+  },
   { key: 'contact', section: 'Contact', label: 'Emergency contact', placeholder: 'Name and phone number', multiline: true },
 ];
 

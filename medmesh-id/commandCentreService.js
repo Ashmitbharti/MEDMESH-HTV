@@ -30,7 +30,16 @@ export function toCommandCentre(profile) {
     home_hospital: HOSPITAL_CODES[d.home_hospital] || null,
     lives_alone: d.lives_alone === 'Yes',
     mobility: d.mobility || '',
+    watch: d.watch === 'Yes',
   };
+}
+
+// Only for people who opted in to the vulnerable-persons registry: where to send a wellness check (GPS, kept offline)
+async function homeFor(profile) {
+  if ((profile.details || {}).watch !== 'Yes') return null;
+  const { getPosition } = await import('../dashboard/hazardService');
+  const p = await getPosition().catch(() => null);
+  return p ? `${p.lat.toFixed(4)},${p.lon.toFixed(4)}` : null;
 }
 
 export async function syncCommandCentre(profile) {
@@ -43,7 +52,7 @@ export async function syncCommandCentre(profile) {
     const res = await fetch(`${base.replace(/\/$/, '')}/api/profile`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(toCommandCentre(profile)),
+      body: JSON.stringify({ ...toCommandCentre(profile), home: await homeFor(profile) }),
       signal: controller.signal,
     });
     const body = await res.json().catch(() => ({}));

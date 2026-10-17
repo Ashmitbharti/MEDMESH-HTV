@@ -6,14 +6,21 @@ export const ROLES = {
   citizen: { label: 'Citizen', home: '/' },
   hospital: { label: 'Hospital', home: '/hospital' },
   pharmacy: { label: 'Pharmacy', home: '/pharmacy' },
+  government: { label: 'Government', home: '/government' },
 };
 
-// Demo accounts work with no backend, so the app can be shown fully offline.
-export const DEMO = {
-  citizen: { email: 'citizen@medmesh.demo', name: 'Margaret' },
-  hospital: { email: 'centenary@medmesh.demo', name: 'Centenary Hospital' },
-  pharmacy: { email: 'pharmacy@medmesh.demo', name: 'Morningside Pharmacy' },
-};
+// Demo accounts work with no backend, so the app can be shown fully offline. Several per role so every case can be tested.
+export const DEMO_ACCOUNTS = [
+  { id: 'citizen-margaret', role: 'citizen', name: 'Margaret', email: 'citizen@medmesh.demo', sub: 'Citizen · 79, heart failure, home oxygen, lives alone · MedMesh ID ready' },
+  { id: 'citizen-new', role: 'citizen', name: '', email: 'newcitizen@medmesh.demo', sub: 'Citizen · brand-new phone, no MedMesh ID yet (test the setup questions)' },
+  { id: 'hospital-cen', role: 'hospital', name: 'Centenary Hospital', email: 'centenary@medmesh.demo', sub: 'Hospital · cardiac, trauma, obstetrics, paediatrics, dialysis' },
+  { id: 'hospital-sgh', role: 'hospital', name: 'Scarborough General', email: 'sgh@medmesh.demo', sub: 'Hospital · busiest ER (95 min wait)' },
+  { id: 'pharmacy-msp', role: 'pharmacy', name: 'Morningside Pharmacy', email: 'pharmacy@medmesh.demo', sub: 'Pharmacy · fair prices' },
+  { id: 'pharmacy-ecp', role: 'pharmacy', name: 'Ellesmere Community Rx', email: 'ellesmere@medmesh.demo', sub: 'Pharmacy · insulin and EpiPen above the cap (tests price flags)' },
+  { id: 'supplier-sho', role: 'pharmacy', name: 'Scarborough Home Oxygen (demo)', email: 'oxygen@medmesh.demo', sub: 'Home-oxygen supplier · oxygen, CPAP power' },
+  { id: 'government', role: 'government', name: 'City Emergency Operations (demo)', email: 'eoc@medmesh.demo', sub: 'Government · read-only overview, analysis, watchlist' },
+];
+export const DEMO = Object.fromEntries(Object.keys(ROLES).map((r) => [r, DEMO_ACCOUNTS.find((a) => a.role === r)]));
 
 const KEY = 'medmesh-auth';
 const supabaseReady = () => !!(process.env.EXPO_PUBLIC_SUPABASE_URL && process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
@@ -71,8 +78,9 @@ export async function signUp(email, password, role, name) {
   }
 }
 
-export function demoSignIn(role) {
-  return remember({ mode: 'demo', email: DEMO[role].email, role, name: DEMO[role].name });
+export function demoSignIn(which) {
+  const a = DEMO_ACCOUNTS.find((x) => x.id === which) || DEMO[which];
+  return remember({ mode: 'demo', email: a.email, role: a.role, name: a.name, demoId: a.id });
 }
 
 export async function signOut() {

@@ -12,7 +12,7 @@ import { latest, newId, queue } from '../dashboard/outbox';
 import LinkBanner from '../components/LinkBanner';
 import { useMesh } from '../link/meshLink';
 
-// Community check-in: O|id|SAFE or NEED|name|lat,lon  (handled by the command centre's h_checkin)
+// Community check-in: O|id|SAFE or NEED|name|lat,lon|medmeshID  (handled by the command centre's h_checkin)
 export default function ImSafe() {
   const { link, outbox } = useMesh();
   const [profile, setProfile] = useState(null);
@@ -33,7 +33,8 @@ export default function ImSafe() {
     const id = newId();
     const name = (d.name || 'Unknown').replace(/\|/g, ' ').slice(0, 24);
     const where = pos ? `${pos.lat.toFixed(4)},${pos.lon.toFixed(4)}` : '';
-    const item = await queue('checkin', `O|${id}|${kind}|${name}|${where}`, { status: 'queued', checkKind: kind });
+    // the MedMesh ID (if any) tells the opt-in registry this person is fine, so nobody is sent to check on them
+    const item = await queue('checkin', `O|${id}|${kind}|${name}|${where}|${profile?.medmeshId || ''}`, { status: 'queued', checkKind: kind });
     setLast(item);
     setBusy(false);
   }

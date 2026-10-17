@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import * as auth from './authService';
+import { seedDemo } from './demoSeed';
 
 const Ctx = createContext(null);
 
@@ -17,7 +18,7 @@ export function AuthProvider({ children }) {
     if (!a.needsConfirmation) setAccount(a);
     return a;
   }, []);
-  const demo = useCallback(async (role) => { const a = await auth.demoSignIn(role); setAccount(a); return a; }, []);
+  const demo = useCallback(async (which) => { const a = await auth.demoSignIn(which); await seedDemo(a); setAccount(a); return a; }, []);
   const signOut = useCallback(async () => { await auth.signOut(); setAccount(null); }, []);
 
   const value = useMemo(() => ({ account, ready, signIn, signUp, demo, signOut }), [account, ready, signIn, signUp, demo, signOut]);

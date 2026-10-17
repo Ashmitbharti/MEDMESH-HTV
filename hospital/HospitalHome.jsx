@@ -3,7 +3,7 @@ import { Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { Building2, CircleCheck, Clock, LogOut, Radio, Send, Stethoscope, TriangleAlert } from 'lucide-react-native';
+import { Building2, CircleCheck, Clock, FlaskConical, LogOut, Radio, Send, Stethoscope, TriangleAlert } from 'lucide-react-native';
 import { c, mono } from '../medmesh-id/theme';
 import { useAuth } from '../auth/AuthContext';
 import { useMesh } from '../link/meshLink';
@@ -85,6 +85,10 @@ export default function HospitalHome() {
             <Text style={{ color: c.redl, fontFamily: mono, fontSize: 10.5, letterSpacing: 2, fontWeight: '700' }}>HOSPITAL ACCOUNT</Text>
             <Text style={{ color: c.ink, fontSize: 17, fontWeight: '800' }} numberOfLines={1}>{hospital?.name || account?.name}</Text>
           </View>
+          <Pressable accessibilityRole="button" accessibilityLabel="Open the test kit" onPress={() => router.push('/testkit')}
+            style={{ width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: c.line2 }}>
+            <FlaskConical size={17} color={c.amber} />
+          </Pressable>
           <Pressable accessibilityRole="button" accessibilityLabel="Sign out" onPress={async () => { await signOut(); router.replace('/welcome'); }}
             style={{ width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: c.line2 }}>
             <LogOut size={17} color={c.muted} />
