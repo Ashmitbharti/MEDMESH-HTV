@@ -75,6 +75,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
   },
+  historyRow: {
+    borderTopWidth: 1,
+    borderTopColor: '#303541',
+    paddingTop: 14,
+    marginTop: 14,
+  },
   resumeText: {
     color: '#7dcfff',
     fontSize: 16,

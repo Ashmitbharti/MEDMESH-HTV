@@ -33,6 +33,26 @@ const styles = StyleSheet.create({
   summaryValue: { color: '#f5f6fa', fontSize: 16, marginTop: 6 },
   error: { color: '#ff8c9d', fontSize: 14, lineHeight: 21, marginTop: 16 },
   pressed: { opacity: 0.7 },
+  deliveryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 12,
+  },
+  deliveryDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#59303b',
+  },
+  deliveryDotDone: {
+    backgroundColor: '#7dcfff',
+  },
+  deliveryText: {
+    flex: 1,
+    color: '#aeb3bd',
+    fontSize: 13,
+  },
   cameraFrame: {
     height: 240,
     borderRadius: 16,

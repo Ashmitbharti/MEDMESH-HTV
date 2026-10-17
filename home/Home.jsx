@@ -4,7 +4,8 @@ import { router, useFocusEffect } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './Home.styles';
-import { createRequest, loadRequest } from '../emergency/requestService';
+import { createRequest, loadRequest, loadRequestHistory, retryDelivery } from '../emergency/requestService';
+import { deliveryLabel } from '../emergency/requestLifecycle';
 
 export default function Home() {
   const [selected, setSelected] = useState(null);
@@ -13,8 +14,24 @@ export default function Home() {
   const [activeRequest, setActiveRequest] = useState(null);
   const [opening, setOpening] = useState(false);
   const [error, setError] = useState('');
+  const [history, setHistory] = useState([]);
   const hold = useRef(null);
   const openingRef = useRef(false);
+  const retrying = useRef(false);
+
+  async function retryPrevious(id) {
+    if (retrying.current) return;
+    retrying.current = true;
+    setError('');
+    try {
+      const saved = await retryDelivery(id);
+      setHistory((current) => current.map((item) => item.id === saved.id ? saved : item));
+    } catch (error) {
+      setError(error.message || 'Cancellation delivery is not confirmed.');
+    } finally {
+      retrying.current = false;
+    }
+  }
 
   const cancelHold = useCallback((type) => {
     if (type && hold.current?.type !== type) return;
@@ -25,8 +42,11 @@ export default function Home() {
 
   useFocusEffect(useCallback(() => {
     let active = true;
-    loadRequest().then((stored) => {
-      if (active) setActiveRequest(stored?.phase !== 'cancelled' ? stored : null);
+    Promise.all([loadRequest(), loadRequestHistory()]).then(([stored, previous]) => {
+      if (active) {
+        setActiveRequest(stored?.phase !== 'cancelled' ? stored : null);
+        setHistory(stored?.phase === 'cancelled' ? [stored, ...previous] : previous);
+      }
     }).catch(() => {
       if (active) setError('Could not load your local requests. Please try again.');
     });
@@ -154,12 +174,29 @@ export default function Home() {
             <Text style={styles.cardTitle}>Saved emergency request</Text>
             <Text style={styles.cardDescription}>
               {activeRequest.mode === 'self' ? 'For you' : 'For another person'}
-              {' · '}Not sent. No mesh connection.
+              {' · '}{deliveryLabel(activeRequest)}
             </Text>
             <Text style={styles.notice}>Resume or cancel this request before starting another.</Text>
             <Pressable accessibilityRole="button" style={styles.resumeButton} onPress={() => router.push('/sos')}>
               <Text style={styles.resumeText}>Resume request</Text>
             </Pressable>
+          </View>
+        ) : null}
+        {history.length ? (
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Recent requests</Text>
+            {history.map((item) => (
+              <View key={item.id} style={styles.historyRow}>
+                <Text style={styles.cardDescription}>{item.mode === 'self' ? 'For you' : 'For another person'} · {item.medmeshId || 'No ID'}</Text>
+                <Text style={styles.notice}>{deliveryLabel(item)}</Text>
+                <Text style={styles.notice}>{new Date(item.createdAt).toLocaleString()}</Text>
+                {!item.cancellationConfirmedAt ? (
+                  <Pressable accessibilityRole="button" style={styles.resumeButton} onPress={() => retryPrevious(item.id)}>
+                    <Text style={styles.resumeText}>Retry cancellation delivery</Text>
+                  </Pressable>
+                ) : null}
+              </View>
+            ))}
           </View>
         ) : null}
         {error ? <Text style={styles.notice} accessibilityRole="alert">{error}</Text> : null}
