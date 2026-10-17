@@ -2,13 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, Pressable, ScrollView, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import SosButton from './SosButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './Home.styles';
-import { createRequest, loadRequest, loadRequestHistory, retryDelivery } from '../emergency/requestService';
+import { createRequest, loadRequest, loadRequestHistory, retryDelivery, subscribeRequest, syncCloudRequest } from '../emergency/requestService';
 import { deliveryLabel } from '../emergency/requestLifecycle';
 
 export default function Home() {
-  const [selected, setSelected] = useState(null);
   const [holding, setHolding] = useState(null);
   const [remaining, setRemaining] = useState(3000);
   const [activeRequest, setActiveRequest] = useState(null);
@@ -42,15 +42,23 @@ export default function Home() {
 
   useFocusEffect(useCallback(() => {
     let active = true;
+    const unsubscribe = subscribeRequest((saved) => {
+      if (!active) return;
+      const finished = ['cancelled', 'closed'].includes(saved.phase);
+      setActiveRequest((current) => current?.id === saved.id ? finished ? null : saved : current);
+      if (finished) setHistory((current) => [saved, ...current.filter((item) => item.id !== saved.id)]);
+    });
     Promise.all([loadRequest(), loadRequestHistory()]).then(([stored, previous]) => {
       if (active) {
-        setActiveRequest(stored?.phase !== 'cancelled' ? stored : null);
-        setHistory(stored?.phase === 'cancelled' ? [stored, ...previous] : previous);
+        const finished = ['cancelled', 'closed'].includes(stored?.phase);
+        setActiveRequest(finished ? null : stored);
+        setHistory(finished ? [stored, ...previous] : previous);
+        if (stored && stored.phase !== 'closed') syncCloudRequest(stored.id).catch(() => {});
       }
     }).catch(() => {
       if (active) setError('Could not load your local requests. Please try again.');
     });
-    return () => { active = false; cancelHold(); };
+    return () => { active = false; unsubscribe(); cancelHold(); };
   }, [cancelHold]));
 
   useEffect(() => {
@@ -73,7 +81,6 @@ export default function Home() {
   function startHold(type) {
     if (hold.current || openingRef.current || activeRequest) return;
     hold.current = { type, started: Date.now() };
-    setSelected(null);
     setRemaining(3000);
     setHolding(type);
   }
@@ -82,7 +89,6 @@ export default function Home() {
     if (hold.current?.type !== type || Date.now() - hold.current.started < 3000) return;
     if (openingRef.current) return;
     openingRef.current = true;
-    setSelected(type);
     cancelHold();
     setOpening(true);
     setError('');
@@ -107,69 +113,20 @@ export default function Home() {
         </Pressable>
         <Text style={styles.description}>Who needs help?</Text>
 
-        <Pressable
-          accessibilityRole="button"
-          accessibilityHint="Press and hold for three seconds. Release early to cancel."
-          disabled={opening || !!activeRequest}
-          accessibilityState={{ selected: selected === 'self', disabled: opening || !!activeRequest }}
-          style={({ pressed }) => [
-            styles.card,
-            styles.troubleCard,
-            selected === 'self' && styles.troubleSelected,
-            pressed && styles.pressed,
-          ]}
-          delayLongPress={3000}
-          onPressIn={() => startHold('self')}
-          onPressOut={() => cancelHold('self')}
-          onLongPress={() => finishHold('self')}
-        >
-          <View style={[styles.icon, styles.troubleIcon]}>
-            <Ionicons name="alert-circle-outline" size={28} color="#ff8c9d" />
-          </View>
-          <Text style={styles.cardTitle}>{"I'm in trouble"}</Text>
-          <Text style={styles.cardDescription}>Get emergency help for yourself</Text>
-          <Text style={styles.holdLabel}>
-            {holding === 'self' ? `Keep holding · ${Math.ceil(remaining / 1000)}s` : 'Press and hold for 3 seconds'}
-          </Text>
-          <View style={styles.progressTrack}>
-            <View style={[
-              styles.progressFill,
-              styles.troubleProgress,
-              { width: holding === 'self' ? `${(1 - remaining / 3000) * 100}%` : '0%' },
-            ]} />
-          </View>
-        </Pressable>
+        {['self', 'other'].map((mode) => (
+          <SosButton key={mode} mode={mode} holding={holding} remaining={remaining}
+            disabled={opening || !!activeRequest} onStart={startHold} onFinish={finishHold} onCancel={cancelHold} />
+        ))}
 
-        <Pressable
-          accessibilityRole="button"
-          accessibilityHint="Press and hold for three seconds. Release early to cancel."
-          disabled={opening || !!activeRequest}
-          accessibilityState={{ selected: selected === 'other', disabled: opening || !!activeRequest }}
-          style={({ pressed }) => [
-            styles.card,
-            selected === 'other' && styles.helpSelected,
-            pressed && styles.pressed,
-          ]}
-          delayLongPress={3000}
-          onPressIn={() => startHold('other')}
-          onPressOut={() => cancelHold('other')}
-          onLongPress={() => finishHold('other')}
-        >
-          <View style={[styles.icon, styles.helpIcon]}>
-            <Ionicons name="people-outline" size={28} color="#7dcfff" />
+        <Pressable accessibilityRole="button" style={styles.firstAidCard} onPress={() => router.push('/first-aid')}>
+          <View style={styles.firstAidIcon}><Ionicons name="medical-outline" size={26} color="#87dfb1" /></View>
+          <View style={styles.helperText}>
+            <Text style={styles.helperTitle}>First aid</Text>
+            <Text style={styles.cardDescription}>Offline guides · CPR beat · emergency timers</Text>
           </View>
-          <Text style={styles.cardTitle}>Help someone else</Text>
-          <Text style={styles.cardDescription}>Help a person who needs assistance</Text>
-          <Text style={styles.holdLabel}>
-            {holding === 'other' ? `Keep holding · ${Math.ceil(remaining / 1000)}s` : 'Press and hold for 3 seconds'}
-          </Text>
-          <View style={styles.progressTrack}>
-            <View style={[
-              styles.progressFill,
-              { width: holding === 'other' ? `${(1 - remaining / 3000) * 100}%` : '0%' },
-            ]} />
-          </View>
+          <Ionicons name="chevron-forward" size={20} color="#87dfb1" />
         </Pressable>
+        <Text style={styles.notice}>First aid works offline. Sending requests still needs a connection.</Text>
 
         {opening ? <Text style={styles.notice}>Saving your request…</Text> : null}
         {activeRequest ? (
@@ -193,7 +150,7 @@ export default function Home() {
                 <Text style={styles.cardDescription}>{item.mode === 'self' ? 'For you' : 'For another person'} · {item.medmeshId || 'No ID'}</Text>
                 <Text style={styles.notice}>{deliveryLabel(item)}</Text>
                 <Text style={styles.notice}>{new Date(item.createdAt).toLocaleString()}</Text>
-                {!item.cancellationConfirmedAt ? (
+                {item.phase === 'cancelled' && !item.cancellationConfirmedAt ? (
                   <Pressable accessibilityRole="button" style={styles.resumeButton} onPress={() => retryPrevious(item.id)}>
                     <Text style={styles.resumeText}>Retry cancellation delivery</Text>
                   </Pressable>

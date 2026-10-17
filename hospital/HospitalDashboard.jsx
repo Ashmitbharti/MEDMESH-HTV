@@ -7,6 +7,8 @@ import { hospitals } from '../command-center/facilities';
 import { loadHospitals } from '../command-center/hospitalService';
 import { readHospitalUpdates, saveHospitalAvailability, syncHospitalAvailability } from './hospitalStore';
 import styles from './Hospital.styles';
+import HospitalSupplies from '../supplies/HospitalSupplies';
+import StaffEmergencies from '../emergency/StaffEmergencies';
 
 function initialValues(hospital) {
   const status = hospital.demoAvailability || {};
@@ -94,6 +96,7 @@ export default function HospitalDashboard() {
               <Ionicons name="flask-outline" size={22} color="#c5a3ff" />
               <Text style={styles.bannerText}>Demo workspace · all availability entered here is simulated.</Text>
             </View>
+            <StaffEmergencies key={`sos-${hospital.hosid}`} mode="hospital" hospitalId={hospital.hosid} />
             <View style={styles.stats}>
               {[
                 ['Total beds', `${hospital.capacity.beds}`, hospital.capacity.simulated ? 'Simulated capacity' : 'Publicly listed; year unknown'],
@@ -149,16 +152,7 @@ export default function HospitalDashboard() {
               ) : null}
               <Text style={styles.hint}>Reopen Command Center → Hospitals on this phone to see local edits. Other devices need a successful cloud sync or a future mesh connection.</Text>
             </View>
-            <View style={styles.card}>
-              <Text style={styles.sectionTitle}>Incoming emergencies</Text>
-              <Text style={styles.body}>No emergency request feed connected yet.</Text>
-              <Text style={styles.hint}>Assignments and patient arrival tracking will appear here once Command Center routing is connected.</Text>
-            </View>
-            <View style={styles.card}>
-              <Text style={styles.sectionTitle}>Pharmacy supplies</Text>
-              <Text style={styles.body}>Supply requests are not connected yet.</Text>
-              <Text style={styles.hint}>Phone: {hospital.phone}</Text>
-            </View>
+            <HospitalSupplies key={hospital.hosid} hospital={hospital} />
           </>
         ) : null}
         {error ? <Text style={styles.error} accessibilityRole="alert">{error}</Text> : null}

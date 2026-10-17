@@ -2,11 +2,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loadProfile } from '../medmesh-id/profileService';
 import { expireRequest } from './questions';
 import { applyReceipt, reviseRequest, validReceipt } from './requestLifecycle';
+import { submitEmergency } from './cloudService';
 
 const storageKey = `medmesh-request:${process.env.EXPO_PUBLIC_SUPABASE_URL || 'offline'}`;
 let queue = Promise.resolve();
 let transport = null;
 const listeners = new Set();
+const syncing = new Map();
+let syncTimer;
+
+function scheduleSync(id) {
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => { syncCloudRequest(id).catch(() => {}); }, 700);
+}
 
 export function subscribeRequest(listener) {
   listeners.add(listener);
@@ -41,6 +49,7 @@ export function loadRequest() {
     }
     const next = reviseRequest(current, expireRequest(current));
     if (next !== current) await AsyncStorage.setItem(storageKey, JSON.stringify(next));
+    if (next !== current) scheduleSync(next.id);
     return next;
   });
 }
@@ -49,7 +58,7 @@ export function createRequest(mode) {
   return serialize(async () => {
     const stored = await AsyncStorage.getItem(storageKey);
     const previous = stored ? JSON.parse(stored) : null;
-    if (previous && previous.phase !== 'cancelled') return previous;
+    if (previous && !['cancelled', 'closed'].includes(previous.phase)) return previous;
     if (previous) {
       const historyKey = `${storageKey}:history`;
       const history = JSON.parse(await AsyncStorage.getItem(historyKey) || '[]');
@@ -86,6 +95,7 @@ export function createRequest(mode) {
       escalation: null,
     };
     await AsyncStorage.setItem(storageKey, JSON.stringify(request));
+    scheduleSync(request.id);
     return request;
   });
 }
@@ -98,6 +108,7 @@ export function updateRequest(id, update) {
     const next = reviseRequest(current, update(current));
     if (next !== current) await AsyncStorage.setItem(storageKey, JSON.stringify(next));
     notify(next);
+    if (next !== current) scheduleSync(next.id);
     return next;
   });
 }
@@ -129,7 +140,7 @@ export async function retryDelivery(id) {
   const active = await loadRequest();
   const request = active?.id === id ? active : (await loadRequestHistory()).find((item) => item.id === id);
   if (!request || request.id !== id) throw new Error('This request is no longer active.');
-  if (!transport) throw new Error('No mesh node connected. Your request and updates are saved on this phone.');
+  if (!transport) return syncCloudRequest(id);
   const packet = {
     requestId: request.id,
     revision: request.revision || 1,
@@ -169,5 +180,52 @@ export async function retryDelivery(id) {
 
 export async function loadRequestHistory() {
   await queue;
+  return JSON.parse(await AsyncStorage.getItem(`${storageKey}:history`) || '[]');
+}
+
+export async function syncCloudRequest(id) {
+  if (syncing.has(id)) return syncing.get(id);
+  const promise = (async () => {
+    const active = await loadRequest();
+    const request = active?.id === id ? active : (await loadRequestHistory()).find((item) => item.id === id);
+    if (!request) return null;
+    try {
+      const remote = await submitEmergency(request);
+      return await serialize(async () => {
+        const stored = JSON.parse(await AsyncStorage.getItem(storageKey) || 'null');
+        const isActive = stored?.id === id;
+        const history = isActive ? [] : await loadHistoryDirect();
+        const current = isActive ? stored : history.find((item) => item.id === id);
+        if (!current) return null;
+        const receipt = { requestId: id, revision: remote.revision, source: 'command_centre', stage: 'command_received' };
+        let next = applyReceipt(current, receipt);
+        if (remote.ambulance_dispatched_at) next = applyReceipt(next, { ...receipt, stage: 'responder_dispatched' });
+        if (remote.status === 'cancelled' && current.phase === 'cancelled') {
+          next = applyReceipt(next, { ...receipt, stage: 'cancellation_received' });
+        }
+        next = { ...next, cloud: remote, deliveryTransport: 'supabase', lastSyncError: null };
+        if (remote.status === 'closed') next = { ...next, phase: 'closed', deadline: null };
+        if (isActive) await AsyncStorage.setItem(storageKey, JSON.stringify(next));
+        else await AsyncStorage.setItem(`${storageKey}:history`, JSON.stringify(history.map((item) => item.id === id ? next : item)));
+        notify(next);
+        if (!['closed', 'cancelled'].includes(remote.status) && (current.revision || 1) > remote.revision) scheduleSync(id);
+        return next;
+      });
+    } catch (error) {
+      await serialize(async () => {
+        const current = JSON.parse(await AsyncStorage.getItem(storageKey) || 'null');
+        if (current?.id !== id) return;
+        const next = { ...current, lastSyncError: error.message || 'Delivery is not confirmed.' };
+        await AsyncStorage.setItem(storageKey, JSON.stringify(next));
+        notify(next);
+      });
+      throw error;
+    }
+  })();
+  syncing.set(id, promise);
+  try { return await promise; } finally { syncing.delete(id); }
+}
+
+async function loadHistoryDirect() {
   return JSON.parse(await AsyncStorage.getItem(`${storageKey}:history`) || '[]');
 }

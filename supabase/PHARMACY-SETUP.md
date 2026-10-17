@@ -2,6 +2,8 @@
 
 Use the same Supabase project as the rest of MedMesh. In SQL Editor, run all of `migrations/20261017040000_pharmacies.sql` once. It creates the tables, permissions, demo save function and seed records. Rerunning it preserves existing inventory edits.
 
+Then run `migrations/20261017050000_supply_requests.sql` to enable hospital supply requests and extend the stock catalogue with ibuprofen and oral rehydration salts. Run migrations in order; the supply migration updates the earlier five-item pharmacy save function for the seven-item catalogue.
+
 | Pharmacy | PharmID |
 | --- | --- |
 | Care IDA Pharmacy | 200001 |
@@ -26,4 +28,6 @@ The `update_demo_pharmacy_status` function permits authenticated demo sessions t
 
 Public details retain their original sources. Inventory, preparation times and operating states are fictional. Seed timestamps describe database insertion, not real pharmacy reports. Real availability is initially unknown.
 
-LoRa transport, real staff access, supply request assignment, acceptance and pickup tracking are not connected. The dashboard shows the incoming request section as a placeholder.
+Also run `migrations/20261017060000_command_supply_routing.sql`. Hospital dashboards send quantities and priority to Command Center first. The Supplies tab lets the operator assign an open pharmacy with sufficient simulated stock. Only assigned requests reach that pharmacy's inbox. Pharmacy staff can accept/reserve stock, decline, mark ready, and confirm collection. Each dashboard has a Refresh requests button; there is no automatic Realtime subscription.
+
+LoRa transport and real staff access are not connected. All requests and inventory remain simulated. The demo RPCs allow authenticated demo participants to act on simulated requests across the three seeded hospitals/pharmacies; they are not production role authentication.

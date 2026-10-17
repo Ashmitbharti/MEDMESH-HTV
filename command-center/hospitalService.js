@@ -2,7 +2,7 @@ import { getSupabase } from '../lib/supabase';
 import { hospitals } from './facilities';
 import { readHospitalUpdates } from '../hospital/hospitalStore';
 
-export async function loadHospitals() {
+export async function loadHospitals({ includeLocal = true } = {}) {
   const local = await readHospitalUpdates();
   let data;
   let cloud = true;
@@ -50,7 +50,7 @@ export async function loadHospitals() {
     };
   }) : hospitals;
   return records.map((hospital) => {
-    const update = local[hospital.hosid];
+    const update = includeLocal ? local[hospital.hosid] : null;
     if (!update || cloud && !update.pending) return { ...hospital, loadedFromCloud: cloud };
     return {
       ...hospital,

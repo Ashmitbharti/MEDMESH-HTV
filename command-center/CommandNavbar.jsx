@@ -17,6 +17,10 @@ export default function CommandNavbar() {
       tabBarItemStyle: styles.item,
       tabBarHideOnKeyboard: true,
     }}>
+      <Tabs.Screen name="sos" options={{
+        title: 'SOS',
+        tabBarIcon: ({ color, size }) => <Ionicons name="alert-circle-outline" size={size} color={color} />,
+      }} />
       <Tabs.Screen name="index" options={{
         title: 'Hospitals',
         tabBarIcon: ({ color, size, focused }) => (
@@ -27,6 +31,12 @@ export default function CommandNavbar() {
         title: 'Pharmacies',
         tabBarIcon: ({ color, size, focused }) => (
           <Ionicons name={focused ? 'medkit' : 'medkit-outline'} size={size} color={color} />
+        ),
+      }} />
+      <Tabs.Screen name="supplies" options={{
+        title: 'Supplies',
+        tabBarIcon: ({ color, size, focused }) => (
+          <Ionicons name={focused ? 'cube' : 'cube-outline'} size={size} color={color} />
         ),
       }} />
     </Tabs>

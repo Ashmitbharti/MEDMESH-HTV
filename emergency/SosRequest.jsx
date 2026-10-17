@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useFocusEffect } from 'expo-router';
 import { answerRequest, expireRequest, questions, startQuestions } from './questions';
 import QrIdentification from './QrIdentification';
-import { loadRequest, retryDelivery, subscribeRequest, updateRequest } from './requestService';
+import { loadRequest, retryDelivery, subscribeRequest, syncCloudRequest, updateRequest } from './requestService';
 import { addConditionUpdate, attachCoordinates, cancelRequest, updateLandmark } from './requestLifecycle';
 import { captureLocation } from './locationService';
 import LocationCapture from './LocationCapture';
@@ -56,6 +56,18 @@ export default function SosRequest() {
   useEffect(() => subscribeRequest((saved) => {
     setRequest((current) => current?.id === saved.id ? saved : current);
   }), []);
+
+  const requestId = request?.id;
+  useEffect(() => {
+    if (!focused || !requestId) return;
+    function refresh() {
+      if (AppState.currentState === 'active') syncCloudRequest(requestId).catch(() => {});
+    }
+    refresh();
+    const timer = setInterval(refresh, 10000);
+    const subscription = AppState.addEventListener('change', (state) => { if (state === 'active') refresh(); });
+    return () => { clearInterval(timer); subscription.remove(); };
+  }, [focused, requestId]);
 
   useEffect(() => {
     if (!focused || !request || request.phase !== 'questions' || missed) return;
@@ -164,6 +176,9 @@ export default function SosRequest() {
     <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>{request?.mode === 'other' ? 'Help someone else' : 'Emergency request'}</Text>
+        <Pressable accessibilityRole="button" style={styles.answerButton} onPress={() => router.push('/first-aid')}>
+          <Text style={styles.buttonText}>First aid · offline guides and CPR beat</Text>
+        </Pressable>
         {request ? <RequestStatus request={request} /> : null}
 
         {loading ? <Text style={styles.description}>Loading your local request…</Text> : null}
@@ -175,8 +190,9 @@ export default function SosRequest() {
               {' · '}{request.medmeshId || 'No MedMesh ID attached'}
             </Text>
             <Text style={styles.hint}>Request saved on this phone.</Text>
+            {request.lastSyncError ? <Text style={styles.error}>Cloud delivery pending: {request.lastSyncError}</Text> : null}
 
-            {request.escalation && request.phase !== 'cancelled' ? (
+            {request.escalation && !['cancelled', 'closed'].includes(request.phase) ? (
               <View style={styles.statusCard}>
                 <Text style={styles.statusTitle}>No response recorded</Text>
                 <Text style={styles.description}>
@@ -247,7 +263,7 @@ export default function SosRequest() {
               </View>
             ) : null}
 
-            {request.phase !== 'cancelled' && request.phase !== 'identify' ? (
+            {!['cancelled', 'closed', 'identify'].includes(request.phase) ? (
               <View style={styles.card}>
                 <Text style={styles.question}>Update your request</Text>
                 <Text style={styles.hint}>Changes are saved here and need delivery acknowledgment.</Text>
@@ -291,7 +307,7 @@ export default function SosRequest() {
             ) : null}
 
             <Pressable accessibilityRole="button" disabled={sending || busy} style={styles.answerButton} onPress={retry}>
-              <Text style={styles.buttonText}>{sending ? 'Checking delivery…' : request.phase === 'cancelled' ? 'Retry cancellation delivery' : 'Retry sending request'}</Text>
+              <Text style={styles.buttonText}>{sending ? 'Checking delivery…' : request.phase === 'cancelled' ? 'Retry cancellation delivery' : 'Send / refresh request status'}</Text>
             </Pressable>
 
             {request.phase === 'ready' ? (
@@ -325,7 +341,7 @@ export default function SosRequest() {
               </View>
             ) : null}
 
-            {request.phase === 'cancelled' ? (
+            {request.phase === 'closed' ? <Text style={styles.description}>The hospital confirmed patient arrival and closed this request.</Text> : request.phase === 'cancelled' ? (
               <Text style={styles.description}>Cancellation saved. Check its acknowledgment above.</Text>
             ) : (
               <Pressable accessibilityRole="button" disabled={busy} style={styles.cancelButton} onPress={cancel}>

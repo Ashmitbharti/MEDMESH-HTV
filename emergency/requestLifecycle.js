@@ -46,12 +46,12 @@ export function applyReceipt(request, receipt, now = Date.now()) {
 }
 
 export function cancelRequest(request, now = Date.now()) {
-  if (request.phase === 'cancelled') return request;
+  if (['cancelled', 'closed'].includes(request.phase)) return request;
   return { ...request, phase: 'cancelled', deadline: null, cancelledAt: new Date(now).toISOString() };
 }
 
 export function addConditionUpdate(request, text, now = Date.now()) {
-  if (request.phase === 'cancelled') throw new Error('This request has been cancelled.');
+  if (['cancelled', 'closed'].includes(request.phase)) throw new Error('This request is no longer active.');
   if (typeof text !== 'string' || !text.trim()) throw new Error('Describe the change before saving.');
   return {
     ...request,
@@ -60,7 +60,7 @@ export function addConditionUpdate(request, text, now = Date.now()) {
 }
 
 export function attachCoordinates(request, fix) {
-  if (request.phase === 'cancelled') throw new Error('This request has been cancelled.');
+  if (['cancelled', 'closed'].includes(request.phase)) throw new Error('This request is no longer active.');
   if (!Number.isFinite(fix.latitude) || Math.abs(fix.latitude) > 90
     || !Number.isFinite(fix.longitude) || Math.abs(fix.longitude) > 180) {
     throw new Error('The phone returned an invalid location. Enter a landmark instead.');
@@ -69,12 +69,13 @@ export function attachCoordinates(request, fix) {
 }
 
 export function updateLandmark(request, text) {
-  if (request.phase === 'cancelled') throw new Error('This request has been cancelled.');
+  if (['cancelled', 'closed'].includes(request.phase)) throw new Error('This request is no longer active.');
   if (typeof text !== 'string' || !text.trim()) throw new Error('Enter an address or landmark.');
   return { ...request, coordinates: null, answers: { ...request.answers, location: text.trim().slice(0, 300) } };
 }
 
 export function deliveryLabel(request) {
+  if (request.phase === 'closed') return 'Patient received by hospital · closed';
   if (request.phase === 'cancelled') {
     return request.cancellationConfirmedAt ? 'Cancellation confirmed' : request.deliveryStatus === 'not_sent'
       ? 'Cancelled locally' : 'Cancellation awaiting confirmation';
@@ -83,6 +84,6 @@ export function deliveryLabel(request) {
     not_sent: 'Saved locally · not sent',
     node_received: 'Sent to node',
     command_received: 'Received by command centre',
-    responder_dispatched: 'Responder dispatched',
+    responder_dispatched: request.deliveryTransport === 'supabase' ? 'Ambulance dispatch recorded · demo' : 'Responder dispatched',
   }[request.deliveryStatus] || 'Delivery not confirmed';
 }

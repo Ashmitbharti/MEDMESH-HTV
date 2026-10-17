@@ -7,6 +7,7 @@ import { loadPharmacies } from '../command-center/pharmacyService';
 import { catalogue } from './catalogue';
 import { readPharmacyUpdates, savePharmacyAvailability, syncPharmacyAvailability } from './pharmacyStore';
 import styles from './Pharmacy.styles';
+import SupplyRequests from '../supplies/SupplyRequests';
 
 function initialValues(pharmacy) {
   const status = pharmacy.pharmacyAvailability;
@@ -152,11 +153,13 @@ export default function PharmacyDashboard() {
               ) : null}
               <Text style={styles.hint}>Reopen Command Center → Pharmacies to refresh. Other devices require successful cloud sync; LoRa delivery is not connected yet.</Text>
             </View>
-            <View style={styles.card}>
-              <Text style={styles.sectionTitle}>Incoming supply requests</Text>
-              <Text style={styles.body}>No hospital supply request feed connected yet.</Text>
-              <Text style={styles.hint}>Request acceptance and pickup tracking will appear here once routing is connected.</Text>
-            </View>
+            <SupplyRequests key={pharmacy.id} mode="pharmacy" id={pharmacy.id} onStockChanged={async () => {
+              try {
+                const records = await loadPharmacies();
+                const updated = records.find((item) => item.id === pharmacy.id);
+                if (updated) { setPharmacy(updated); setValues(initialValues(updated)); }
+              } catch { setError('Stock was reserved. Refresh the dashboard before editing inventory.'); }
+            }} />
             <View style={styles.card}>
               <Text style={styles.sectionTitle}>Pharmacy details</Text>
               <Text style={styles.body}>{pharmacy.hours}</Text>

@@ -26,6 +26,7 @@ export default function Navbar() {
         }}
       >
         <Tabs.Screen name="sos" options={{ href: null }} />
+        <Tabs.Screen name="first-aid" options={{ href: null }} />
         <Tabs.Screen
           name="home"
           options={{
