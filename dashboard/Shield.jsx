@@ -113,9 +113,12 @@ export default function Shield({
   // nearer places sit closer to the dome; poles take three heights so labels have room
   const ringOf = (p) => (p.km != null ? 1.45 + Math.min(1, p.km / 6) * 0.75 : 1.8);
   // only the nearest few carry a text label (the rest show their symbol), so a crowded side stays readable
-  const byKm = [...places].sort((a, b) => (a.km ?? 0) - (b.km ?? 0)).map((p) => p.label);
-  const items = places.map((p, i) => ({ ...p, quiet: byKm.indexOf(p.label) >= 3,
-    g: P(...placeAt(p.bearing, ringOf(p))), top: P(...placeAt(p.bearing, ringOf(p), 0.42 + (i % 3) * 0.36)) }))
+  // places keep their compass order around you but are spread evenly around the dome, so none hide behind another
+  const order = [...places].sort((a, b) => a.bearing - b.bearing).map((p) => p.label);
+  const first = places.length ? Math.min(...places.map((p) => p.bearing)) : 0;
+  const spread = (p) => first + (order.indexOf(p.label) / Math.max(1, places.length)) * Math.PI * 2;
+  const items = places.map((p, i) => ({ ...p, quiet: false,
+    g: P(...placeAt(spread(p), ringOf(p))), top: P(...placeAt(spread(p), ringOf(p), 0.42 + (i % 2) * 0.3)) }))
     .sort((a, b) => b.g.z - a.g.z);
   // keep labels from overlapping when two places lie in the same direction
   [...items].filter((x) => !x.quiet).sort((a, b) => b.top.y - a.top.y).forEach((it, i, arr) => {

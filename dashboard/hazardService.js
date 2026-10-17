@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 
@@ -43,8 +44,16 @@ function fromWeather(code) {
   return 'calm';
 }
 
+// Demo accounts stand at UTSC (the hackathon venue), so distances and directions match the demo map wherever the
+// laptop really is. Real accounts always use GPS.
+const DEMO_POS = 'medmesh-demo-pos';
+export function setDemoPosition(on) {
+  return on ? AsyncStorage.setItem(DEMO_POS, '1') : AsyncStorage.removeItem(DEMO_POS);
+}
+
 export async function getPosition() {
   try {
+    if (await AsyncStorage.getItem(DEMO_POS)) return { lat: 43.7845, lon: -79.1867, demo: true };
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') return null;
     const last = await Location.getLastKnownPositionAsync();
@@ -103,4 +112,17 @@ export function ago(at) {
   if (m < 1) return 'just now';
   if (m < 60) return `${m} min ago`;
   return `${Math.round(m / 60)} h ago`;
+}
+
+// Current hazard for any screen, refreshed every 30 s (hospital, pharmacy and government screens show the same weather).
+export function useHazard() {
+  const [h, setH] = useState({ kind: 'calm' });
+  useEffect(() => {
+    let alive = true;
+    const load = () => getHazard().then((x) => alive && setH(x)).catch(() => {});
+    load();
+    const t = setInterval(load, 30000);
+    return () => { alive = false; clearInterval(t); };
+  }, []);
+  return h;
 }

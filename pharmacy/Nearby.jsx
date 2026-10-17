@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import WeatherBackdrop from '../dashboard/WeatherBackdrop';
+import { useHazard } from '../dashboard/hazardService';
 import { EyeOff, Lightbulb, Radar } from 'lucide-react-native';
 import { c, mono } from '../medmesh-id/theme';
 import { useMesh } from '../link/meshLink';
@@ -15,6 +17,7 @@ const BAR = '#a78bfa';
 const UNMET = '#f43f5e';
 
 export default function Nearby() {
+  const hz = useHazard();
   const { width } = useWindowDimensions();
   const { pharmacy } = usePharmacy();
   const { inbox } = useMesh();
@@ -37,6 +40,7 @@ export default function Nearby() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={['top', 'left', 'right']}>
+      <WeatherBackdrop kind={hz.kind} />
       <LinearGradient colors={['rgba(167,139,250,0.2)', 'rgba(5,7,15,0)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 340 }} pointerEvents="none" />
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 130 }}>
         <Text style={{ color: c.violet, fontFamily: mono, fontSize: 10.5, letterSpacing: 2, fontWeight: '700' }}>NEARBY NEEDS</Text>

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import WeatherBackdrop from '../dashboard/WeatherBackdrop';
+import { useHazard } from '../dashboard/hazardService';
 import { router } from 'expo-router';
 import { BadgeCheck, Bike, Building2, CircleCheck, CircleX, Clock, FlaskConical, LogOut, MapPin, Package, Store, Timer, Truck, Undo2 } from 'lucide-react-native';
 import { c, mono } from '../medmesh-id/theme';
@@ -177,6 +179,7 @@ function OrderCard({ o, act, price, onReply }) {
 }
 
 export default function Requests() {
+  const hz = useHazard();
   const { width } = useWindowDimensions();
   const { signOut } = useAuth();
   const { pharmacy, ready, choose } = usePharmacy();
@@ -202,6 +205,7 @@ export default function Requests() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={['top', 'left', 'right']}>
+      <WeatherBackdrop kind={hz.kind} />
       <LinearGradient colors={['rgba(52,211,153,0.2)', 'rgba(5,7,15,0)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }} pointerEvents="none" />
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 130 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Switch, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import WeatherBackdrop from '../dashboard/WeatherBackdrop';
+import { useHazard } from '../dashboard/hazardService';
 import { CircleCheck, Clock, Radio, Send, ShieldCheck, TriangleAlert } from 'lucide-react-native';
 import { c, mono } from '../medmesh-id/theme';
 import { useMesh } from '../link/meshLink';
@@ -13,6 +15,7 @@ import { usePharmacy } from './PharmacyContext';
 import { capOf, changes, consumed, fullOf, ITEMS, loadStock, LOW, sendStock, stockAcked, stockWires } from './pharmacyService';
 
 export default function Stock() {
+  const hz = useHazard();
   const { width } = useWindowDimensions();
   const { pharmacy } = usePharmacy();
   const { inbox } = useMesh();
@@ -59,6 +62,7 @@ export default function Stock() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={['top', 'left', 'right']}>
+      <WeatherBackdrop kind={hz.kind} />
       <LinearGradient colors={['rgba(125,211,252,0.18)', 'rgba(5,7,15,0)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 340 }} pointerEvents="none" />
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 130 }} keyboardShouldPersistTaps="handled">
         <Text style={{ color: c.sky, fontFamily: mono, fontSize: 10.5, letterSpacing: 2, fontWeight: '700' }}>STOCK & PRICES · {pharmacy.short.toUpperCase()}</Text>

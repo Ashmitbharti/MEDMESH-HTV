@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ActivityIndicator, Linking, Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import WeatherBackdrop from '../dashboard/WeatherBackdrop';
+import { useHazard } from '../dashboard/hazardService';
 import { FileDown, Presentation, Sparkles } from 'lucide-react-native';
 import { c, mono } from '../medmesh-id/theme';
 import { useAuth } from '../auth/AuthContext';
@@ -22,6 +24,7 @@ function Stat({ label, value, sub, w }) {
 }
 
 export default function Analysis() {
+  const hz = useHazard();
   const { width } = useWindowDimensions();
   const { account } = useAuth();
   const { now } = useClock(true, 1);
@@ -41,6 +44,7 @@ export default function Analysis() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={['top', 'left', 'right']}>
+      <WeatherBackdrop kind={hz.kind} />
       <LinearGradient colors={['rgba(125,211,252,0.18)', 'rgba(5,7,15,0)']} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 340 }} pointerEvents="none" />
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 130 }}>
         <GovHeader kicker="GOVERNMENT · ANALYSIS" title={'What happened,\nand what to fix.'} tint={c.sky} />
