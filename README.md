@@ -2,6 +2,8 @@
 
 **Emergency help that works when the networks don't.**
 
+On July 8, 2022, the Rogers outage cut off wireless and wireline services for **more than 12 million customers** and disrupted access to **9-1-1**. An emergency shouldn't have to wait for the network to come back. [CBC News](https://www.cbc.ca/news/politics/rogers-outage-human-error-system-deficiencies-1.7255641) · [CRTC assessment](https://crtc.gc.ca/eng/publications/reports/xona2024.htm)
+
 MedMesh is an offline emergency network built on a LoRa radio mesh (Meshtastic). When storms, floods or outages take down cell service and internet, a resident's SOS still travels as a tiny radio message to a command centre. The command centre triages it, picks an ambulance, hospital and pharmacy, and flags the people and radio nodes that have gone silent, so welfare checks go to those who need them most.
 
 Built at **Hack the Valley 11** by Ishika Sharma, Banaj Bhasin, Ashmit Bharti and Shiven Sharma.
@@ -12,7 +14,7 @@ Built at **Hack the Valley 11** by Ishika Sharma, Banaj Bhasin, Ashmit Bharti an
 
 ## What is the problem ??
 
-Storms, floods and outages cut networks, and the people who depend on help most go silent first: older people living alone, people on home oxygen, people with mobility or medical needs. MedMesh keeps them connected and tells responders who has stopped answering. (Rogers )
+Storms, floods and outages cut networks, and the people who depend on help most go silent first: older people living alone, people on home oxygen, people with mobility or medical needs. MedMesh keeps them connected and tells responders who has stopped answering.
 
 ## What it does
 
