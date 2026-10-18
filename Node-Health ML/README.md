@@ -294,4 +294,3 @@ Rows are marked SIMULATED REPLAY.
 2. **Choose WATCH differently.** F2-optimal WATCH alarms on most healthy rows, including the steady demo link. Options: F1-optimal, a fixed precision of about 40%, or a false-alarm budget on validation.
 3. **Ship the big-set model, not the coverage one.** Tuning on 66 rows chose a model that does nothing (see above). If the coverage model must ship, a minimum on C (for example ≥ 0.01) would stop that.
 4. **Getting past 83% test accuracy** needs better inputs, not more tuning; the logistic-regression search is flat. Candidates: longer-history features (60–120 s SNR trend, packet-loss trend), or a shorter horizon.
-5. **Simulated is not real.** The physics in `simulate.py` (reception curve, packet rate, voltage curve) are assumptions.
