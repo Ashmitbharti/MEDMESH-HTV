@@ -1,0 +1,22 @@
+{
+  "features": [
+    "snr_mean_30s",
+    "snr_slope_30s",
+    "snr_std_30s",
+    "rssi_mean_30s",
+    "rssi_slope_30s",
+    "packets_per_min",
+    "hops_used",
+    "hops_change_120s",
+    "seconds_since_last_packet",
+    "battery_voltage",
+    "voltage_slope",
+    "channel_utilization",
+    "snr_missing",
+    "snr_slope_missing",
+    "hops_missing",
+    "voltage_missing",
+    "chutil_missing"
+  ],
+  "model": "rf"
+}

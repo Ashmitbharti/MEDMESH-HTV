@@ -1,0 +1,3 @@
+ts_utc,note
+2026-10-04T07:00:01.000+00:00,SIMULATED session cov_brownout_07: scenario brownout
+2026-10-04T07:03:51.332+00:00,SIMULATED: battery starts sagging (!b8b60fc6)

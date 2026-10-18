@@ -1,0 +1,13 @@
+ts_utc,note
+2026-11-12T17:00:01.000+00:00,SIMULATED session big_13
+2026-11-12T17:01:02.377+00:00,SIMULATED: interference burst (!cddc7fb9)
+2026-11-12T17:04:07.925+00:00,SIMULATED: node unplugged (!b63f5a46)
+2026-11-12T17:08:57.373+00:00,SIMULATED: interference burst (!2a3cef98)
+2026-11-12T17:10:29.585+00:00,SIMULATED: slow stepwise fade begins (!b63f5a46)
+2026-11-12T17:11:25.401+00:00,SIMULATED: node unplugged (!cddc7fb9)
+2026-11-12T17:17:41.266+00:00,SIMULATED: node unplugged (!cddc7fb9)
+2026-11-12T17:18:19.441+00:00,SIMULATED: carrying node out of range (!2a3cef98)
+2026-11-12T17:22:57.399+00:00,SIMULATED: carrying node out of range (!cddc7fb9)
+2026-11-12T17:23:55.077+00:00,SIMULATED: relay unplugged (!b63f5a46)
+2026-11-12T17:25:53.980+00:00,SIMULATED: node blocked by obstruction (!2a3cef98)
+2026-11-12T17:30:26.184+00:00,SIMULATED: carrying node out of range (!cddc7fb9)

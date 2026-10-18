@@ -1,0 +1,12 @@
+ts_utc,note
+2026-11-12T10:00:01.000+00:00,SIMULATED session big_06
+2026-11-12T10:01:08.984+00:00,SIMULATED: walk away and back (!dfe53657)
+2026-11-12T10:04:00.756+00:00,SIMULATED: relay unplugged (!1714bf48)
+2026-11-12T10:04:04.432+00:00,SIMULATED: battery starts sagging (!3f4a74a1)
+2026-11-12T10:11:55.966+00:00,SIMULATED: slow stepwise fade begins (!1714bf48)
+2026-11-12T10:13:05.658+00:00,SIMULATED: carrying node out of range (!dfe53657)
+2026-11-12T10:13:11.912+00:00,SIMULATED: water on node (!3f4a74a1)
+2026-11-12T10:22:53.204+00:00,SIMULATED: node unplugged (!3f4a74a1)
+2026-11-12T10:23:10.841+00:00,SIMULATED: carrying node out of range (!1714bf48)
+2026-11-12T10:24:47.365+00:00,SIMULATED: interference burst (!dfe53657)
+2026-11-12T10:25:52.574+00:00,SIMULATED: walk away and back (!3f4a74a1)

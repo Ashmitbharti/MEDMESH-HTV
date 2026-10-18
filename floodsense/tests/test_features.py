@@ -10,7 +10,7 @@ from src.features import TODAY_DISCH, TODAY_LEVEL_DERIVED, build_frame, feature_
 THR = 1.5
 
 
-def synthetic(n=400, seed=0):
+def sample_frame(n=400, seed=0):
     rng = np.random.default_rng(seed)
     idx = pd.date_range("2010-01-01", periods=n, freq="D")
     level = 1.3 + np.abs(np.cumsum(rng.normal(0, 0.02, n))) + (rng.random(n) < 0.03) * rng.random(n)
@@ -29,7 +29,7 @@ def cols_for(target):
 @pytest.mark.parametrize("target", ["next", "same"])
 @pytest.mark.parametrize("t", [40, 120, 250, 398])
 def test_no_feature_at_t_uses_data_after_t(target, t):
-    df = synthetic()
+    df = sample_frame()
     cols = cols_for(target)
     base = build_frame(df, THR, use_snow=True)[cols]
     altered = df.copy()
@@ -41,7 +41,7 @@ def test_no_feature_at_t_uses_data_after_t(target, t):
 
 @pytest.mark.parametrize("t", [40, 120, 250, 398])
 def test_same_day_inputs_ignore_todays_level_and_discharge(t):
-    df = synthetic()
+    df = sample_frame()
     cols = cols_for("same")
     base = build_frame(df, THR, use_snow=True)[cols]
     altered = df.copy()
@@ -59,7 +59,7 @@ def test_same_day_feature_names_are_not_today_level_derived():
 
 def test_next_day_label_alignment():
     from src.label import label
-    df = synthetic()
+    df = sample_frame()
     y = label(df, "next", THR)
     i = 100
     assert y.iloc[i] == float(df["LEVEL"].iloc[i + 1] > THR)

@@ -1,0 +1,11 @@
+ts_utc,note
+2026-11-12T15:00:01.000+00:00,SIMULATED session big_11
+2026-11-12T15:01:27.808+00:00,SIMULATED: short signal dip (!e008c8e9)
+2026-11-12T15:03:51.950+00:00,SIMULATED: relay unplugged (!b933d84b)
+2026-11-12T15:04:25.196+00:00,SIMULATED: relay unplugged (!aca937e0)
+2026-11-12T15:08:12.360+00:00,SIMULATED: interference burst (!e008c8e9)
+2026-11-12T15:13:01.229+00:00,SIMULATED: slow stepwise fade begins (!b933d84b)
+2026-11-12T15:14:35.064+00:00,SIMULATED: relay unplugged (!aca937e0)
+2026-11-12T15:22:47.555+00:00,SIMULATED: water on node (!aca937e0)
+2026-11-12T15:24:54.999+00:00,SIMULATED: carrying node out of range (!e008c8e9)
+2026-11-12T15:25:09.478+00:00,SIMULATED: relay unplugged (!b933d84b)

@@ -1,0 +1,3 @@
+ts_utc,note
+2026-10-01T23:00:01.000+00:00,SIMULATED session cov_obstruction_01: scenario obstruction
+2026-10-01T23:05:13.560+00:00,SIMULATED: node blocked by obstruction (!70c74604)

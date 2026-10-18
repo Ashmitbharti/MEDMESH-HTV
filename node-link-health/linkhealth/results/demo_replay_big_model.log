@@ -1,0 +1,31 @@
+##############################################################################
+###  SIMULATED REPLAY - simulated packets, not real radio data  ###
+##############################################################################
+SIMULATED REPLAY: node !dem00001 fades from t=30 s; speed x1000; log -> C:\Users\Shiven\hackathon\MEDMESH-HTV\node-link-health\linkhealth\results\replay\demo_replay_log.csv
+  time       node     SNR    RSSI       A  alert    status  top feature
+    0s  !dem00001     6.2    -111   0.311  WATCH    OK      -
+   10s  !dem00001     5.8    -112   0.319  WATCH    OK      -
+   20s  !dem00001     5.7    -113   0.321  WATCH    OK      -
+   30s  !dem00001     5.6    -113   0.322  WATCH    OK      -
+   40s  !dem00001     5.4    -113   0.321  WATCH    OK      -
+   50s  !dem00001     4.0    -114   0.441  WARNING  OK      snr_std_30s
+   60s  !dem00001     1.9    -116   0.597  WARNING  OK      snr_slope_30s
+   70s  !dem00001    -0.8    -119   0.737  WARNING  OK      snr_std_30s
+   80s  !dem00001    -3.9    -121   0.780  WARNING  OK      snr_std_30s
+   90s  !dem00001    -6.8    -124   0.930  WARNING  OK      snr_std_30s
+  100s  !dem00001    -9.8    -127   0.962  WARNING  OK      rssi_mean_30s
+  110s  !dem00001   -11.5    -129   0.985  WARNING  OK      rssi_mean_30s
+  120s  !dem00001   -12.6    -131   0.983  WARNING  OK      rssi_mean_30s
+  130s  !dem00001   -13.4    -132   0.985  WARNING  OK      snr_mean_30s
+  140s  !dem00001       -       -   0.468  WARNING  OK      seconds_since_last_packet
+  150s  !dem00001       -       -   0.468  WARNING  OK      seconds_since_last_packet
+  160s  !dem00001       -       -   0.468  WARNING  OK      seconds_since_last_packet
+  170s  !dem00001       -       -   0.468  WARNING  OK      seconds_since_last_packet
+  180s  !dem00001       -       -   0.468  WARNING  OK      seconds_since_last_packet
+###  SIMULATED REPLAY - simulated packets, not real radio data  ###
+Last packet from !dem00001 at t=106 s (silence starts; counted as failure once it reaches 90 s, at t=196 s - after the replay ends).
+  WATCH: first at t=0 s, 106 s before the last packet.
+  WARNING: first at t=50 s, 56 s before the last packet.
+  FALSE ALARM: the link was still steady (t < 30 s) but the alert was WATCH at t = 0, 10, 20 s.
+  Result: the intended NONE -> WATCH -> WARNING -> silence sequence did NOT happen cleanly (see above).
+Wrote C:\Users\Shiven\hackathon\MEDMESH-HTV\node-link-health\linkhealth\results\demo_replay.csv (every row marked SIMULATED REPLAY).

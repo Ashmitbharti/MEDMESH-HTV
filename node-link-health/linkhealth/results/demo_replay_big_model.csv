@@ -1,0 +1,20 @@
+mode,t_s,node_id,snr_mean_30s,rssi_mean_30s,A,alert,status,seconds_since_last_packet,top_features,model,dataset
+SIMULATED REPLAY,0,!dem00001,6.21,-111.4,0.3111,WATCH,OK,3.1,,rf,big
+SIMULATED REPLAY,10,!dem00001,5.81,-112.0,0.3188,WATCH,OK,1.2,,rf,big
+SIMULATED REPLAY,20,!dem00001,5.68,-112.6,0.3213,WATCH,OK,1.4,,rf,big
+SIMULATED REPLAY,30,!dem00001,5.61,-112.7,0.3222,WATCH,OK,3.7,,rf,big
+SIMULATED REPLAY,40,!dem00001,5.42,-112.7,0.3213,WATCH,OK,5.6,,rf,big
+SIMULATED REPLAY,50,!dem00001,4.0,-114.0,0.4412,WARNING,OK,0.9,snr_std_30s=1.758;snr_slope_30s=-0.172;rssi_slope_30s=-0.248,rf,big
+SIMULATED REPLAY,60,!dem00001,1.86,-116.4,0.5965,WARNING,OK,0.1,snr_slope_30s=-0.289;snr_std_30s=2.93;rssi_slope_30s=-0.354,rf,big
+SIMULATED REPLAY,70,!dem00001,-0.79,-118.7,0.7365,WARNING,OK,0.3,snr_std_30s=3.178;rssi_mean_30s=-118.714;snr_slope_30s=-0.312,rf,big
+SIMULATED REPLAY,80,!dem00001,-3.9,-121.2,0.7804,WARNING,OK,3.6,snr_std_30s=1.947;rssi_mean_30s=-121.2;snr_mean_30s=-3.9,rf,big
+SIMULATED REPLAY,90,!dem00001,-6.8,-123.6,0.9296,WARNING,OK,3.2,snr_std_30s=2.379;rssi_mean_30s=-123.6;snr_mean_30s=-6.8,rf,big
+SIMULATED REPLAY,100,!dem00001,-9.8,-127.0,0.9616,WARNING,OK,4.2,rssi_mean_30s=-127.0;snr_mean_30s=-9.8;snr_std_30s=2.315,rf,big
+SIMULATED REPLAY,110,!dem00001,-11.5,-129.3,0.9854,WARNING,OK,4.3,rssi_mean_30s=-129.333;snr_mean_30s=-11.5;snr_std_30s=2.102,rf,big
+SIMULATED REPLAY,120,!dem00001,-12.62,-130.8,0.9829,WARNING,OK,14.3,rssi_mean_30s=-130.75;snr_mean_30s=-12.625;packets_per_min=9.0,rf,big
+SIMULATED REPLAY,130,!dem00001,-13.38,-132.0,0.9852,WARNING,OK,24.3,snr_mean_30s=-13.375;rssi_mean_30s=-132.0;packets_per_min=7.0,rf,big
+SIMULATED REPLAY,140,!dem00001,,,0.4682,WARNING,OK,34.3,seconds_since_last_packet=34.319;snr_missing=1.0;packets_per_min=6.0,rf,big
+SIMULATED REPLAY,150,!dem00001,,,0.4682,WARNING,OK,44.3,seconds_since_last_packet=44.319;snr_missing=1.0;packets_per_min=4.0,rf,big
+SIMULATED REPLAY,160,!dem00001,,,0.4682,WARNING,OK,54.3,seconds_since_last_packet=54.319;snr_missing=1.0;packets_per_min=2.0,rf,big
+SIMULATED REPLAY,170,!dem00001,,,0.4684,WARNING,OK,64.3,seconds_since_last_packet=64.319;snr_missing=1.0;packets_per_min=0.0,rf,big
+SIMULATED REPLAY,180,!dem00001,,,0.4684,WARNING,OK,74.3,seconds_since_last_packet=74.319;snr_missing=1.0;packets_per_min=0.0,rf,big

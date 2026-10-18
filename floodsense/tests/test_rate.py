@@ -8,7 +8,7 @@ from src.rate import hourly_to_daily, rate_features
 STATS = dict(thr=1.6, train_median_level=1.35, capacity=4.0, median_train_ant7=12.0, rate_var="max_1h_rain")
 
 
-def synthetic(days=200, seed=0):
+def sample_frame(days=200, seed=0):
     rng = np.random.default_rng(seed)
     hours = pd.date_range("2015-01-01", periods=days * 24, freq="h")
     h = pd.Series(np.where(rng.random(len(hours)) < 0.06, rng.gamma(0.7, 3, len(hours)), 0.0), index=hours)
@@ -26,7 +26,7 @@ def all_features(h, df):
 
 @pytest.mark.parametrize("t", [20, 90, 150, 198])
 def test_hourly_and_drainage_features_ignore_later_data(t):
-    h, df = synthetic()
+    h, df = sample_frame()
     base = all_features(h, df)
     cut = df.index[t] + pd.Timedelta(hours=23)                 # end of day t
     h2, df2 = h.copy(), df.copy()
@@ -37,7 +37,7 @@ def test_hourly_and_drainage_features_ignore_later_data(t):
 
 
 def test_day_needs_20_hours_and_ratio_definition():
-    h, _ = synthetic()
+    h, _ = sample_frame()
     d = hourly_to_daily(h)
     gap_day = h.index[520].floor("D")
     assert d.loc[gap_day].isna().all()
@@ -46,7 +46,7 @@ def test_day_needs_20_hours_and_ratio_definition():
 
 
 def test_antecedent_excludes_today():
-    _, df = synthetic()
+    _, df = sample_frame()
     f = rate_features(df, None, {**STATS, "rate_var": "rain_today"})
     t = 50
     assert f["antecedent_7d"].iloc[t] == pytest.approx(df["TOTAL_PRECIPITATION"].iloc[t - 7:t].sum())

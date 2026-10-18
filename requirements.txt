@@ -1,0 +1,20 @@
+# Python 3.11. For an NVIDIA GPU install torch first from the CUDA index, e.g.:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu126
+torch>=2.2
+transformers>=4.50,<5        # Gemma 3 needs >= 4.50; tested with 4.57.6
+sentence-transformers>=5.0   # Nemotron embed uses the "query"/"document" prompts from its ST config
+accelerate>=0.30
+huggingface_hub>=0.24
+
+langchain-core>=0.3
+langchain-huggingface>=0.1
+langchain-chroma>=0.2
+chromadb>=1.0
+
+pydantic>=2.6
+pyyaml>=6.0
+numpy>=1.26
+pandas>=2.0                  # population-level notes from the provided datasets
+scikit-learn>=1.3            # optional step 7 (stroke baseline risk)
+
+pytest>=8.0

@@ -1,0 +1,15 @@
+ts_utc,note
+2026-11-12T12:00:01.000+00:00,SIMULATED session big_08
+2026-11-12T12:03:24.435+00:00,SIMULATED: carrying node out of range (!54f494df)
+2026-11-12T12:03:35.636+00:00,SIMULATED: battery starts sagging (!5b8548eb)
+2026-11-12T12:04:18.480+00:00,SIMULATED: node unplugged (!b90e4266)
+2026-11-12T12:10:19.044+00:00,SIMULATED: battery starts sagging (!b90e4266)
+2026-11-12T12:11:28.353+00:00,SIMULATED: node unplugged (!54f494df)
+2026-11-12T12:12:48.217+00:00,SIMULATED: node blocked by obstruction (!5b8548eb)
+2026-11-12T12:16:40.067+00:00,SIMULATED: walk away and back (!5b8548eb)
+2026-11-12T12:16:55.747+00:00,SIMULATED: relay unplugged (!54f494df)
+2026-11-12T12:19:53.447+00:00,SIMULATED: water on node (!b90e4266)
+2026-11-12T12:23:30.923+00:00,SIMULATED: interference burst (!54f494df)
+2026-11-12T12:27:50.329+00:00,SIMULATED: relay unplugged (!5b8548eb)
+2026-11-12T12:29:19.738+00:00,SIMULATED: node blocked by obstruction (!b90e4266)
+2026-11-12T12:30:25.456+00:00,SIMULATED: walk away and back (!54f494df)
