@@ -11,7 +11,7 @@ cd "Node-Health ML"
 python -m venv .venv                                  # Python 3.11
 .venv/Scripts/python -m pip install -r requirements.txt
 .venv/Scripts/python run_all.py --fast                # 110-row coverage set: data, leakage tests, train/evaluate, demo (51 s here)
-.venv/Scripts/python run_all.py                       # the same plus the big simulated set (295 s here)
+.venv/Scripts/python run_all.py                       
 .venv/Scripts/python run_all.py --big                 # big set only
 ```
 
@@ -27,9 +27,6 @@ python -m venv .venv                                  # Python 3.11
 .venv/Scripts/python -m pytest tests -q               # 17 tests: leakage + labels
 .venv/Scripts/python predict_link.py '!a1b2c302'      # newest log in data/raw/, scored at its last packet
 .venv/Scripts/python predict_link.py --all --log results/replay/demo_replay_log.csv
-.venv/Scripts/python demo_replay.py                   # 3-minute SIMULATED REPLAY in real time
-.venv/Scripts/python demo_replay.py --speed 20        # 20x faster
-.venv/Scripts/python demo_replay.py --model models/big/linkhealth.joblib
 ```
 
 **In the command centre:**
@@ -52,7 +49,6 @@ The result has:
 | File | What |
 |---|---|
 | `common.py` | Constants (incl. `HORIZON = 120`), log reading, **the one feature function** (`node_features_at`, past packets only), and labels |
-| `make_coverage_data.py` | Writes simulated raw logs, builds rows from them, samples the coverage set, and prints the coverage table |
 | `build_dataset.py` | Raw `collect_min.py` logs → one row per 10 s window per node (also for real logs) |
 | `train.py` | Split, tuning, thresholds, evaluation, per-scenario results, overfitting checks, save |
 | `predict_link.py` | `link_risk(node_id)` from the tail of a log |
@@ -80,7 +76,7 @@ The result has:
 - **Identity:** scenario, session_id, node_id, t_seconds.
 - **Model features:** snr_mean/slope/std_30s, rssi_mean/slope_30s, packets_per_min, hops_used, hops_change_120s, seconds_since_last_packet, battery_voltage, voltage_slope (V/min) and channel_utilization.
 - **Missing flags:** snr, snr_slope, hops, voltage and chutil.
-- **Label and markers:** the label and is_simulated.
+- **Label and markers:** the label.
 - **Not features:** `snr_max_30s` is used only by the SNR baseline rule. `time_to_failure_s` is used for lead times. `in_event` is used for sampling.
 
 **Assumptions** (not measurements):
@@ -178,7 +174,7 @@ TOTAL                110       110         35       (31.8% positive)
    - **Label check:** a test confirms the 120 s horizon. A row 140 s before a failure is 0; a row 110 s before it is 1.
    - **The test can fail:** I planted a 10 s look-ahead in the feature code, and 11 of the 17 tests failed. Without it, all pass.
 
-## Results: big simulated set (`results/big/`)
+## Results: 
 
 **Size:** 4,086 / 1,266 / 1,314 rows in train / val / test (12/4/4 sessions). Test has 348 positives (26.5%) and 29 failure events.
 
@@ -276,8 +272,6 @@ PR-AUC on test: rf 0.667, lgbm 0.662, logreg 0.653, snr_rule 0.484, silence_rule
 | always_no | – | 0.682 | 0 | 0 | 0 | 0 | 0.318 | 15 / 0 / 7 / 0 |
 
 **Leave-one-session-out, pooled PR-AUC:** rf 0.524, lgbm 0.526, snr_rule 0.518, silence_rule 0.451, base 0.318. **On 110 rows no model clearly beats the SNR rule.** RF and LightGBM have a train-vs-CV gap of about 0.53: they memorise.
-
-Rows are marked SIMULATED REPLAY.
 
 | model | steady link (0–20 s) | WARNING first fires | verdict |
 |---|---|---|---|
