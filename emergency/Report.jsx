@@ -1,3 +1,4 @@
+import { useSceneActive } from '../ui3d/project';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -40,6 +41,7 @@ function Btn({ onPress, disabled, colors, icon: Icon, children }) {
 }
 
 export default function Report() {
+  const active = useSceneActive();
   const [scene, setScene] = useState(null);
   const [text, setText] = useState('');
   const speech = useSpeech(setText);
@@ -75,6 +77,8 @@ export default function Report() {
   const sendAll = useCallback(async ({ stoppedAnswering = false } = {}) => {
     if (sending.current || !scene) return;
     sending.current = true;
+    setError('');
+    try {
     const sc = { ...scene, sent: { ...scene.sent }, people: [...scene.people] };
     if (stoppedAnswering && sc.mode === 'self') {
       // they stopped answering: we can no longer assume they are responsive
@@ -89,19 +93,22 @@ export default function Report() {
     for (const p of sc.people) {
       if (sc.sent[p.key]) continue;
       const id = newId();
-      sc.sent[p.key] = id;
       await queue('report', reportWire(id, p, { count, loc: sc.loc, sceneId: sc.sceneId, hazards: sc.hazards || [], cause: sc.cause, ai: p.fromAi ? (sc.ai?.source === 'gemini' ? 'g' : 'o') : '' }), { scene: sc.id });
       // same report into Ashmit's Supabase SOS table when there is internet (never blocks the mesh path)
-      mirrorSos({ id, mode: sc.mode, person: p, loc: sc.loc, medmeshId: p.mid, summary: sc.ai?.result?.summary }).catch(() => {});
+      await mirrorSos({ id, mode: sc.mode, person: p, loc: sc.loc, medmeshId: p.mid, summary: sc.ai?.result?.summary });
+      sc.sent[p.key] = id;
+      await saveScene(sc);
+      setScene({ ...sc, sent: { ...sc.sent } });
     }
     sc.phase = 'sent';
     await saveScene(sc);
     setScene(sc);
-    sending.current = false;
+    } catch (e) { setError(e.message || 'Could not save the report. Please retry.'); }
+    finally { sending.current = false; }
   }, [scene]);
 
   // auto-send for "I'm in trouble" when the person stops interacting
-  const auto = scene && scene.mode === 'self' && !['sent', 'cancelled', 'closed'].includes(scene.phase);
+  const auto = active && scene && scene.mode === 'self' && !['sent', 'cancelled', 'closed'].includes(scene.phase);
   useEffect(() => {
     if (!auto) return undefined;
     const t = setInterval(() => setIdle((v) => v + 1), 1000);

@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Svg, { Circle, Defs, Ellipse, G, RadialGradient, Stop, Text as SvgText } from 'react-native-svg';
-import { useClock } from '../ui3d/project';
+import { useClock, useSceneActive } from '../ui3d/project';
 
 // The SOS button as a glowing 3D orb (idea from Ashmit's home screen, made 3D): ripples pulse out from it, a tilted
 // orbit ring turns around it, and while you hold it the ring fills and the orb heats up. Hold 3 seconds; letting go cancels.
@@ -13,6 +13,14 @@ export default function SosOrb({ size = 230, disabled, onComplete, onBlocked }) 
   const { t } = useClock(true, 30);
   const [frac, setFrac] = useState(0);
   const timer = useRef(null);
+  const active = useSceneActive();
+  useEffect(() => {
+    if (!active || disabled) {
+      clearInterval(timer.current);
+      setFrac(0);
+    }
+    return () => clearInterval(timer.current);
+  }, [active, disabled]);
 
   function start() {
     if (disabled) { onBlocked?.(); return; }   // a report is already open: take them to it instead of doing nothing
@@ -64,7 +72,7 @@ export default function SosOrb({ size = 230, disabled, onComplete, onBlocked }) 
           <Circle key={i} cx={cx} cy={cy} r={ring + k * (S / 2 - ring)} fill="none" stroke="#fb7185" strokeOpacity={(1 - k) * 0.55} strokeWidth={2} />
         ))}
         {/* tilted orbit ring: the back half is drawn behind the orb, the front half in front */}
-        <G rotation={-18} origin={`${cx}, ${cy}`}>
+        <G transform={`rotate(-18 ${cx} ${cy})`}>
           <Ellipse cx={cx} cy={cy} rx={R * 1.45} ry={R * 0.42} fill="none" stroke="#fecdd3" strokeOpacity={0.25} strokeWidth={1.5} strokeDasharray="3 7" strokeDashoffset={-orbit * 30} />
         </G>
         <Ellipse cx={cx} cy={cy + R * 0.95} rx={R * 0.85} ry={R * 0.16} fill="#000" fillOpacity={0.35} />
@@ -80,7 +88,7 @@ export default function SosOrb({ size = 230, disabled, onComplete, onBlocked }) 
         })()}
         <Circle cx={cx} cy={cy} r={ring} fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth={6} />
         <Circle cx={cx} cy={cy} r={ring} fill="none" stroke="#fff" strokeWidth={6} strokeLinecap="round"
-          strokeDasharray={`${circ}`} strokeDashoffset={circ * (1 - frac)} rotation={-90} origin={`${cx}, ${cy}`} />
+          strokeDasharray={`${circ}`} strokeDashoffset={circ * (1 - frac)} transform={`rotate(-90 ${cx} ${cy})`} />
         <SvgText x={cx} y={cy + (holding ? 14 : 10)} fill="#fff" fontSize={holding ? 52 : 44} fontWeight="900" textAnchor="middle" fontFamily={SANS}>
           {holding ? `${left}` : 'SOS'}
         </SvgText>

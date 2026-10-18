@@ -1,1 +1,1 @@
-export { default } from '../../../hospital/HospitalHome';
+export { default } from '../../../hospital/HospitalDashboard';

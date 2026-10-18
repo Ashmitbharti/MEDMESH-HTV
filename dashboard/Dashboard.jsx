@@ -1,3 +1,4 @@
+import { useEmergencyUpdates } from '../workflow/useEmergencyUpdates';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,8 +19,9 @@ import { latest } from './outbox';
 import { c } from '../medmesh-id/theme';
 import { useAuth } from '../auth/AuthContext';
 import { loadProfile } from '../medmesh-id/profileService';
-import { createScene, isOpen, loadScene } from '../emergency/sceneService';
+import { createScene, isOpen, loadScene, saveScene } from '../emergency/sceneService';
 import { forId, useMesh } from '../link/meshLink';
+import { useSceneActive } from '../ui3d/project';
 
 const HAZARD_ICON = { storm: CloudLightning, rain: CloudRain, flood: Waves, snow: Snowflake, fire: Flame, quake: Activity, calm: Sun };
 
@@ -40,8 +42,9 @@ function parseContact(raw) {
 }
 
 export default function Dashboard() {
+  const active = useSceneActive();
   const { width } = useWindowDimensions();
-  const { account, signOut } = useAuth();
+  const { account, switchRole } = useAuth();
   const [profile, setProfile] = useState(null);
   const [hazard, setHazard] = useState(() => ({ kind: 'calm', source: 'Checking…', at: Date.now() }));
   const [request, setRequest] = useState(null);
@@ -67,12 +70,12 @@ export default function Dashboard() {
 
   // earthquake: the shield trembles now and then
   useEffect(() => {
-    if (hazard.kind !== 'quake') return undefined;
+    if (hazard.kind !== 'quake' || !active) return undefined;
     const id = setInterval(() => {
       Animated.sequence([4, -4, 3, -3, 2, 0].map((v) => Animated.timing(shake, { toValue: v, duration: 55, useNativeDriver: true }))).start();
     }, 5200);
     return () => clearInterval(id);
-  }, [hazard.kind, shake]);
+  }, [hazard.kind, shake, active]);
 
   const onFlash = useCallback(() => setFlashAt(Date.now()), []);
   const { link, inbox } = useMesh();
@@ -82,8 +85,17 @@ export default function Dashboard() {
   const contact = parseContact(d.contact);
   const pos = hazard.pos || DEFAULT_POS;
   const oxygen = /oxygen|cpap|bipap|ventilat/i.test(`${d.devices || ''} ${d.conditions || ''}`);
-  const near = around(pos, { oxygen });
+  const near = useMemo(() => around(pos, { oxygen }), [pos, oxygen]);
   const km = (x) => (x.km < 1 ? `${Math.round(x.km * 1000)} m` : `${x.km.toFixed(1)} km`);
+
+  const { records: dispatched } = useEmergencyUpdates(Object.values(request?.sent || {}));
+  const cloudHelp = dispatched.some((r) => r.ambulance_id && !['closed', 'cancelled'].includes(r.status));
+  useEffect(() => {
+    const ids = Object.values(request?.sent || {});
+    if (ids.length && dispatched.length === ids.length && dispatched.every((r) => ['closed', 'cancelled'].includes(r.status))) {
+      saveScene({ ...request, phase: 'closed' }).then(() => setRequest(null)).catch(() => {});
+    }
+  }, [dispatched, request]);
 
   const status = request ? 'help' : checkin ? 'safe' : 'calm';
   const col = STATUS_COLOR[status];
@@ -122,7 +134,7 @@ export default function Dashboard() {
 
   async function leave() {
     await setDemoHazard(null);
-    await signOut();
+    await switchRole();
     router.replace('/welcome');
   }
 
@@ -132,11 +144,11 @@ export default function Dashboard() {
   const reqIds = request ? [...Object.values(request.sent || {}), request.voiceId].filter(Boolean) : [];
   const lastHelp = reqIds.flatMap((id) => forId(inbox, id)).filter((m) => m.code === 'H').sort((a, b) => a.at - b.at).pop();
   const withAmb = new Set(reqIds.filter((id) => forId(inbox, id).some((m) => m.code === 'H' && m.f[1] === 'AMB')));
-  const helpText = withAmb.size > 1 ? `Ambulances assigned for ${withAmb.size} people. Stay where you are.` : lastHelp ? lastHelp.f.slice(3).join('|') : '';
+  const helpText = cloudHelp ? 'Command Center dispatched an ambulance. Open Status to see the receiving hospital.' : withAmb.size > 1 ? `Ambulances assigned for ${withAmb.size} people. Stay where you are.` : lastHelp ? lastHelp.f.slice(3).join('|') : '';
 
   const headline = {
     calm: ["Don't worry,", "we've got you."],
-    help: lastHelp ? ['Help is', 'on the way.'] : ['Your request', request?.phase === 'sent' ? 'is out.' : 'is open.'],
+    help: lastHelp || cloudHelp ? ['Help is', 'on the way.'] : ['Your request', request?.phase === 'sent' ? 'is out.' : 'is open.'],
     safe: ["You're marked", 'safe.'],
   }[status];
   const subline = {
@@ -207,7 +219,7 @@ export default function Dashboard() {
           <View style={s.statusPill}>
             <View style={[s.dot, { backgroundColor: col }]} />
             <Text style={[s.statusText, { color: col }]}>
-              {status === 'help' ? (lastHelp ? 'HELP ON THE WAY' : 'EMERGENCY REPORT OPEN') : status === 'safe' ? 'CHECKED IN SAFE' : 'PROTECTED · READY'}
+              {status === 'help' ? (lastHelp || cloudHelp ? 'HELP ON THE WAY' : 'EMERGENCY REPORT OPEN') : status === 'safe' ? 'CHECKED IN SAFE' : 'PROTECTED · READY'}
             </Text>
           </View>
           <Text style={s.headline}>{headline[0]}{'\n'}<Text style={{ color: col }}>{headline[1]}</Text></Text>

@@ -1,1 +1,1 @@
-export { default } from '../../../pharmacy/Stock';
+export { default } from '../../../pharmacy/PharmacyDashboard';

@@ -7,3 +7,4 @@ venv/
 
 data/runtime/
 some-agentic-stuff/
+node_modules

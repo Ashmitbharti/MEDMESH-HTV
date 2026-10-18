@@ -5,6 +5,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { Cloud, HeartPulse, QrCode, RotateCw, Server, Smartphone } from 'lucide-react-native';
 import styles from './MedMeshID.styles';
 import { c, grad } from './theme';
+import { useSceneActive } from '../ui3d/project';
 
 function Status({ icon: Icon, label, state }) {
   const color = state === 'ok' ? c.green : state === 'wait' ? c.amber : c.dim;
@@ -17,6 +18,7 @@ function Status({ icon: Icon, label, state }) {
 }
 
 export default function MedMeshIDCard({ profile, dirty }) {
+  const active = useSceneActive();
   const id = profile.medmeshId;
   const hasRegisteredId = typeof id === 'string' && /^[A-Z0-9]{6}$/.test(id);
   const d = profile.details || {};
@@ -26,15 +28,16 @@ export default function MedMeshIDCard({ profile, dirty }) {
   const [appear] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
+    if (!active) return undefined;
     Animated.spring(appear, { toValue: 1, friction: 7, tension: 50, useNativeDriver: true }).start();
     const loop = Animated.loop(Animated.sequence([
       Animated.delay(1800),
-      Animated.timing(sheen, { toValue: 1, duration: 1600, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-      Animated.timing(sheen, { toValue: 0, duration: 0, useNativeDriver: true }),
+      Animated.timing(sheen, { toValue: 1, duration: 1600, easing: Easing.inOut(Easing.quad), useNativeDriver: true, isInteraction: false }),
+      Animated.timing(sheen, { toValue: 0, duration: 0, useNativeDriver: true, isInteraction: false }),
     ]));
     loop.start();
     return () => loop.stop();
-  }, [appear, sheen]);
+  }, [appear, sheen, active]);
 
   function toggle() {
     if (!hasRegisteredId) return;

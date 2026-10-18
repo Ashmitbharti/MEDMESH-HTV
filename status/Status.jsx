@@ -1,3 +1,6 @@
+import { useEmergencyUpdates, cloudStatus } from '../workflow/useEmergencyUpdates';
+import { cloudCaseId } from '../cloud/cloudSync';
+import { hospitals } from '../command-center/facilities';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,6 +23,7 @@ import { TRIAGE, triageOf } from '../emergency/sosLogic';
 import { useClock } from '../ui3d/project';
 
 const HERO = {
+  cancelled: { tint: ['#334155', '#0b1020'], title: 'Request cancelled', sub: 'Command Center has closed this request.' },
   saved: { tint: ['#78350f', '#1c1206'], title: 'Your report is safe on this phone', sub: 'It goes out by itself as soon as a MedMesh node is in range. Keep the app open.' },
   sent: { tint: ['#1e3a8a', '#0b1020'], title: 'Your report is on its way', sub: 'Travelling across the mesh to the command centre.' },
   received: { tint: ['#1e3a8a', '#0b1020'], title: "We've got your report", sub: 'The command centre is choosing the right hospital and the nearest ambulance.' },
@@ -40,7 +44,7 @@ export default function Status() {
   const [sel, setSel] = useState(0);
 
   useFocusEffect(useCallback(() => {
-    loadScene().then((x) => setScene(isOpen(x) ? x : null));
+    loadScene().then((x) => setScene(x));
     loadProfile().then(setProfile).catch(() => {});
   }, []));
   useEffect(() => {
@@ -51,9 +55,12 @@ export default function Status() {
   const people = scene ? scene.people.filter((p) => scene.sent[p.key]) : [];
   const person = people[Math.min(sel, Math.max(0, people.length - 1))];
   const caseId = person ? scene.sent[person.key] : '';
-  const st = caseId ? caseStatus(caseId, inbox, outbox) : null;
-  const hosp = st && SITES.find((x) => x.id === st.hospId);
-  const hospName = hosp?.name || st?.hospName || '';
+  const { records, error: cloudError } = useEmergencyUpdates(Object.values(scene?.sent || {}));
+  const cloud = records.find((r) => r.id === cloudCaseId(caseId));
+  const radio = caseId ? caseStatus(caseId, inbox, outbox) : null;
+  const st = cloud && !['withyou', 'arrived'].includes(radio?.phase) ? cloudStatus(cloud) : radio;
+  const hosp = st && SITES.find((x) => x.id === st.hospId || x.cloudId === st.hospId);
+  const hospName = hosp?.name || hospitals.find((h) => h.hosid === st?.hospId)?.name || st?.hospName || '';
   const you = scene?.loc?.lat != null ? scene.loc : null;
   const eta = st && now ? etaLeft(st.etaAt, now) : null;
   const self = scene?.mode === 'self' && person === scene?.people[0];
@@ -68,8 +75,10 @@ export default function Status() {
     <SafeAreaView style={s.screen} edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={s.content}>
         <Text style={s.eyebrow}>STATUS & MESSAGES</Text>
-        <LinkBanner link={link} ids={caseId ? [caseId] : []} outbox={outbox} />
+        {!cloud ? <LinkBanner link={link} ids={caseId ? [caseId] : []} outbox={outbox} /> : null}
 
+        {cloudError ? <Text style={{ color: c.amber, marginTop: 10 }}>{cloudError}</Text> : null}
+        {cloud ? <Text style={{ color: c.muted, marginTop: 10 }}>{cloud.demo ? 'Demo on this device' : 'Command Center updates via Supabase'}</Text> : null}
         {!st ? (
           <View style={s.empty}>
             <ShieldCheck size={36} color={c.green} />

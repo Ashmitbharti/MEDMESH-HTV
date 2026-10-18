@@ -11,7 +11,7 @@ const MARGARET = {
     communication: 'Hard of hearing', mobility: 'Need some help', lives_alone: 'Yes', home_hospital: 'Centenary Hospital',
     watch: 'Yes', contact: 'Sean Doyle (son), 416-555-0142', labs: '',
   },
-  userId: 'demo-margaret', medmeshId: 'ZP5W1K', status: 'synced', commandCentre: 'pending',
+  userId: 'demo-margaret', medmeshId: 'DEMOID', status: 'synced', commandCentre: 'pending',
 };
 
 // Every demo citizen sign-in starts clean: no open emergency, no old messages, so the demo always begins with
@@ -23,7 +23,7 @@ async function freshStart() {
 }
 
 export async function seedDemo(account) {
-  if (account?.role === 'citizen') await freshStart();
+  if (account?.demoId === 'citizen-new') await freshStart();
   if (account?.demoId === 'citizen-new') {
     const keys = (await AsyncStorage.getAllKeys()).filter((k) => k.startsWith('medmesh-profile:'));
     await AsyncStorage.multiRemove(keys);

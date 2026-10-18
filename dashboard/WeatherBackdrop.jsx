@@ -3,6 +3,7 @@ import { Animated, Easing, Platform, StyleSheet, useWindowDimensions, View } fro
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
 import { HAZARDS } from './hazardService';
+import { useSceneActive } from '../ui3d/project';
 
 // Full-screen animated weather behind the dashboard. All motion uses the native driver (transform/opacity only).
 
@@ -29,7 +30,7 @@ function useLoop(duration, delay, easing = Easing.linear) {
   useEffect(() => {
     let loop;
     const t = setTimeout(() => {
-      loop = Animated.loop(Animated.timing(v, { toValue: 1, duration, easing, useNativeDriver: NATIVE }));
+      loop = Animated.loop(Animated.timing(v, { toValue: 1, duration, easing, useNativeDriver: NATIVE, isInteraction: false }));
       loop.start();
     }, delay);
     return () => { clearTimeout(t); loop?.stop(); };
@@ -162,7 +163,12 @@ function Lightning({ W, H, onFlash }) {
   );
 }
 
-export default function WeatherBackdrop({ kind = 'calm', onFlash }) {
+export default function WeatherBackdrop(props) {
+  const active = useSceneActive();
+  return active ? <WeatherScene {...props} /> : null;
+}
+
+function WeatherScene({ kind = 'calm', onFlash }) {
   const { width: W, height: H } = useWindowDimensions();
   const cfg = CONFIG[kind] || CONFIG.calm;
   const tint = (HAZARDS[kind] || HAZARDS.calm).tint;

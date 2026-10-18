@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AppState } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 
 // Tiny 3D helper for SVG scenes (no WebGL, so it runs the same on phones and the web preview).
 // World: y is up, the ground is the x/z plane. The camera orbits by `yaw` and looks down by `pitch`.
@@ -37,22 +39,58 @@ export const toPath = (project, pts) => pts.map((p, i) => {
   return `${i ? 'L' : 'M'}${q.x.toFixed(1)},${q.y.toFixed(1)}`;
 }).join('');
 
-// Shared animation clock: one requestAnimationFrame loop, ~30 fps.
+// Only the visible screen needs decorative motion. Mesh traffic keeps running separately.
+export function useSceneActive() {
+  const [focused, setFocused] = useState(false);
+  const [active, setActive] = useState(AppState.currentState !== 'background' && AppState.currentState !== 'inactive');
+  useFocusEffect(useCallback(() => {
+    setFocused(true);
+    return () => setFocused(false);
+  }, []));
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => setActive(state === 'active'));
+    return () => sub.remove();
+  }, []);
+  return focused && active;
+}
+
+// One timer for all visible scenes; one-second status labels don't run a 60 fps loop.
+const clocks = new Set();
+let clockTimer;
+function scheduleClock() {
+  clearTimeout(clockTimer);
+  if (!clocks.size) return;
+  const next = Math.min(...Array.from(clocks, (c) => c.next));
+  clockTimer = setTimeout(() => {
+    const now = Date.now();
+    clocks.forEach((c) => {
+      if (now >= c.next) {
+        c.next = now + c.interval;
+        c.tick(now);
+      }
+    });
+    scheduleClock();
+  }, Math.max(0, next - Date.now()));
+}
 
 export function useClock(running = true, fps = 30) {
+  const active = useSceneActive();
+  const elapsed = useRef(0);
   const [clock, setClock] = useState({ t: 0, now: 0 });
   useEffect(() => {
-    if (!running) return undefined;
-    let raf;
-    let last = 0;
+    if (!running || !active) return undefined;
     const start = Date.now();
-    const loop = () => {
-      const now = Date.now();
-      if (now - last >= 1000 / fps) { last = now; setClock({ t: (now - start) / 1000, now }); }
-      raf = requestAnimationFrame(loop);
+    const c = {
+      interval: 1000 / Math.max(1, fps), next: start,
+      tick: (now) => setClock({ t: elapsed.current + (now - start) / 1000, now }),
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [running, fps]);
+    clocks.add(c);
+    scheduleClock();
+    return () => {
+      elapsed.current += (Date.now() - start) / 1000;
+      clocks.delete(c);
+      scheduleClock();
+    };
+  }, [running, fps, active]);
   return clock; // { t: seconds since mount, now: wall-clock ms }
 }

@@ -24,7 +24,7 @@ Storms, floods and outages cut networks, and the people who depend on help most 
 - **Command centre.** A FastAPI server reads packets from a gateway board, runs START-style triage, and assigns an ambulance, hospital and pharmacy using Dijkstra routing over a road network, with hospital capacity and queueing models.
 - **Silent-resident and silent-node alerts.** The command centre flags residents and radio nodes that stop responding.
 - **AI assists, people decide.** Gemini drafts a triage summary and suggests a priority, and powers a "fill the form for me" helper. A person approves the final decision. Without internet, rule-based fallbacks take over and the UI labels which one produced the text.
-- **Separate views** for citizens, hospitals, pharmacies and government.
+- **Separate views** for citizens, hospitals, pharmacies and Command Center.
 - **Offline first aid.** CPR coach with a metronome, and step-by-step guides.
 - **FloodSense (Model B).** Estimates next-day creek high-water risk from 11 Toronto-area Water Survey of Canada gauges plus rain data, to warn about road and relay risk ahead of a storm.
 - **Link health (Model A, experimental).** A link-failure model trained on **simulated** data.
@@ -33,7 +33,7 @@ Storms, floods and outages cut networks, and the people who depend on help most 
 
 | Path | What it is |
 |---|---|
-| `src/app/` + feature folders (`dashboard/`, `emergency/`, `medmesh-id/`, `firstaid/`, `hospital/`, `pharmacy/`, `government/`, ...) | Expo app: citizen, hospital, pharmacy and government screens |
+| `src/app/` + feature folders (`dashboard/`, `emergency/`, `medmesh-id/`, `firstaid/`, `hospital/`, `pharmacy/`, `command-center/`, ...) | Expo app: citizen, hospital, pharmacy and Command Center screens |
 | `link/`, `cloud/`, `lib/`, `auth/` | Mesh connection (Wi-Fi sim or Bluetooth), Supabase sync and auth |
 | `command-centre/base/` | FastAPI command centre: mesh bridge, triage, routing, dispatch engine |
 | `command-centre/app/` | Offline phone web app served at `/app/` |
@@ -77,6 +77,15 @@ npm run web -- --localhost
 Open the address Expo prints, choose a role, then select a demo account. Use **Test kit** to send sample emergencies, medicine requests and weather alerts. Keep both terminals running. Restart Expo after changing `.env`.
 
 For a phone on the same Wi-Fi, use the laptop's local IP instead of `127.0.0.1` in `.env` and run `npm start`. Supabase and Gemini setup is optional for the local demo; real sign-in, report extraction and generated emergency packs need their backend credentials.
+
+## Role workflow
+
+- Enter as Citizen opens a filled presentation profile directly, registers its MedMesh ID with Supabase on first use, and reuses that session's ID on later visits.
+- SOS goes to Command Center, which dispatches an ambulance and assigns a hospital. The hospital sees the assignment and confirms arrival.
+- Hospitals request medicine through Command Center. Command Center assigns a pharmacy; the pharmacy approves or declines. Approval deducts stock and closes the request for the hospital.
+- Command Center uses access code `111111`. Hospitals and pharmacies enter with their facility codes. Shared requests use Supabase; each staff session needs the corresponding permissions.
+
+See [workflow setup](supabase/WORKFLOW-SETUP.md) for the required database migration and demo walkthrough.
 
 ## Hardware used
 

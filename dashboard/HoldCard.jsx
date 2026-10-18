@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Circle } from 'react-native-svg';
 import s from './Dashboard.styles';
+import { useSceneActive } from '../ui3d/project';
 
 // Press and hold for 3 seconds (stops accidental SOS). Releasing early cancels.
 const HOLD_MS = 3000;
@@ -14,6 +15,17 @@ export default function HoldCard({ title, sub, icon: Icon, colors, accent, prima
   const [frac, setFrac] = useState(0);   // ring progress (a plain value: animated SVG props warn on web)
   const anim = useRef(null);
   const timer = useRef(null);
+  const active = useSceneActive();
+  useEffect(() => {
+    if (!active || disabled) {
+      anim.current?.stop();
+      clearInterval(timer.current);
+      setHolding(false);
+      setFrac(0);
+      p.setValue(0);
+    }
+    return () => { anim.current?.stop(); clearInterval(timer.current); };
+  }, [active, disabled, p]);
 
   function start() {
     if (disabled) return;

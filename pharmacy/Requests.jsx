@@ -218,10 +218,7 @@ export default function Requests() {
             <Text style={{ color: c.ink, fontSize: 17, fontWeight: '800' }} numberOfLines={1}>{pharmacy?.name || 'Pharmacy'}</Text>
             {pharmacy?.address ? <Text style={{ color: c.dim, fontSize: 11.5 }} numberOfLines={1}>{pharmacy.address}{pharmacy.phone ? ` · ${pharmacy.phone}` : ''}</Text> : null}
           </View>
-          <Pressable accessibilityRole="button" accessibilityLabel="Open the test kit" onPress={() => router.push('/testkit')}
-            style={{ width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: c.line2 }}>
-            <FlaskConical size={17} color={c.amber} />
-          </Pressable>
+
           <Pressable accessibilityRole="button" accessibilityLabel="Sign out" onPress={async () => { await signOut(); router.replace('/welcome'); }}
             style={{ width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: c.line2 }}>
             <LogOut size={17} color={c.muted} />

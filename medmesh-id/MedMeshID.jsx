@@ -16,6 +16,7 @@ import { loadProfile, saveProfile } from './profileService';
 import PackCard from '../firstaid/PackCard';
 import { LANGUAGES } from '../firstaid/content';
 import { loadPack } from '../firstaid/pack';
+import { useSceneActive } from '../ui3d/project';
 
 // `multi` fields store a comma-separated string so the existing validation and Supabase mapping keep working.
 const fields = [
@@ -101,6 +102,7 @@ function GradientButton({ label, onPress, disabled, icon: Icon, accessibilitySta
 }
 
 export default function MedMeshID() {
+  const sceneActive = useSceneActive();
   const [step, setStep] = useState(0);
   const [details, setDetails] = useState({});
   const [error, setError] = useState('');
@@ -124,7 +126,7 @@ export default function MedMeshID() {
     loadProfile().then((stored) => {
       if (active && stored) {
         setProfile(stored);
-        setDetails(stored.details);
+        setDetails(stored.details || {});
         setStep(fields.length);
       }
     }).catch(() => {
@@ -136,13 +138,14 @@ export default function MedMeshID() {
   }, []);
 
   useEffect(() => {
+    if (!sceneActive) return undefined;
     const loop = Animated.loop(Animated.sequence([
-      Animated.timing(pulse, { toValue: 1, duration: 900, easing: Easing.out(Easing.quad), useNativeDriver: true }),
-      Animated.timing(pulse, { toValue: 0, duration: 900, easing: Easing.in(Easing.quad), useNativeDriver: true }),
+      Animated.timing(pulse, { toValue: 1, duration: 900, easing: Easing.out(Easing.quad), useNativeDriver: true, isInteraction: false }),
+      Animated.timing(pulse, { toValue: 0, duration: 900, easing: Easing.in(Easing.quad), useNativeDriver: true, isInteraction: false }),
     ]));
     loop.start();
     return () => loop.stop();
-  }, [pulse]);
+  }, [pulse, sceneActive]);
 
   useEffect(() => {
     enter.setValue(0);

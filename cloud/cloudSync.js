@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { demoMode, demoSubmit } from '../workflow/demoStore';
 import { getSession, getSupabase } from '../lib/supabase';
 
 // Ashmit's Supabase backend, used as a second path next to the mesh. When there is internet and Supabase is set up
@@ -20,8 +22,8 @@ function explain(error) {
 }
 
 async function rpc(name, args) {
-  if (!cloudReady()) return { ok: false, off: true, text: 'Supabase not set up: sent over the mesh only' };
   try {
+    if (name === 'submit_emergency_request' && await demoMode()) return { ok: true, data: await demoSubmit(args.p_payload), text: 'Received by the demo Command Center on this device' };
     await getSession();
     const { data, error } = await getSupabase().rpc(name, args);
     if (error) return { ok: false, text: explain(error) };
@@ -66,7 +68,7 @@ export async function mirrorPharmacy(site, items, open) {
 }
 
 const YN = (v) => (v === 'yes' ? 'Yes' : v === 'no' ? 'No' : 'Not sure');
-export function mirrorSos({ id, mode, person, loc, medmeshId, summary }) {
+export async function mirrorSos({ id, mode, person, loc, medmeshId, summary }) {
   const answers = {
     complaint: String(person.complaint || 'OT'),
     breathing: String(person.breathing || 'unknown'),
@@ -78,18 +80,53 @@ export function mirrorSos({ id, mode, person, loc, medmeshId, summary }) {
   if (person.note) answers.note = String(person.note).slice(0, 200);
   if (summary) answers.summary = String(summary).slice(0, 200);
   const mid = String(medmeshId || person.mid || '').toUpperCase();
-  return rpc('submit_emergency_request', {
-    p_payload: {
-      id: `medmesh-${String(id).toLowerCase().replace(/[^a-z0-9-]/g, '')}`,
+  const payload = {
+      id: cloudCaseId(id),
       revision: 1,
       mode: mode === 'other' ? 'other' : 'self',
       medmeshId: /^[A-Z]{6}$/.test(mid) ? mid : null,
       phase: 'ready',
-      coordinates: loc?.lat ? { latitude: loc.lat, longitude: loc.lon } : null,
+      coordinates: Number.isFinite(loc?.lat) && Number.isFinite(loc?.lon) ? { latitude: loc.lat, longitude: loc.lon } : null,
       answers,
       missedQuestions: Object.entries(answers).filter(([, v]) => v === 'Not sure').map(([k]) => k),
       escalation: null,
       conditionUpdates: [],
-    },
+  };
+  const owner = await cloudOwner();
+  await editPending((items) => [...items.filter((x) => x.payload.id !== payload.id), { payload, owner, pending: true }]);
+  retryCloudSos().catch(() => {});
+  return { ok: false, queued: true };
+}
+
+export const cloudCaseId = (id) => `medmesh-${String(id).toLowerCase().replace(/[^a-z0-9-]/g, '')}`;
+
+const PENDING = 'medmesh-cloud-sos-v1';
+let pendingWrite = Promise.resolve();
+let syncing;
+async function cloudOwner() {
+  const a = JSON.parse(await AsyncStorage.getItem('medmesh-auth') || 'null');
+  return a?.role === 'citizen' ? `${a.mode}:${a.demoId || a.medmeshId || a.userId || 'new'}` : '';
+}
+function editPending(update) {
+  const result = pendingWrite.then(async () => {
+    const items = JSON.parse(await AsyncStorage.getItem(PENDING) || '[]');
+    await AsyncStorage.setItem(PENDING, JSON.stringify(update(items)));
   });
+  pendingWrite = result.catch(() => {});
+  return result;
+}
+export async function retryCloudSos() {
+  if (syncing) return syncing;
+  syncing = (async () => {
+    const owner = await cloudOwner();
+    if (!owner) return;
+    await pendingWrite;
+    const items = JSON.parse(await AsyncStorage.getItem(PENDING) || '[]');
+    for (const item of items.filter((x) => x.pending && x.owner === owner)) {
+      const result = await rpc('submit_emergency_request', { p_payload: item.payload });
+      if (!result.ok) throw new Error(result.text);
+      await editPending((all) => all.filter((x) => x.payload.id !== item.payload.id || x.owner !== owner));
+    }
+  })();
+  try { return await syncing; } finally { syncing = null; }
 }

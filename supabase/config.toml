@@ -3,3 +3,12 @@ entrypoint = './functions/pdf-autofill/index.js'
 # The handler validates the user's token with Supabase Auth. This also supports
 # projects using newer signing keys rather than the gateway's legacy JWT check.
 verify_jwt = false
+
+[functions.sos-interpret]
+entrypoint = './functions/sos-interpret/index.js'
+# Each handler validates the bearer token with Supabase Auth.
+verify_jwt = false
+
+[functions.emergency-pack]
+entrypoint = './functions/emergency-pack/index.js'
+verify_jwt = false

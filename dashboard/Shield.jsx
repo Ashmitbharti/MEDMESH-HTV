@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PanResponder, Platform, View } from 'react-native';
 import { DeviceMotion } from 'expo-sensors';
 import Svg, { Circle, Defs, G, Line, Path, RadialGradient, Stop, Text as SvgText } from 'react-native-svg';
-import { makeCamera, ring, splitPath, toPath, useClock } from '../ui3d/project';
+import { makeCamera, ring, splitPath, toPath, useClock, useSceneActive } from '../ui3d/project';
 import { c } from '../medmesh-id/theme';
 
 // "The Shield": a glowing 3D dome over the person. Weather from the backdrop hits it and sparks off it,
@@ -19,32 +19,44 @@ const SANS = 'Inter, -apple-system, Segoe UI, Roboto, sans-serif';
 
 function hash(n) { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); }
 
+const DOME = [0, 1, 2, 3, 4, 5].map((i) => {
+  const a = i * Math.PI / 6;
+  return Array.from({ length: 33 }, (_, j) => {
+    const ph = j * Math.PI / 32;
+    return [Math.cos(a) * Math.cos(ph), Math.sin(ph), Math.sin(a) * Math.cos(ph)];
+  });
+});
+const PARALLELS = [0.38, 0.78, 1.15].map((e) => ring(Math.cos(e), Math.sin(e), 56));
+
 export default function Shield({
   width, height = 300, status = 'calm', kind = 'calm', flashAt = 0, signal = 0.6, places = [], contacts = [], responder,
 }) {
   const { t, now } = useClock(true, 30);
+  const active = useSceneActive();
   const [drag, setDrag] = useState(0);
-  const [tilt, setTilt] = useState(0);
+  const tilt = useRef(0);
   const [tapAt, setTapAt] = useState(0);
+  const touch = useRef(null);
   const [gesture] = useState(() => ({ base: 0, live: 0 })); // mutable gesture scratch, not render state
 
   useEffect(() => {
-    if (Platform.OS === 'web') return undefined;
+    if (Platform.OS === 'web' || !active) return undefined;
     let sub;
+    let alive = true;
     DeviceMotion.isAvailableAsync().then((ok) => {
-      if (!ok) return;
-      DeviceMotion.setUpdateInterval(60);
+      if (!ok || !alive) return;
+      DeviceMotion.setUpdateInterval(100);
       sub = DeviceMotion.addListener((m) => {
         const beta = m.rotation?.beta ?? 0.9;
-        setTilt(Math.max(-0.18, Math.min(0.18, (beta - 0.9) * 0.35)));
+        tilt.current = Math.max(-0.18, Math.min(0.18, (beta - 0.9) * 0.35));
       });
     }).catch(() => {});
-    return () => sub?.remove();
-  }, []);
+    return () => { alive = false; sub?.remove(); };
+  }, [active]);
 
   const [pan] = useState(() => PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 4,
+    onStartShouldSetPanResponder: () => false,
+    onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 8 && Math.abs(g.dx) > Math.abs(g.dy) * 1.5,
     onPanResponderGrant: () => { gesture.base = gesture.live; },
     onPanResponderMove: (_, g) => { gesture.live = gesture.base + g.dx * 0.012; setDrag(gesture.live); },
     onPanResponderRelease: (_, g) => {
@@ -55,17 +67,11 @@ export default function Shield({
   const col = STATUS_COLOR[status] || c.sky;
   const yaw = t * 0.1 + drag;
   const scale = Math.min(width, 420) * 0.235;
-  const P = makeCamera({ cx: width / 2, cy: height * 0.6, scale, yaw, pitch: 0.42 + tilt, dist: 8 });
+  const P = makeCamera({ cx: width / 2, cy: height * 0.6, scale, yaw, pitch: 0.42 + tilt.current, dist: 8 });
 
   // dome wireframe
-  const meridians = [0, 1, 2, 3, 4, 5].map((i) => {
-    const a = (i * Math.PI) / 6;
-    return splitPath(P, Array.from({ length: 33 }, (_, j) => {
-      const ph = (j / 32) * Math.PI;
-      return [Math.cos(a) * Math.cos(ph), Math.sin(ph), Math.sin(a) * Math.cos(ph)];
-    }));
-  });
-  const parallels = [0.38, 0.78, 1.15].map((e) => splitPath(P, ring(Math.cos(e), Math.sin(e), 56)));
+  const meridians = DOME.map((pts) => splitPath(P, pts));
+  const parallels = PARALLELS.map((pts) => splitPath(P, pts));
   const wire = { near: [...meridians, ...parallels].map((m) => m.near).join(''), far: [...meridians, ...parallels].map((m) => m.far).join('') };
 
   // silhouette: upper half circle + near half of the base ellipse
@@ -134,7 +140,15 @@ export default function Shield({
   }
 
   return (
-    <View style={{ width, height }} {...pan.panHandlers} accessible accessibilityRole="button"
+    <View style={{ width, height }} {...pan.panHandlers}
+      onTouchStart={(e) => { touch.current = { x: e.nativeEvent.pageX, y: e.nativeEvent.pageY }; }}
+      onTouchEnd={(e) => {
+        const p = touch.current;
+        if (p && Math.hypot(e.nativeEvent.pageX - p.x, e.nativeEvent.pageY - p.y) < 6) setTapAt(Date.now());
+        touch.current = null;
+      }}
+      onTouchCancel={() => { touch.current = null; }}
+      accessible accessibilityRole="button" onAccessibilityTap={() => setTapAt(Date.now())}
       accessibilityLabel={`Your MedMesh shield. Status: ${status}. Drag to rotate, tap for details.`}>
       <Svg width={width} height={height}>
         <Defs>

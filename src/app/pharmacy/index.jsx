@@ -1,1 +1,2 @@
-export { default } from '../../../pharmacy/Requests';
+import FacilityPage from '../../../workflow/FacilityPage';
+export default function Page() { return <FacilityPage kind="pharmacy" />; }

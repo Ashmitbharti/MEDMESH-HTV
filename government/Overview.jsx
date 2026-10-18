@@ -26,10 +26,7 @@ export function GovHeader({ title, kicker, tint = c.violet }) {
           <Text style={{ color: tint, fontFamily: mono, fontSize: 10.5, letterSpacing: 2, fontWeight: '700' }}>{kicker}</Text>
           <Text style={{ color: c.ink, fontSize: 16, fontWeight: '800' }} numberOfLines={1}>{account?.name || 'Government'}</Text>
         </View>
-        <Pressable accessibilityRole="button" accessibilityLabel="Open the test kit" onPress={() => router.push('/testkit')}
-          style={{ width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: c.line2 }}>
-          <FlaskConical size={17} color={c.amber} />
-        </Pressable>
+
         <Pressable accessibilityRole="button" accessibilityLabel="Sign out" onPress={async () => { await signOut(); router.replace('/welcome'); }}
           style={{ width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: c.line2 }}>
           <LogOut size={17} color={c.muted} />
