@@ -39,6 +39,43 @@ Storms, floods and outages cut networks, and the people who depend on help most 
 | `floodsense/` | Flood-risk models for 11 creek gauges |
 | `node-link-health/linkhealth/` | Link-failure model (simulated data) |
 
+## Run locally
+
+You need Node.js with npm and Python 3.11 or newer. The simulator works without LoRa boards or API keys.
+
+```bash
+git clone https://github.com/Ashmitbharti/MEDMESH-HTV.git
+cd MEDMESH-HTV
+npm install
+python -m venv .venv
+```
+
+Activate the Python environment with `source .venv/bin/activate` on macOS/Linux, or `.\.venv\Scripts\Activate.ps1` in Windows PowerShell. Then start the command centre:
+
+```bash
+python -m pip install -r command-centre/base/requirements.txt
+python command-centre/base/server.py --sim
+```
+
+Open [localhost:8000](http://localhost:8000) for the command-centre dashboard. Keep this terminal running.
+
+Create a `.env` file in the project root:
+
+```dotenv
+EXPO_PUBLIC_COMMAND_CENTRE_URL=http://127.0.0.1:8000
+EXPO_PUBLIC_MESH_NODE=FIELD
+```
+
+In a second terminal, from the project root:
+
+```bash
+npm run web -- --localhost
+```
+
+Open the address Expo prints, choose a role, then select a demo account. Use **Test kit** to send sample emergencies, medicine requests and weather alerts. Keep both terminals running. Restart Expo after changing `.env`.
+
+For a phone on the same Wi-Fi, use the laptop's local IP instead of `127.0.0.1` in `.env` and run `npm start`. Supabase and Gemini setup is optional for the local demo; real sign-in, report extraction and generated emergency packs need their backend credentials.
+
 ## Hardware used
 
 - Heltec WiFi LoRa 32 V3 boards running Meshtastic firmware.
