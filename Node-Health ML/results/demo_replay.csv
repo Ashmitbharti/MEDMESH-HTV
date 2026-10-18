@@ -1,0 +1,20 @@
+mode,t_s,node_id,snr_mean_30s,rssi_mean_30s,A,alert,status,seconds_since_last_packet,top_features,model,dataset
+SIMULATED REPLAY,0,!dem00001,6.21,-111.4,0.3184,WATCH,OK,3.1,voltage_slope=-0.025;channel_utilization=7.53;snr_std_30s=0.807,logreg,coverage
+SIMULATED REPLAY,10,!dem00001,5.81,-112.0,0.3182,NONE,OK,1.2,voltage_slope=-0.025;channel_utilization=7.53;snr_std_30s=0.768,logreg,coverage
+SIMULATED REPLAY,20,!dem00001,5.68,-112.6,0.3182,NONE,OK,1.4,voltage_slope=-0.025;channel_utilization=7.53;snr_std_30s=0.799,logreg,coverage
+SIMULATED REPLAY,30,!dem00001,5.61,-112.7,0.3181,NONE,OK,3.7,seconds_since_last_packet=3.652;channel_utilization=7.84;snr_std_30s=0.693,logreg,coverage
+SIMULATED REPLAY,40,!dem00001,5.42,-112.7,0.3183,NONE,OK,5.6,seconds_since_last_packet=5.568;channel_utilization=7.84;snr_std_30s=0.656,logreg,coverage
+SIMULATED REPLAY,50,!dem00001,4.0,-114.0,0.3182,NONE,OK,0.9,rssi_slope_30s=-0.248;snr_slope_30s=-0.172;channel_utilization=7.84,logreg,coverage
+SIMULATED REPLAY,60,!dem00001,1.86,-116.4,0.3183,NONE,OK,0.1,rssi_slope_30s=-0.354;snr_slope_30s=-0.289;rssi_mean_30s=-116.429,logreg,coverage
+SIMULATED REPLAY,70,!dem00001,-0.79,-118.7,0.3185,WATCH,OK,0.3,rssi_mean_30s=-118.714;snr_slope_30s=-0.312;snr_mean_30s=-0.786,logreg,coverage
+SIMULATED REPLAY,80,!dem00001,-3.9,-121.2,0.319,WARNING,OK,3.6,rssi_mean_30s=-121.2;snr_mean_30s=-3.9;snr_slope_30s=-0.246,logreg,coverage
+SIMULATED REPLAY,90,!dem00001,-6.8,-123.6,0.3192,WARNING,OK,3.2,rssi_mean_30s=-123.6;snr_mean_30s=-6.8;snr_slope_30s=-0.323,logreg,coverage
+SIMULATED REPLAY,100,!dem00001,-9.8,-127.0,0.3195,WARNING,OK,4.2,rssi_mean_30s=-127.0;snr_mean_30s=-9.8;snr_slope_30s=-0.309,logreg,coverage
+SIMULATED REPLAY,110,!dem00001,-11.5,-129.3,0.3197,WARNING,OK,4.3,rssi_mean_30s=-129.333;snr_mean_30s=-11.5;packets_per_min=11.0,logreg,coverage
+SIMULATED REPLAY,120,!dem00001,-12.62,-130.8,0.3208,WARNING,OK,14.3,seconds_since_last_packet=14.319;rssi_mean_30s=-130.75;packets_per_min=9.0,logreg,coverage
+SIMULATED REPLAY,130,!dem00001,-13.38,-132.0,0.3229,WARNING,OK,24.3,seconds_since_last_packet=24.319;snr_slope_missing=1.0;packets_per_min=7.0,logreg,coverage
+SIMULATED REPLAY,140,!dem00001,,,0.3228,WARNING,OK,34.3,seconds_since_last_packet=34.319;snr_slope_missing=1.0;packets_per_min=6.0,logreg,coverage
+SIMULATED REPLAY,150,!dem00001,,,0.3237,WARNING,OK,44.3,seconds_since_last_packet=44.319;snr_slope_missing=1.0;packets_per_min=4.0,logreg,coverage
+SIMULATED REPLAY,160,!dem00001,,,0.3246,WARNING,OK,54.3,seconds_since_last_packet=54.319;packets_per_min=2.0;snr_slope_missing=1.0,logreg,coverage
+SIMULATED REPLAY,170,!dem00001,,,0.3256,WARNING,OK,64.3,seconds_since_last_packet=64.319;packets_per_min=0.0;snr_slope_missing=1.0,logreg,coverage
+SIMULATED REPLAY,180,!dem00001,,,0.3263,WARNING,OK,74.3,seconds_since_last_packet=74.319;packets_per_min=0.0;snr_slope_missing=1.0,logreg,coverage

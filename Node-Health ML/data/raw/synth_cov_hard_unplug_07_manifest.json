@@ -1,0 +1,19 @@
+{
+ "session_id": "cov_hard_unplug_07",
+ "is_simulated": true,
+ "t0": 1791025200.0,
+ "t0_utc": "2026-10-03T11:00:00+00:00",
+ "targets": {
+  "!cbb72222": [
+   {
+    "scenario": "hard_unplug",
+    "start": 0.0,
+    "end": 428.0126351184689,
+    "event": [
+     282.2239700512617,
+     282.2239700512617
+    ]
+   }
+  ]
+ }
+}

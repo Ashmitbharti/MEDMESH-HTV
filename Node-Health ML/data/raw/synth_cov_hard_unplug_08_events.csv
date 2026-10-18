@@ -1,0 +1,3 @@
+ts_utc,note
+2026-10-03T12:00:01.000+00:00,SIMULATED session cov_hard_unplug_08: scenario hard_unplug
+2026-10-03T12:03:39.639+00:00,SIMULATED: node unplugged (!46611754)

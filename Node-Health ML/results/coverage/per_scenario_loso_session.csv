@@ -1,0 +1,67 @@
+scenario,kind,positives,negatives,recall_watch,recall_warning,false_alarm_rate_watch,false_alarm_rate_warning,model
+walkout,failure,5,5,0.0,0.0,1.0,1.0,logreg
+obstruction,failure,5,5,0.0,0.0,1.0,1.0,logreg
+stepwise_fade,failure,5,5,0.0,0.0,1.0,1.0,logreg
+water,failure,5,5,0.0,0.0,1.0,1.0,logreg
+hard_unplug,failure,5,5,0.0,0.0,1.0,1.0,logreg
+relay_failure,failure,5,5,0.4,0.4,1.0,1.0,logreg
+brownout,failure,5,5,0.0,0.0,1.0,1.0,logreg
+short_dip,hard negative,0,10,,,1.0,1.0,logreg
+interference_burst,hard negative,0,10,,,0.9,0.9,logreg
+walk_away_back,hard negative,0,10,,,1.0,1.0,logreg
+baseline,baseline,0,10,,,1.0,1.0,logreg
+walkout,failure,5,5,1.0,0.0,1.0,0.2,rf
+obstruction,failure,5,5,0.8,0.0,1.0,0.0,rf
+stepwise_fade,failure,5,5,1.0,1.0,1.0,0.8,rf
+water,failure,5,5,1.0,0.6,1.0,0.4,rf
+hard_unplug,failure,5,5,1.0,0.4,0.8,0.4,rf
+relay_failure,failure,5,5,1.0,0.4,1.0,0.0,rf
+brownout,failure,5,5,1.0,0.8,1.0,0.2,rf
+short_dip,hard negative,0,10,,,1.0,0.3,rf
+interference_burst,hard negative,0,10,,,1.0,0.0,rf
+walk_away_back,hard negative,0,10,,,1.0,0.4,rf
+baseline,baseline,0,10,,,0.9,0.0,rf
+walkout,failure,5,5,0.8,0.0,1.0,0.0,lgbm
+obstruction,failure,5,5,0.8,0.0,0.8,0.0,lgbm
+stepwise_fade,failure,5,5,1.0,0.4,1.0,0.0,lgbm
+water,failure,5,5,0.8,0.0,1.0,0.0,lgbm
+hard_unplug,failure,5,5,1.0,0.2,1.0,0.0,lgbm
+relay_failure,failure,5,5,0.6,0.2,1.0,0.0,lgbm
+brownout,failure,5,5,1.0,0.8,1.0,0.0,lgbm
+short_dip,hard negative,0,10,,,1.0,0.0,lgbm
+interference_burst,hard negative,0,10,,,1.0,0.0,lgbm
+walk_away_back,hard negative,0,10,,,1.0,0.2,lgbm
+baseline,baseline,0,10,,,0.9,0.0,lgbm
+walkout,failure,5,5,0.8,0.8,0.0,0.0,snr_rule
+obstruction,failure,5,5,0.4,0.4,0.2,0.2,snr_rule
+stepwise_fade,failure,5,5,1.0,1.0,0.8,0.8,snr_rule
+water,failure,5,5,0.8,0.8,0.2,0.2,snr_rule
+hard_unplug,failure,5,5,0.8,0.8,0.6,0.6,snr_rule
+relay_failure,failure,5,5,0.6,0.6,0.4,0.4,snr_rule
+brownout,failure,5,5,0.4,0.4,0.4,0.4,snr_rule
+short_dip,hard negative,0,10,,,0.5,0.5,snr_rule
+interference_burst,hard negative,0,10,,,0.8,0.8,snr_rule
+walk_away_back,hard negative,0,10,,,0.8,0.8,snr_rule
+baseline,baseline,0,10,,,0.3,0.3,snr_rule
+walkout,failure,5,5,1.0,0.0,1.0,0.0,silence_rule
+obstruction,failure,5,5,1.0,0.0,0.8,0.0,silence_rule
+stepwise_fade,failure,5,5,1.0,0.0,1.0,0.0,silence_rule
+water,failure,5,5,1.0,0.2,1.0,0.2,silence_rule
+hard_unplug,failure,5,5,0.8,0.0,0.8,0.0,silence_rule
+relay_failure,failure,5,5,1.0,0.6,0.6,0.0,silence_rule
+brownout,failure,5,5,0.8,0.0,0.8,0.0,silence_rule
+short_dip,hard negative,0,10,,,0.8,0.0,silence_rule
+interference_burst,hard negative,0,10,,,0.9,0.2,silence_rule
+walk_away_back,hard negative,0,10,,,0.9,0.0,silence_rule
+baseline,baseline,0,10,,,0.8,0.0,silence_rule
+walkout,failure,5,5,0.0,0.0,0.0,0.0,always_no
+obstruction,failure,5,5,0.0,0.0,0.0,0.0,always_no
+stepwise_fade,failure,5,5,0.0,0.0,0.0,0.0,always_no
+water,failure,5,5,0.0,0.0,0.0,0.0,always_no
+hard_unplug,failure,5,5,0.0,0.0,0.0,0.0,always_no
+relay_failure,failure,5,5,0.0,0.0,0.0,0.0,always_no
+brownout,failure,5,5,0.0,0.0,0.0,0.0,always_no
+short_dip,hard negative,0,10,,,0.0,0.0,always_no
+interference_burst,hard negative,0,10,,,0.0,0.0,always_no
+walk_away_back,hard negative,0,10,,,0.0,0.0,always_no
+baseline,baseline,0,10,,,0.0,0.0,always_no

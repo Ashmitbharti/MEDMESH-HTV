@@ -1,0 +1,3 @@
+ts_utc,note
+2026-10-01T16:00:01.000+00:00,SIMULATED session cov_walkout_04: scenario walkout
+2026-10-01T16:03:56.248+00:00,SIMULATED: carrying node out of range (!6be4cfc0)

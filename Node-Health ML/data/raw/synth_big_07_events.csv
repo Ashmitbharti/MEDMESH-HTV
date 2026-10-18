@@ -1,0 +1,11 @@
+ts_utc,note
+2026-11-12T11:00:01.000+00:00,SIMULATED session big_07
+2026-11-12T11:01:34.034+00:00,SIMULATED: walk away and back (!c0ead476)
+2026-11-12T11:03:29.167+00:00,SIMULATED: water on node (!15135238)
+2026-11-12T11:10:49.593+00:00,SIMULATED: battery starts sagging (!55fdcbf9)
+2026-11-12T11:14:12.552+00:00,SIMULATED: battery starts sagging (!15135238)
+2026-11-12T11:18:25.673+00:00,SIMULATED: short signal dip (!55fdcbf9)
+2026-11-12T11:19:51.821+00:00,SIMULATED: short signal dip (!15135238)
+2026-11-12T11:25:34.650+00:00,SIMULATED: short signal dip (!55fdcbf9)
+2026-11-12T11:26:30.492+00:00,SIMULATED: battery starts sagging (!c0ead476)
+2026-11-12T11:28:02.594+00:00,SIMULATED: walk away and back (!15135238)

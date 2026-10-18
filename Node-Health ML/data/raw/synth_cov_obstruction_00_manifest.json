@@ -1,0 +1,19 @@
+{
+ "session_id": "cov_obstruction_00",
+ "is_simulated": true,
+ "t0": 1790892000.0,
+ "t0_utc": "2026-10-01T22:00:00+00:00",
+ "targets": {
+  "!d58f5f2d": [
+   {
+    "scenario": "obstruction",
+    "start": 0.0,
+    "end": 372.0881839285106,
+    "event": [
+     224.6215852684385,
+     242.44886830829856
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,12 @@
+ts_utc,note
+2026-11-12T05:00:01.000+00:00,SIMULATED session big_01
+2026-11-12T05:04:10.274+00:00,SIMULATED: slow stepwise fade begins (!90fe2cc1)
+2026-11-12T05:04:37.532+00:00,SIMULATED: node unplugged (!f3eab04e)
+2026-11-12T05:04:57.661+00:00,SIMULATED: battery starts sagging (!47f13614)
+2026-11-12T05:10:10.639+00:00,SIMULATED: relay unplugged (!f3eab04e)
+2026-11-12T05:13:30.869+00:00,SIMULATED: short signal dip (!90fe2cc1)
+2026-11-12T05:15:40.615+00:00,SIMULATED: battery starts sagging (!47f13614)
+2026-11-12T05:19:45.008+00:00,SIMULATED: water on node (!f3eab04e)
+2026-11-12T05:21:29.992+00:00,SIMULATED: interference burst (!90fe2cc1)
+2026-11-12T05:25:00.888+00:00,SIMULATED: walk away and back (!f3eab04e)
+2026-11-12T05:26:09.894+00:00,SIMULATED: relay unplugged (!47f13614)

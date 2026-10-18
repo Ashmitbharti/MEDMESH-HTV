@@ -1,0 +1,16 @@
+{
+ "session_id": "cov_baseline_04",
+ "is_simulated": true,
+ "t0": 1791230400.0,
+ "t0_utc": "2026-10-05T20:00:00+00:00",
+ "targets": {
+  "!7344441d": [
+   {
+    "scenario": "baseline",
+    "start": 0.0,
+    "end": 410.8103094935454,
+    "event": null
+   }
+  ]
+ }
+}

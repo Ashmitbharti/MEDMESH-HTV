@@ -1,0 +1,19 @@
+{
+ "session_id": "cov_interference_burst_07",
+ "is_simulated": true,
+ "t0": 1791169200.0,
+ "t0_utc": "2026-10-05T03:00:00+00:00",
+ "targets": {
+  "!7a3d70c0": [
+   {
+    "scenario": "interference_burst",
+    "start": 0.0,
+    "end": 471.21529067628234,
+    "event": [
+     127.43188049726808,
+     185.86647322401643
+    ]
+   }
+  ]
+ }
+}

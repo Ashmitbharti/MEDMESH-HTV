@@ -1,0 +1,251 @@
+
+$ python -m pytest tests -q -p no:cacheprovider
+.................                                                        [100%]
+17 passed in 0.66s
+
+$ python make_coverage_data.py --big
+SIMULATED DATA (is_simulated=1). Coverage table:
+                    rows  sessions  positives           kind
+scenario                                                    
+walkout              642        14        378        failure
+obstruction          440        13        324        failure
+stepwise_fade        717        13        234        failure
+water                842        17        378        failure
+hard_unplug          459        15        342        failure
+relay_failure        638        13        360        failure
+brownout             905        15        396        failure
+short_dip            488         9          0  hard negative
+interference_burst   379         8          0  hard negative
+walk_away_back       477         8          0  hard negative
+baseline             493        13          0       baseline
+TOTAL               6480        20       2412               
+
+6480 rows, 20 sessions, positives 2412 (37.2%), failure events behind the positive rows: 134
+raw logs: 20 x C:\Users\Shiven\hackathon\MEDMESH-HTV\node-link-health\linkhealth\data\raw/synth_big_*.csv (+ _events.csv, _manifest.json) -> C:\Users\Shiven\hackathon\MEDMESH-HTV\node-link-health\linkhealth\data\big.csv
+
+$ python train.py --data big --shuffles 10
+=== Model A (link health), dataset big: 6480 rows, 20 sessions, 2412 positives (37.2%); is_simulated all 1: True ===
+
+=== STEP 1: split by session ===
+  TRAIN:  3991 rows,  12 sessions, 1458 positives (36.5%)
+         sessions: big_00, big_03, big_05, big_06, big_07, big_09, big_10, big_12, big_14, big_15, big_16, big_19
+  VAL  :  1215 rows,   4 sessions, 432 positives (35.6%)
+         sessions: big_02, big_04, big_11, big_18
+  TEST :  1274 rows,   4 sessions, 522 positives (41.0%)
+         sessions: big_01, big_08, big_13, big_17
+  rows / positives per scenario and split:
+                    rows_train  pos_train  rows_val  pos_val  rows_test  pos_test
+scenario                                                                         
+walkout                    366        216       135       72        141        90
+obstruction                301        216        72       54         67        54
+stepwise_fade              383        126       233       72        101        36
+water                      633        288        91       36        118        54
+hard_unplug                204        162       109       72        146       108
+relay_failure              351        198       152       90        135        72
+brownout                   585        252        81       36        239       108
+short_dip                  357          0        85        0         46         0
+interference_burst         128          0        91        0        160         0
+walk_away_back             376          0        48        0         53         0
+baseline                   307          0       118        0         68         0
+
+=== STEP 2: tuning (TRAIN only) ===
+  tuning on TRAIN only: 3991 rows, 1458 positives, 12 sessions; GroupKFold(5) by session, test-fold positives [360, 342, 288, 198, 270]; n_iter=15
+  NOTE: with this little data the CV score of each candidate is noisy, so picking the best of 15 candidates mostly fits noise. A tuned set is kept only if it gains >= 0.01 CV PR-AUC.
+ model  default_cv_pr_auc  default_std  tuned_cv_pr_auc  tuned_std    gain  gain_vs_tuned_std    kept
+logreg             0.7198       0.0337           0.7244     0.0342  0.0046             0.1340 default
+    rf             0.7022       0.0403           0.7135     0.0358  0.0113             0.3154   tuned
+  lgbm             0.7034       0.0265           0.7033     0.0265 -0.0001            -0.0045 default
+  (gain_vs_tuned_std < 1 means the gain is smaller than the fold-to-fold spread of the winner itself)
+
+=== STEP 3: fit on TRAIN, thresholds on VALIDATION ===
+  logreg: WATCH = 0.1694 (F2-optimal on val), WARNING = 0.5414 (lowest threshold with val precision >= 0.5)
+  rf: WATCH = 0.3603 (F2-optimal on val), WARNING = 0.4290 (lowest threshold with val precision >= 0.5)
+  lgbm: WATCH = 0.1837 (F2-optimal on val), WARNING = 0.3247 (lowest threshold with val precision >= 0.5)
+  snr_rule: WATCH = max SNR(30 s) < 10.75 dB, WARNING = max SNR(30 s) < 1.00 dB (lowest threshold with val precision >= 0.5)
+  silence_rule: WATCH = seconds_since_last_packet >= 0.0, WARNING >= 4.8 (lowest threshold with val precision >= 0.5)
+
+=== STEP 4: VALIDATION and TEST (TEST scored once, thresholds fixed) ===
+  --- VAL at WATCH (ranked by PR-AUC; accuracy shown, not used) ---
+       model  precision  recall    f1    f2  pr_auc  roc_auc  brier  accuracy  tn  fp  fn  tp events  median_lead_s     cv_pr_auc
+          rf      0.398   0.991 0.568 0.763   0.651    0.682  0.198     0.463 135 648   4 428  24/24        174.703 0.713+/-0.036
+        lgbm      0.396   0.984 0.565 0.759   0.643    0.677  0.185     0.462 136 647   7 425  24/24        174.703 0.703+/-0.027
+      logreg      0.381   0.993 0.551 0.752   0.617    0.660  0.225     0.425  87 696   3 429  24/24        174.784 0.720+/-0.034
+    snr_rule      0.361   0.991 0.529 0.734   0.531    0.540  0.627     0.373  25 758   4 428  24/24        174.784 0.600+/-0.053
+silence_rule      0.356   1.000 0.525 0.734   0.464    0.543  0.644     0.356   0 783   0 432  24/24        174.784 0.465+/-0.060
+   always_no      0.000   0.000 0.000 0.000   0.356    0.500  0.356     0.644 783   0 432   0   0/24            NaN 0.371+/-0.051
+  --- VAL at WARNING (ranked by PR-AUC; accuracy shown, not used) ---
+       model  precision  recall    f1    f2  pr_auc  roc_auc  brier  accuracy  tn  fp  fn  tp events  median_lead_s     cv_pr_auc
+          rf      0.501   0.567 0.532 0.553   0.651    0.682  0.198     0.645 539 244 187 245  22/24        159.342 0.713+/-0.036
+        lgbm      0.507   0.532 0.519 0.527   0.643    0.677  0.185     0.649 559 224 202 230  22/24        124.430 0.703+/-0.027
+      logreg      0.500   0.488 0.494 0.491   0.617    0.660  0.225     0.644 572 211 221 211  23/24        117.567 0.720+/-0.034
+    snr_rule      0.559   0.319 0.406 0.349   0.531    0.540  0.332     0.668 674 109 294 138  17/24         56.766 0.600+/-0.053
+silence_rule      0.500   0.199 0.285 0.226   0.464    0.543  0.356     0.644 697  86 346  86  23/24        117.942 0.465+/-0.060
+   always_no      0.000   0.000 0.000 0.000   0.356    0.500  0.356     0.644 783   0 432   0   0/24            NaN 0.371+/-0.051
+  --- TEST at WATCH (ranked by PR-AUC; accuracy shown, not used) ---
+       model  precision  recall    f1    f2  pr_auc  roc_auc  brier  accuracy  tn  fp  fn  tp events  median_lead_s     cv_pr_auc
+        lgbm      0.455   0.979 0.621 0.796   0.694    0.703  0.198     0.511 140 612  11 511  29/29        176.227 0.703+/-0.027
+          rf      0.458   0.981 0.624 0.798   0.683    0.681  0.198     0.516 145 607  10 512  29/29        176.227 0.713+/-0.036
+      logreg      0.443   0.985 0.612 0.791   0.679    0.690  0.204     0.487 107 645   8 514  29/29        176.213 0.720+/-0.034
+    snr_rule      0.418   0.971 0.584 0.768   0.559    0.582  0.566     0.434  46 706  15 507  29/29        176.227 0.600+/-0.053
+silence_rule      0.410   1.000 0.581 0.776   0.488    0.533  0.590     0.410   0 752   0 522  29/29        176.375 0.465+/-0.060
+   always_no      0.000   0.000 0.000 0.000   0.410    0.500  0.410     0.590 752   0 522   0   0/29            NaN 0.371+/-0.051
+  --- TEST at WARNING (ranked by PR-AUC; accuracy shown, not used) ---
+       model  precision  recall    f1    f2  pr_auc  roc_auc  brier  accuracy  tn  fp  fn  tp events  median_lead_s     cv_pr_auc
+        lgbm      0.661   0.433 0.523 0.465   0.694    0.703  0.198     0.677 636 116 296 226  22/29        104.570 0.703+/-0.027
+          rf      0.652   0.448 0.531 0.478   0.683    0.681  0.198     0.676 627 125 288 234  21/29        100.829 0.713+/-0.036
+      logreg      0.710   0.404 0.515 0.442   0.679    0.690  0.204     0.688 666  86 311 211  22/29        115.525 0.720+/-0.034
+    snr_rule      0.868   0.176 0.293 0.210   0.559    0.582  0.349     0.651 738  14 430  92  16/29         29.046 0.600+/-0.053
+silence_rule      0.500   0.176 0.261 0.202   0.488    0.533  0.410     0.590 660  92 430  92  29/29        120.829 0.465+/-0.060
+   always_no      0.000   0.000 0.000 0.000   0.410    0.500  0.410     0.590 752   0 522   0   0/29            NaN 0.371+/-0.051
+  NOTE: baselines' Brier is computed on their 0/1 alarm (they output no probability). CV = GroupKFold(5) by session on TRAIN. Lead time = earliest alarm before the failure, per caught failure event.
+  REFERENCE: 'always alarm' on VAL has precision 0.356, recall 1, F2 0.734
+  REFERENCE: 'always alarm' on TEST has precision 0.410, recall 1, F2 0.776
+  WARNING: logreg's F2-optimal WATCH alarms on 89% of VALIDATION negatives. At this base rate F2 rewards alarming on nearly everything, so WATCH is close to 'always alarm'; WARNING is the usable level.
+  WARNING: rf's F2-optimal WATCH alarms on 83% of VALIDATION negatives. At this base rate F2 rewards alarming on nearly everything, so WATCH is close to 'always alarm'; WARNING is the usable level.
+  WARNING: lgbm's F2-optimal WATCH alarms on 83% of VALIDATION negatives. At this base rate F2 rewards alarming on nearly everything, so WATCH is close to 'always alarm'; WARNING is the usable level.
+  NOTE: TEST has 522 positive rows; one row more or less caught moves recall by 0.00.
+
+=== STEP 5: feature importances and coefficients ===
+  rf importance (impurity decrease, share): snr_mean_30s=0.21, rssi_mean_30s=0.19, voltage_slope=0.14, battery_voltage=0.13, snr_std_30s=0.11, snr_slope_30s=0.07, packets_per_min=0.06, seconds_since_last_packet=0.03, rssi_slope_30s=0.03, channel_utilization=0.01, hops_used=0.01, hops_change_120s=0.01, snr_missing=0.00, snr_slope_missing=0.00, voltage_missing=0.00, chutil_missing=0.00
+  lgbm importance (gain, share): rssi_mean_30s=0.23, battery_voltage=0.18, voltage_slope=0.17, snr_mean_30s=0.14, snr_std_30s=0.11, packets_per_min=0.09, snr_slope_30s=0.03, seconds_since_last_packet=0.02, hops_used=0.02, channel_utilization=0.00, rssi_slope_30s=0.00
+  logreg coefficients (per 1 std of the feature, + = more risk): voltage_slope=-0.78, packets_per_min=+0.66, rssi_mean_30s=-0.36, snr_mean_30s=-0.36, seconds_since_last_packet=+0.34, hops_change_120s=+0.30, snr_slope_30s=-0.29, snr_slope_missing=+0.15, hops_used=+0.11, snr_std_30s=+0.11, battery_voltage=-0.10, snr_missing=+0.07, rssi_slope_30s=-0.06, channel_utilization=+0.01, voltage_missing=-0.00, chutil_missing=-0.00, hops_missing=+0.00
+
+=== STEP 6: winner (validation PR-AUC; within 0.01 -> F2 at WATCH; within 0.01 -> simpler) ===
+  rf      val PR-AUC 0.651  F2@WATCH 0.763  train-CV PR-AUC 0.713 +/- 0.036
+  lgbm    val PR-AUC 0.643  F2@WATCH 0.759  train-CV PR-AUC 0.703 +/- 0.027
+  logreg  val PR-AUC 0.617  F2@WATCH 0.752  train-CV PR-AUC 0.720 +/- 0.034
+  WINNER: rf. Validation has 432 positives: differences of a few hundredths are within noise.
+  rf on TEST at WATCH: precision 0.458, recall 0.981, F2 0.798, PR-AUC 0.683, false alarms 607/752, events caught 29/29, median lead 176 s
+  rf on TEST at WARNING: precision 0.652, recall 0.448, F2 0.478, PR-AUC 0.683, false alarms 125/752, events caught 21/29, median lead 101 s
+  baseline snr_rule     on TEST at WATCH: precision 0.418, recall 0.971, F2 0.768, PR-AUC 0.559
+  baseline silence_rule on TEST at WATCH: precision 0.410, recall 1.000, F2 0.776, PR-AUC 0.488
+  baseline always_no    on TEST at WATCH: precision 0.000, recall 0.000, F2 0.000, PR-AUC 0.410
+
+=== STEP 7: per-scenario recall and false-alarm rate ===
+  (a) TEST split, rf, fixed thresholds:
+          scenario          kind  positives  negatives  recall_watch  recall_warning  false_alarm_rate_watch  false_alarm_rate_warning
+           walkout       failure         90         51          0.99            0.38                    0.61                      0.08
+       obstruction       failure         54         13          0.98            0.31                    0.08                      0.00
+     stepwise_fade       failure         36         65          1.00            1.00                    0.86                      0.25
+             water       failure         54         64          1.00            0.59                    0.75                      0.02
+       hard_unplug       failure        108         38          0.94            0.00                    0.74                      0.11
+     relay_failure       failure         72         63          0.99            0.42                    0.71                      0.08
+          brownout       failure        108        131          0.99            0.79                    0.86                      0.15
+         short_dip hard negative          0         46           NaN             NaN                    0.87                      0.30
+interference_burst hard negative          0        160           NaN             NaN                    0.88                      0.25
+    walk_away_back hard negative          0         53           NaN             NaN                    0.91                      0.23
+          baseline      baseline          0         68           NaN             NaN                    0.84                      0.13
+    FAILS (TEST): walkout: recall 0.99 at WATCH, 0.38 at WARNING (90 positive rows) - most of the lead-up is missed at WARNING.
+    FAILS (TEST): obstruction: recall 0.98 at WATCH, 0.31 at WARNING (54 positive rows) - most of the lead-up is missed at WARNING.
+    FAILS (TEST): hard_unplug: recall 0.94 at WATCH, 0.00 at WARNING (108 positive rows) - most of the lead-up is missed at WARNING.
+    FAILS (TEST): relay_failure: recall 0.99 at WATCH, 0.42 at WARNING (72 positive rows) - most of the lead-up is missed at WARNING.
+    FALSE ALARMS (TEST): walkout: 61% of its 51 negative rows alarm at WATCH, 8% at WARNING.
+    FALSE ALARMS (TEST): obstruction: 8% of its 13 negative rows alarm at WATCH, 0% at WARNING.
+    FALSE ALARMS (TEST): stepwise_fade: 86% of its 65 negative rows alarm at WATCH, 25% at WARNING.
+    FALSE ALARMS (TEST): water: 75% of its 64 negative rows alarm at WATCH, 2% at WARNING.
+    FALSE ALARMS (TEST): hard_unplug: 74% of its 38 negative rows alarm at WATCH, 11% at WARNING.
+    FALSE ALARMS (TEST): relay_failure: 71% of its 63 negative rows alarm at WATCH, 8% at WARNING.
+    FALSE ALARMS (TEST): brownout: 86% of its 131 negative rows alarm at WATCH, 15% at WARNING.
+    FALSE ALARMS (TEST): HARD NEGATIVE short_dip: 87% of its 46 negative rows alarm at WATCH, 30% at WARNING.
+    FALSE ALARMS (TEST): HARD NEGATIVE interference_burst: 88% of its 160 negative rows alarm at WATCH, 25% at WARNING.
+    FALSE ALARMS (TEST): HARD NEGATIVE walk_away_back: 91% of its 53 negative rows alarm at WATCH, 23% at WARNING.
+    FALSE ALARMS (TEST): baseline: 84% of its 68 negative rows alarm at WATCH, 13% at WARNING.
+  TEST without hard_unplug rows (unpredictable from signal): recall 0.990, precision 0.415, PR-AUC 0.728
+
+  (b) leave-one-SESSION-out, out-of-fold predictions for every row (all splits; params fixed from train tuning, thresholds fixed from validation; diagnostic only, nothing is chosen here):
+          scenario          kind  positives  negatives  recall_watch  recall_warning  false_alarm_rate_watch  false_alarm_rate_warning
+           walkout       failure        378        264          1.00            0.39                    0.71                      0.12
+       obstruction       failure        324        116          0.98            0.06                    0.54                      0.11
+     stepwise_fade       failure        234        483          1.00            0.96                    0.89                      0.37
+             water       failure        378        464          1.00            0.76                    0.79                      0.12
+       hard_unplug       failure        342        117          0.97            0.07                    0.63                      0.10
+     relay_failure       failure        360        278          1.00            0.46                    0.76                      0.10
+          brownout       failure        396        509          0.99            0.78                    0.88                      0.19
+         short_dip hard negative          0        488           NaN             NaN                    0.93                      0.35
+interference_burst hard negative          0        379           NaN             NaN                    0.91                      0.29
+    walk_away_back hard negative          0        477           NaN             NaN                    0.93                      0.41
+          baseline      baseline          0        493           NaN             NaN                    0.91                      0.30
+    FAILS (leave-one-session-out): walkout: recall 1.00 at WATCH, 0.39 at WARNING (378 positive rows) - most of the lead-up is missed at WARNING.
+    FAILS (leave-one-session-out): obstruction: recall 0.98 at WATCH, 0.06 at WARNING (324 positive rows) - most of the lead-up is missed at WARNING.
+    FAILS (leave-one-session-out): hard_unplug: recall 0.97 at WATCH, 0.07 at WARNING (342 positive rows) - most of the lead-up is missed at WARNING.
+    FAILS (leave-one-session-out): relay_failure: recall 1.00 at WATCH, 0.46 at WARNING (360 positive rows) - most of the lead-up is missed at WARNING.
+    FALSE ALARMS (leave-one-session-out): walkout: 71% of its 264 negative rows alarm at WATCH, 12% at WARNING.
+    FALSE ALARMS (leave-one-session-out): obstruction: 54% of its 116 negative rows alarm at WATCH, 11% at WARNING.
+    FALSE ALARMS (leave-one-session-out): stepwise_fade: 89% of its 483 negative rows alarm at WATCH, 37% at WARNING.
+    FALSE ALARMS (leave-one-session-out): water: 79% of its 464 negative rows alarm at WATCH, 12% at WARNING.
+    FALSE ALARMS (leave-one-session-out): hard_unplug: 63% of its 117 negative rows alarm at WATCH, 10% at WARNING.
+    FALSE ALARMS (leave-one-session-out): relay_failure: 76% of its 278 negative rows alarm at WATCH, 10% at WARNING.
+    FALSE ALARMS (leave-one-session-out): brownout: 88% of its 509 negative rows alarm at WATCH, 19% at WARNING.
+    FALSE ALARMS (leave-one-session-out): HARD NEGATIVE short_dip: 93% of its 488 negative rows alarm at WATCH, 35% at WARNING.
+    FALSE ALARMS (leave-one-session-out): HARD NEGATIVE interference_burst: 91% of its 379 negative rows alarm at WATCH, 29% at WARNING.
+    FALSE ALARMS (leave-one-session-out): HARD NEGATIVE walk_away_back: 93% of its 477 negative rows alarm at WATCH, 41% at WARNING.
+    FALSE ALARMS (leave-one-session-out): baseline: 91% of its 493 negative rows alarm at WATCH, 30% at WARNING.
+
+=== STEP 8: leave-one-SCENARIO-out (train on the other 10 scenarios, all splits) ===
+  rf, each scenario scored by a model that never saw it:
+          scenario          kind  positives  negatives  recall_watch  recall_warning  false_alarm_rate_watch  false_alarm_rate_warning
+           walkout       failure        378        264          1.00            0.35                    0.67                      0.04
+       obstruction       failure        324        116          0.98            0.03                    0.54                      0.09
+     stepwise_fade       failure        234        483          1.00            0.97                    0.89                      0.62
+             water       failure        378        464          1.00            0.94                    0.79                      0.59
+       hard_unplug       failure        342        117          0.98            0.03                    0.64                      0.07
+     relay_failure       failure        360        278          0.98            0.66                    0.75                      0.27
+          brownout       failure        396        509          0.99            0.82                    0.86                      0.50
+         short_dip hard negative          0        488           NaN             NaN                    0.93                      0.16
+interference_burst hard negative          0        379           NaN             NaN                    0.94                      0.20
+    walk_away_back hard negative          0        477           NaN             NaN                    0.93                      0.29
+          baseline      baseline          0        493           NaN             NaN                    0.90                      0.14
+    FAILS (leave-one-scenario-out): walkout: recall 1.00 at WATCH, 0.35 at WARNING (378 positive rows) - most of the lead-up is missed at WARNING.
+    FAILS (leave-one-scenario-out): obstruction: recall 0.98 at WATCH, 0.03 at WARNING (324 positive rows) - most of the lead-up is missed at WARNING.
+    FAILS (leave-one-scenario-out): hard_unplug: recall 0.98 at WATCH, 0.03 at WARNING (342 positive rows) - most of the lead-up is missed at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): walkout: 67% of its 264 negative rows alarm at WATCH, 4% at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): obstruction: 54% of its 116 negative rows alarm at WATCH, 9% at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): stepwise_fade: 89% of its 483 negative rows alarm at WATCH, 62% at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): water: 79% of its 464 negative rows alarm at WATCH, 59% at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): hard_unplug: 64% of its 117 negative rows alarm at WATCH, 7% at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): relay_failure: 75% of its 278 negative rows alarm at WATCH, 27% at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): brownout: 86% of its 509 negative rows alarm at WATCH, 50% at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): HARD NEGATIVE short_dip: 93% of its 488 negative rows alarm at WATCH, 16% at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): HARD NEGATIVE interference_burst: 94% of its 379 negative rows alarm at WATCH, 20% at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): HARD NEGATIVE walk_away_back: 93% of its 477 negative rows alarm at WATCH, 29% at WARNING.
+    FALSE ALARMS (leave-one-scenario-out): baseline: 90% of its 493 negative rows alarm at WATCH, 14% at WARNING.
+
+  CV summary (pooled = all out-of-fold rows together; per-fold = mean +/- std over folds that contain both classes):
+       model                     cv  pooled_pr_auc  pooled_roc_auc  recall_watch  precision_watch  f2_watch  per_fold_pr_auc_mean  per_fold_pr_auc_std  folds_with_both_classes
+      logreg  leave-one-session-out          0.677           0.723         0.994            0.396     0.764                 0.713                0.078                       20
+          rf  leave-one-session-out          0.682           0.713         0.993            0.408     0.772                 0.725                0.067                       20
+        lgbm  leave-one-session-out          0.667           0.693         0.990            0.412     0.773                 0.713                0.061                       20
+    snr_rule  leave-one-session-out          0.558           0.611         0.971            0.381     0.741                 0.583                0.103                       20
+silence_rule  leave-one-session-out          0.467           0.543         1.000            0.372     0.748                 0.473                0.096                       20
+   always_no  leave-one-session-out          0.372           0.500         0.000            0.000     0.000                 0.376                0.097                       20
+      logreg leave-one-scenario-out          0.583           0.673         0.990            0.395     0.761                 0.805                0.029                        7
+          rf leave-one-scenario-out          0.572           0.625         0.989            0.408     0.770                 0.810                0.101                        7
+        lgbm leave-one-scenario-out          0.487           0.522         0.984            0.408     0.768                 0.776                0.158                        7
+    snr_rule leave-one-scenario-out          0.558           0.611         0.971            0.381     0.741                 0.743                0.137                        7
+silence_rule leave-one-scenario-out          0.467           0.543         1.000            0.372     0.748                 0.636                0.110                        7
+   always_no leave-one-scenario-out          0.372           0.500         0.000            0.000     0.000                 0.550                0.145                        7
+
+=== STEP 9: overfitting checks ===
+  null reference: random scores on the same GroupKFold folds give CV PR-AUC 0.377 +/- 0.008 (base rate 0.365)
+ model  train_pr_auc  cv_pr_auc   gap  shuffled_cv_pr_auc  shuffled_std  random_score_cv_pr_auc  random_std  base_rate verdict
+logreg         0.725      0.720 0.005               0.369         0.014                   0.377       0.008      0.365      ok
+    rf         0.773      0.713 0.060               0.375         0.010                   0.377       0.008      0.365      ok
+  lgbm         0.780      0.703 0.077               0.373         0.016                   0.377       0.008      0.365      ok
+  logreg: train-vs-CV gap +0.005; shuffled-label CV PR-AUC 0.369 vs random-score 0.377 (base rate 0.365) -> no leakage sign: falls to the random level
+  rf: train-vs-CV gap +0.060; shuffled-label CV PR-AUC 0.375 vs random-score 0.377 (base rate 0.365) -> no leakage sign: falls to the random level
+  lgbm: train-vs-CV gap +0.077; shuffled-label CV PR-AUC 0.373 vs random-score 0.377 (base rate 0.365) -> no leakage sign: falls to the random level
+
+  learning curve: fraction of TRAIN sessions -> PR-AUC on VALIDATION (mean of 5 draws; 1 at 100%)
+model               lgbm  logreg     rf
+fraction sessions                      
+0.25     3         0.562   0.602  0.615
+0.50     6         0.632   0.610  0.633
+0.75     9         0.644   0.616  0.644
+1.00     12        0.643   0.617  0.651
+
+=== STEP 10: save ===
+  saved C:\Users\Shiven\hackathon\MEDMESH-HTV\node-link-health\linkhealth\models\big\linkhealth.joblib (rf), thresholds.json, features.json
+
+Done in 71s. Tables and plots in C:\Users\Shiven\hackathon\MEDMESH-HTV\node-link-health\linkhealth\results\big
+
+run_all done in 76s; log in results/run_all_big.log

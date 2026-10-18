@@ -1,0 +1,19 @@
+{
+ "session_id": "cov_walk_away_back_00",
+ "is_simulated": true,
+ "t0": 1791180000.0,
+ "t0_utc": "2026-10-05T06:00:00+00:00",
+ "targets": {
+  "!ad20500b": [
+   {
+    "scenario": "walk_away_back",
+    "start": 0.0,
+    "end": 509.4187596688242,
+    "event": [
+     76.9471049317087,
+     218.80866346985908
+    ]
+   }
+  ]
+ }
+}

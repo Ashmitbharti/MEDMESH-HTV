@@ -1,0 +1,14 @@
+ts_utc,note
+2026-11-12T20:00:01.000+00:00,SIMULATED session big_16
+2026-11-12T20:01:30.074+00:00,SIMULATED: interference burst (!c2a69410)
+2026-11-12T20:03:41.131+00:00,SIMULATED: relay unplugged (!36baf8f6)
+2026-11-12T20:03:55.159+00:00,SIMULATED: water on node (!09a86f83)
+2026-11-12T20:10:29.827+00:00,SIMULATED: interference burst (!36baf8f6)
+2026-11-12T20:11:45.178+00:00,SIMULATED: water on node (!c2a69410)
+2026-11-12T20:12:23.308+00:00,SIMULATED: node blocked by obstruction (!09a86f83)
+2026-11-12T20:19:44.863+00:00,SIMULATED: relay unplugged (!09a86f83)
+2026-11-12T20:19:46.658+00:00,SIMULATED: carrying node out of range (!36baf8f6)
+2026-11-12T20:21:31.110+00:00,SIMULATED: battery starts sagging (!c2a69410)
+2026-11-12T20:26:42.668+00:00,SIMULATED: short signal dip (!09a86f83)
+2026-11-12T20:28:02.401+00:00,SIMULATED: node blocked by obstruction (!36baf8f6)
+2026-11-12T20:30:59.171+00:00,SIMULATED: relay unplugged (!c2a69410)

@@ -1,0 +1,13 @@
+ts_utc,note
+2026-11-12T22:00:01.000+00:00,SIMULATED session big_18
+2026-11-12T22:04:29.501+00:00,SIMULATED: node blocked by obstruction (!62b8b6f5)
+2026-11-12T22:04:47.388+00:00,SIMULATED: battery starts sagging (!63a2d776)
+2026-11-12T22:11:34.366+00:00,SIMULATED: carrying node out of range (!62b8b6f5)
+2026-11-12T22:11:47.004+00:00,SIMULATED: node unplugged (!67154213)
+2026-11-12T22:14:53.363+00:00,SIMULATED: water on node (!63a2d776)
+2026-11-12T22:18:37.827+00:00,SIMULATED: node unplugged (!67154213)
+2026-11-12T22:20:15.280+00:00,SIMULATED: carrying node out of range (!62b8b6f5)
+2026-11-12T22:22:18.085+00:00,SIMULATED: node blocked by obstruction (!63a2d776)
+2026-11-12T22:24:59.885+00:00,SIMULATED: slow stepwise fade begins (!67154213)
+2026-11-12T22:28:06.487+00:00,SIMULATED: node blocked by obstruction (!62b8b6f5)
+2026-11-12T22:28:22.254+00:00,SIMULATED: slow stepwise fade begins (!63a2d776)

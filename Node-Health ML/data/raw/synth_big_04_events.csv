@@ -1,0 +1,12 @@
+ts_utc,note
+2026-11-12T08:00:01.000+00:00,SIMULATED session big_04
+2026-11-12T08:01:39.936+00:00,SIMULATED: walk away and back (!c17f92c8)
+2026-11-12T08:03:55.987+00:00,SIMULATED: slow stepwise fade begins (!6541f18e)
+2026-11-12T08:04:37.855+00:00,SIMULATED: battery starts sagging (!bbee9895)
+2026-11-12T08:10:56.462+00:00,SIMULATED: short signal dip (!c17f92c8)
+2026-11-12T08:14:06.053+00:00,SIMULATED: node unplugged (!bbee9895)
+2026-11-12T08:17:49.210+00:00,SIMULATED: slow stepwise fade begins (!6541f18e)
+2026-11-12T08:20:12.304+00:00,SIMULATED: carrying node out of range (!bbee9895)
+2026-11-12T08:20:49.154+00:00,SIMULATED: carrying node out of range (!c17f92c8)
+2026-11-12T08:27:06.453+00:00,SIMULATED: node blocked by obstruction (!bbee9895)
+2026-11-12T08:29:14.785+00:00,SIMULATED: node unplugged (!c17f92c8)

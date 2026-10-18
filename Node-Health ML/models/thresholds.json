@@ -1,0 +1,45 @@
+{
+  "model": "logreg",
+  "WATCH": 0.31833291908948025,
+  "WARNING": 0.3189136941368474,
+  "warning_rule": "lowest threshold with val precision >= 0.5",
+  "watch_rule": "F2-optimal on validation",
+  "ACCURACY": 0.3201375068003413,
+  "accuracy_rule": "accuracy-optimal on validation",
+  "horizon_s": 120,
+  "silence_override_s": 90,
+  "dataset": "coverage",
+  "simulated": true,
+  "all": {
+    "logreg": {
+      "WATCH": 0.31833291908948025,
+      "WARNING": 0.3189136941368474,
+      "warning_rule": "lowest threshold with val precision >= 0.5"
+    },
+    "rf": {
+      "WATCH": 0.24554564475487678,
+      "WARNING": 0.5048408461342635,
+      "warning_rule": "lowest threshold with val precision >= 0.5"
+    },
+    "lgbm": {
+      "WATCH": 0.09564179882908473,
+      "WARNING": 0.6607688323698651,
+      "warning_rule": "lowest threshold with val precision >= 0.5"
+    },
+    "snr_rule": {
+      "WATCH": -5.0,
+      "WARNING": -5.0,
+      "warning_rule": "lowest threshold with val precision >= 0.5"
+    },
+    "silence_rule": {
+      "WATCH": 0.6169998645782471,
+      "WARNING": 6.264999866485596,
+      "warning_rule": "lowest threshold with val precision >= 0.5"
+    },
+    "always_no": {
+      "WATCH": 0.5,
+      "WARNING": 0.5,
+      "warning_rule": "never alarms"
+    }
+  }
+}

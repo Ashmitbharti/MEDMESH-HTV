@@ -1,0 +1,24 @@
+{
+  "logreg": {
+    "model__C": 0.00012411333354855078,
+    "model__class_weight": null,
+    "model__l1_ratio": 0.0
+  },
+  "rf": {
+    "model__n_estimators": 100,
+    "model__min_samples_leaf": 2,
+    "model__max_features": 0.5,
+    "model__max_depth": 3
+  },
+  "lgbm": {
+    "model__colsample_bytree": 0.7123738038749523,
+    "model__learning_rate": 0.06977921490278444,
+    "model__max_depth": 2,
+    "model__min_child_samples": 8,
+    "model__n_estimators": 64,
+    "model__num_leaves": 3,
+    "model__reg_lambda": 0.01673601016782578,
+    "model__subsample": 0.9960660809801551,
+    "model__subsample_freq": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+ "session_id": "cov_stepwise_fade_06",
+ "is_simulated": true,
+ "t0": 1790949600.0,
+ "t0_utc": "2026-10-02T14:00:00+00:00",
+ "targets": {
+  "!b9b05a49": [
+   {
+    "scenario": "stepwise_fade",
+    "start": 0.0,
+    "end": 598.7552683984757,
+    "event": [
+     204.86252606542297,
+     477.429470311505
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "session_id": "cov_relay_failure_01",
+ "is_simulated": true,
+ "t0": 1791039600.0,
+ "t0_utc": "2026-10-03T15:00:00+00:00",
+ "targets": {
+  "!19c7cfa2": [
+   {
+    "scenario": "relay_failure",
+    "start": 0.0,
+    "end": 502.14175654543874,
+    "event": [
+     245.3435114270767,
+     385.3435114270767
+    ]
+   }
+  ]
+ },
+ "relay": "!90bdd470"
+}
