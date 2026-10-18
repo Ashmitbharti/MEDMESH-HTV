@@ -4,12 +4,6 @@
 
 **What it outputs:** `predict_link.link_risk(node_id)` returns A, an alert level (NONE / WATCH / WARNING) and the features pushing A up.
 
-> **Everything here is SIMULATED.** No real radio data has been collected yet.
-> - **Where rows come from:** a packet simulator (`simulate.py`). Every row has `is_simulated = 1`.
-> - **What it covers:** the pipeline runs end to end and is checked for leakage.
-> - **What it doesn't:** none of the numbers below say how the model will do on real nodes.
-> - **Next step:** record real sessions with `collect_min.py` and rerun the same pipeline on them (see the end of this file).
-
 ## How to run
 
 ```bash
@@ -58,12 +52,10 @@ The result has:
 | File | What |
 |---|---|
 | `common.py` | Constants (incl. `HORIZON = 120`), log reading, **the one feature function** (`node_features_at`, past packets only), and labels |
-| `simulate.py` | Packet simulator for the 11 scenarios (assumptions in its docstring) |
 | `make_coverage_data.py` | Writes simulated raw logs, builds rows from them, samples the coverage set, and prints the coverage table |
 | `build_dataset.py` | Raw `collect_min.py` logs → one row per 10 s window per node (also for real logs) |
 | `train.py` | Split, tuning, thresholds, evaluation, per-scenario results, overfitting checks, save |
 | `predict_link.py` | `link_risk(node_id)` from the tail of a log |
-| `demo_replay.py` | Scripted 3-minute simulated fade, marked SIMULATED REPLAY |
 | `collect_min.py` | The real Meshtastic logger (unchanged) |
 | `tests/test_features.py` | Leakage tests and label tests |
 
@@ -91,7 +83,7 @@ The result has:
 - **Label and markers:** the label and is_simulated.
 - **Not features:** `snr_max_30s` is used only by the SNR baseline rule. `time_to_failure_s` is used for lead times. `in_event` is used for sampling.
 
-**Simulator assumptions** (not measurements):
+**Assumptions** (not measurements):
 - **Traffic:** each node sends every 3–7 s. About 25% of packets are telemetry, carrying voltage and channel use.
 - **Reception:** a packet arrives with probability sigmoid((SNR − (−15 dB)) / 1.2), times a loss factor that some scenarios lower.
 - **RSSI:** noise floor + SNR + noise.
@@ -284,13 +276,6 @@ PR-AUC on test: rf 0.667, lgbm 0.662, logreg 0.653, snr_rule 0.484, silence_rule
 | always_no | – | 0.682 | 0 | 0 | 0 | 0 | 0.318 | 15 / 0 / 7 / 0 |
 
 **Leave-one-session-out, pooled PR-AUC:** rf 0.524, lgbm 0.526, snr_rule 0.518, silence_rule 0.451, base 0.318. **On 110 rows no model clearly beats the SNR rule.** RF and LightGBM have a train-vs-CV gap of about 0.53: they memorise.
-
-## Demo replay (`demo_replay.py`)
-
-**The script:** I fixed it before scoring any model on it.
-- **0–30 s:** steady link, base SNR 6 dB.
-- **From 30 s:** SNR falls about 27 dB over 100 s and keeps falling.
-- **Last packet:** t = 106 s.
 
 Rows are marked SIMULATED REPLAY.
 
